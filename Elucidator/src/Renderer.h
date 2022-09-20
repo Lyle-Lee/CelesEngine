@@ -13,7 +13,7 @@
 class Renderer
 {
 public:
-    Renderer(std::vector<MeshObject*>& objs, DirectionalLight* light);
+    Renderer(std::vector<MeshObject*>& objs, DirectionalLight* light, const int numAttachments = 0);
     ~Renderer();
 
     void init();
@@ -24,9 +24,14 @@ public:
     //void updateLightInfo(const glm::vec3 lightPos, const glm::vec3 lightDir);
 private:
     std::vector<MeshObject*> m_Objects;
-    DirectionalLight* m_Light = nullptr;
+    DirectionalLight* m_Light;
+
     std::vector<VertexBuffer> m_VBs;
     std::vector<VertexArray> m_VAs;
     std::vector<IndexBuffer> m_IBs;
-    std::unique_ptr<FrameBuffer> m_FB;
+
+    FrameBuffer* m_GBuffer = nullptr;
+    std::vector<std::unique_ptr<Texture>> m_GBufferTextures;
+    std::vector<unsigned int> m_Attachments;
+    Material* m_GBufferMtl = nullptr;
 };

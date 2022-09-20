@@ -1,13 +1,37 @@
 #include "Renderer.h"
 #include "Utils.h"
 
-Renderer::Renderer(std::vector<MeshObject*>& objs, DirectionalLight* light)
+Renderer::Renderer(std::vector<MeshObject*>& objs, DirectionalLight* light, const int numAttachments)
     : m_Objects(objs), m_Light(light)
 {
+    if (numAttachments > 0)
+    {
+        m_GBufferTextures.reserve(numAttachments);
+        m_Attachments.reserve(numAttachments);
+
+        m_GBuffer = new FrameBuffer(WINDOW_WIDTH, WINDOW_HEIGHT);
+        m_GBufferTextures.push_back(std::make_unique<Texture>(WINDOW_WIDTH, WINDOW_HEIGHT)); // Kd
+        m_GBuffer->bindTexture(*m_GBufferTextures[0]);
+        m_Attachments.push_back(GL_COLOR_ATTACHMENT0);
+        for (unsigned int i = 1; i < numAttachments; ++i)
+        {   // Geometry infos
+            m_GBufferTextures.push_back(std::make_unique<Texture>(WINDOW_WIDTH, WINDOW_HEIGHT, GL_RGBA16F, GL_FLOAT));
+            m_GBuffer->bindTexture(*m_GBufferTextures[i], i);
+            m_Attachments.push_back(GL_COLOR_ATTACHMENT0 + i);
+        }
+        glDrawBuffers(numAttachments, &m_Attachments[0]);
+        m_GBuffer->bindRenderBuffer();
+        m_GBuffer->checkStatus();
+        m_GBuffer->unbind();
+
+        m_GBufferMtl = new Material("assets/shaders/GBufferVertexShader.glsl", "assets/shaders/GBufferFragmentShader.glsl");
+    }
 }
 
 Renderer::~Renderer()
 {
+    delete m_GBuffer;
+    delete m_GBufferMtl;
 }
 
 void Renderer::init()
@@ -29,16 +53,6 @@ void Renderer::init()
 
         m_Objects[i]->material->bindAttribute();
     }
-
-    m_FB = std::make_unique<FrameBuffer>(RESOLUTION, RESOLUTION);
-    if (m_Light->material->hasShadowMap)
-    {
-        m_Light->material->shadowMap->get()->bind();
-        m_FB->bindTexture(*m_Light->material->shadowMap->get());
-        m_FB->bindRenderBuffer();
-        m_FB->checkStatus();
-    }
-    m_FB->unbind();
 
     glEnable(GL_DEPTH_TEST);
 }
@@ -62,16 +76,16 @@ void Renderer::clear() const
 
 void Renderer::render()
 {
-    m_FB->bind();
-    glViewport(0, 0, RESOLUTION, RESOLUTION);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    clear();
-    glEnable(GL_DEPTH_TEST);
-
     // Light pass
     glm::mat4 lightVP;
     if (m_Light->material->hasShadowMap)
     {
+        m_Light->fbo->bind();
+        glViewport(0, 0, RESOLUTION, RESOLUTION);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        clear();
+        glEnable(GL_DEPTH_TEST);
+
         lightVP = m_Light->calcLightVP();
         m_Light->material->shader->bind();
         m_Light->material->shader->setUniformMat4f("uLightVP", lightVP);
@@ -80,10 +94,38 @@ void Renderer::render()
             m_Light->material->shader->setUniformMat4f("uModel", m_Objects[i]->translation);
             draw(m_VAs[i], m_IBs[i], m_Light->material->shader);
         }
+        m_Light->fbo->unbind();
     }
 
-    m_FB->unbind();
-    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    // G-buffer pass
+    if (m_Attachments.size() > 0)
+    {
+        m_GBuffer->bind();
+        glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        clear();
+        glEnable(GL_DEPTH_TEST);
+
+        m_GBufferMtl->shader->bind();
+        // TODO: camera VP, camera pos
+
+        if (m_Light->material->hasShadowMap)
+        {
+            m_GBufferMtl->shader->setUniformMat4f("uLightVP", lightVP);
+            m_Light->material->shadowMap->get()->bind();
+            m_GBufferMtl->shader->setUniform1i("uShadowMap", 0);
+        }
+
+        for (int i = 0; i < m_Objects.size(); ++i)
+        {
+            m_GBufferMtl->shader->setUniform1i("materialID", i);
+            m_GBufferMtl->shader->setUniformMat4f("uModel", m_Objects[i]->translation);
+            // TODO: bind Texture Unit to G-buffer shader for each obj
+
+            draw(m_VAs[i], m_IBs[i], m_GBufferMtl->shader);
+        }
+        m_GBuffer->unbind();
+    }
 
     // Camera pass
     for (int i = 0; i < m_Objects.size(); ++i)
@@ -93,11 +135,11 @@ void Renderer::render()
         // TODO: camera VP, camera pos
         m_Objects[i]->material->shader->setUniform3fv("uLightPos", 1, &m_Light->lightPos.x);
 
-        if (m_Light->material->hasShadowMap)
+        if (m_Light->material->hasShadowMap && m_Attachments.size() == 0)
         {
             m_Objects[i]->material->shader->setUniformMat4f("uLightVP", lightVP);
             m_Light->material->shadowMap->get()->bind();
-            m_Objects[i]->material->shader->setUniform1i("uShadowMap", 0); // TODO: G-buffer
+            m_Objects[i]->material->shader->setUniform1i("uShadowMap", 0);
         }
 
         draw(m_VAs[i], m_IBs[i], m_Objects[i]->material->shader);

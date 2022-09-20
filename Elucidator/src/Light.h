@@ -2,6 +2,7 @@
 
 #include "Object.h"
 #include "Material.h"
+#include "FrameBuffer.h"
 
 class DirectionalLight : public Cube
 {
@@ -14,4 +15,5 @@ public:
 	glm::vec3 lightPos, lightDir, upDir;
 	glm::vec3 radiance;
 	EmissiveMaterial* material;
+	FrameBuffer* fbo = nullptr;
 };
