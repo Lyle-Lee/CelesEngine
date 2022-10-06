@@ -8,7 +8,7 @@ test::TestShadowMap::TestShadowMap()
     m_Projection(glm::perspectiveFov(glm::pi<float>() / 2.0f, 4.0f, 3.0f, 1.5f, 100.0f))
 {
     m_Material = new PhongMaterial("assets/shaders/PhongVertexShader.glsl", "assets/shaders/PhongFragmentShader.glsl");
-    m_LightMtl = new EmissiveMaterial("assets/shaders/ShadowVertexShader.glsl", "assets/shaders/ShadowFragmentShader.glsl", glm::vec3(1.0f));
+    m_LightMtl = new EmissiveMaterial("assets/shaders/ShadowVertexShader.glsl", "assets/shaders/ShadowFragmentShader.glsl");
 
     m_Objs.push_back(std::make_unique<MeshObject>("assets/models/TestObj.obj", m_Material));
     m_Objs.push_back(std::make_unique<MeshObject>("assets/models/floor/floor.obj", m_Material));
@@ -65,7 +65,7 @@ void test::TestShadowMap::onRender()
 
     glm::mat4 model = glm::translate(glm::mat4(1.0f), m_Translation);
     m_Light->lightPos = m_LightPos;
-    m_Light->lightDir = -m_LightPos;
+    m_Light->lightDir = glm::normalize(m_LightPos);
     glm::mat4 lightVP = m_Light->calcLightVP();
 
     m_LightMtl->shader->bind();

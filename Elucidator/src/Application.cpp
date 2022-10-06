@@ -36,7 +36,8 @@ int main(void)
 
     glfwSwapInterval(1);
 
-    if (glewInit() != GLEW_OK) std::cout << "GLEW Init Error" << std::endl;
+    if (glewInit() != GLEW_OK)
+        std::cout << "GLEW Init Error" << std::endl;
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 

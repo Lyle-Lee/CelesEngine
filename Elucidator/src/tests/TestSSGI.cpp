@@ -8,7 +8,7 @@ test::TestSSGI::TestSSGI()
     m_Projection(glm::perspectiveFov(glm::pi<float>() / 2.0f, 4.0f, 3.0f, 1.5f, 100.0f))
 {
     m_Material = new Material("assets/shaders/SSGIVertexShader.glsl", "assets/shaders/SSGIFragmentShader.glsl");
-    m_LightMtl = new EmissiveMaterial("assets/shaders/ShadowVertexShader.glsl", "assets/shaders/ShadowFragmentShader.glsl", glm::vec3(1.0f));
+    m_LightMtl = new EmissiveMaterial("assets/shaders/ShadowVertexShader.glsl", "assets/shaders/ShadowFragmentShader.glsl");
     m_GBufferMtl = new Material("assets/shaders/GBufferVertexShader.glsl", "assets/shaders/GBufferFragmentShader.glsl");
 
     m_Textures.push_back(std::make_unique<Texture>("assets/models/floor/siEoZ_2K_Albedo.jpg"));
@@ -31,7 +31,7 @@ test::TestSSGI::TestSSGI()
         m_IBs.push_back(std::make_unique<IndexBuffer>(&(m_Objs[i]->indices[0]), indexCount));
     }
 
-    m_Light = std::make_unique<DirectionalLight>(m_LightPos, glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), m_LightMtl);
+    m_Light = std::make_unique<DirectionalLight>(m_LightPos, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), m_LightMtl, glm::vec3(1.0f));
 
     m_Material->shader->bind();
     m_Material->shader->setUniform3fv("uLightRadiance", 1, &m_Light->radiance.x);
@@ -85,7 +85,7 @@ void test::TestSSGI::onRender()
 
     glm::mat4 model = glm::translate(glm::mat4(1.0f), m_Translation);
     m_Light->lightPos = m_LightPos;
-    m_Light->lightDir = glm::normalize(-m_LightPos);
+    m_Light->lightDir = glm::normalize(m_LightPos);
     glm::mat4 lightVP = m_Light->calcLightVP();
 
     m_LightMtl->shader->bind();
@@ -139,7 +139,6 @@ void test::TestSSGI::onRender()
     m_Material->shader->setUniformMat4f("uModel", model);
     m_Material->shader->setUniformMat4f("uViewProj", vp);
     //m_Material->shader->setUniformMat4f("uLightVP", lightVP);
-    m_Light->lightDir = -m_Light->lightDir;
     m_Material->shader->setUniform3fv("uLightDir", 1, &m_Light->lightDir.x);
     m_Material->shader->setUniform3fv("uCameraPos", 1, &m_CameraPos.x);
 

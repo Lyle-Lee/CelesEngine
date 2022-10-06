@@ -94,14 +94,15 @@ void Renderer::render()
             m_Light->material->shader->setUniformMat4f("uModel", m_Objects[i]->translation);
             draw(m_VAs[i], m_IBs[i], m_Light->material->shader);
         }
+
         m_Light->fbo->unbind();
+        glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     // G-buffer pass
     if (m_Attachments.size() > 0)
     {
         m_GBuffer->bind();
-        glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         clear();
         glEnable(GL_DEPTH_TEST);
@@ -134,6 +135,7 @@ void Renderer::render()
         m_Objects[i]->material->shader->setUniformMat4f("uModel", m_Objects[i]->translation);
         // TODO: camera VP, camera pos
         m_Objects[i]->material->shader->setUniform3fv("uLightPos", 1, &m_Light->lightPos.x);
+        m_Objects[i]->material->bindAttribute();
 
         if (m_Light->material->hasShadowMap && m_Attachments.size() == 0)
         {

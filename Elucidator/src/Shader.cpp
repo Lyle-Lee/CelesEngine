@@ -92,6 +92,11 @@ void Shader::setUniform4f(const std::string& name, float v0, float v1, float v2,
     glUniform4f(getUniformLocation(name), v0, v1, v2, v3);
 }
 
+void Shader::setUniform4fv(const std::string& name, int count, const float* valueVector)
+{
+    glUniform4fv(getUniformLocation(name), count, valueVector);
+}
+
 void Shader::setUniform3f(const std::string& name, float v0, float v1, float v2)
 {
     glUniform3f(getUniformLocation(name), v0, v1, v2);

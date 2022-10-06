@@ -29,6 +29,7 @@ public:
 	void unbind() const;
 
 	void setUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+	void setUniform4fv(const std::string& name, int count, const float* valueVector);
 	void setUniform3f(const std::string& name, float v0, float v1, float v2);
 	void setUniform3fv(const std::string& name, int count, const float* valueVector);
 	void setUniform1i(const std::string& name, int value);

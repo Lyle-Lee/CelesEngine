@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include <variant>
 #include "Shader.h"
 #include "Texture.h"
 
@@ -13,15 +14,23 @@ enum class AttribValueType
 	uniformMat4 = 4, sampler2D = 5
 };
 
-template<typename T>
 struct Attribute
 {
 	std::string name;
-	T value;
+	std::variant<glm::vec3, glm::vec4, glm::mat4, int> value;
 	AttribValueType type;
 
 	Attribute(const std::string& _name, AttribValueType _type): name(_name), type(_type) {}
-	Attribute(const std::string& _name, const T& _value, AttribValueType _type)
+	Attribute(const std::string& _name, const glm::vec3& _value)
+		: name(_name), value(_value), type(AttribValueType::uniform3f)
+	{}
+	Attribute(const std::string& _name, const glm::vec4& _value)
+		: name(_name), value(_value), type(AttribValueType::uniform4f)
+	{}
+	Attribute(const std::string& _name, const glm::mat4& _value)
+		: name(_name), value(_value), type(AttribValueType::uniformMat4)
+	{}
+	Attribute(const std::string& _name, const int _value, AttribValueType _type = AttribValueType::sampler2D)
 		: name(_name), value(_value), type(_type)
 	{}
 };
@@ -39,22 +48,33 @@ public:
 	~Material();
 
 	template<typename T>
-	void setAttribute(const std::string& name, const T& value, AttribValueType type)
+	void setAttribute(const std::string& name, const T& value)
 	{
-		attribs.push_back(Attribute<T>(name, value, type));
+		if (m_AttribCache.find(name) != m_AttribCache.end())
+		{
+			m_Attribs[m_AttribCache[name]].value = value;
+		}
+		else
+		{
+			m_Attribs.push_back(Attribute(name, value));
+			m_AttribCache[name] = m_Attribs.size() - 1;
+		}
 	}
 
 	void bindAttribute();
 
 	MatarialType type = MatarialType::Undefined;
 	std::unique_ptr<Shader> shader;
-	std::vector<Attribute<glm::vec3>> attribs;
+private:
+	std::vector<Attribute> m_Attribs;
+	std::unordered_map<std::string, unsigned int> m_AttribCache;
 };
 
 class EmissiveMaterial : public Material
 {
 public:
 	EmissiveMaterial(const glm::vec3& radiance);
+	EmissiveMaterial(const std::string& vertexShaderPath, const std::string& fragmentShaderPath, bool enableShadowMap = true);
 	EmissiveMaterial(const std::string& vertexShaderPath, const std::string& fragmentShaderPath, const glm::vec3& radiance);
 	~EmissiveMaterial();
 

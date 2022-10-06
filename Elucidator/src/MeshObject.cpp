@@ -17,9 +17,9 @@ MeshObject::MeshObject(const std::string& filepath, Material* mtl)
 
 	if (loader.LoadedMaterials.size() > 0)
 	{
-		mtl->setAttribute("uKa", loader.LoadedMaterials[0].Ka, AttribValueType::uniform3fv);
-		mtl->setAttribute("uKd", loader.LoadedMaterials[0].Kd, AttribValueType::uniform3fv);
-		mtl->setAttribute("uKs", loader.LoadedMaterials[0].Ks, AttribValueType::uniform3fv);
+		mtl->setAttribute<glm::vec3>("uKa", loader.LoadedMaterials[0].Ka);
+		mtl->setAttribute<glm::vec3>("uKd", loader.LoadedMaterials[0].Kd);
+		mtl->setAttribute<glm::vec3>("uKs", loader.LoadedMaterials[0].Ks);
 	}
 }
 
