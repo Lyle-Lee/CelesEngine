@@ -15,11 +15,16 @@ struct Vertex
 class MeshObject : public Object
 {
 public:
-	MeshObject(const std::string& filepath);
-	MeshObject(const std::string& filepath, Material* mtl);
+	MeshObject(const std::string& filepath, Material* mtl = nullptr);
+	MeshObject(const std::string& filepath, Material* mtl, Texture* tex, unsigned int slot = 0);
 	~MeshObject();
+
+	void bindTexture();
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	Material* material;
+private:
+	std::variant<glm::vec3, Texture> m_Kd;
+	int m_TextureSlot = -1;
 };

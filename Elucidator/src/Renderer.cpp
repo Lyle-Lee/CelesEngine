@@ -122,6 +122,7 @@ void Renderer::render()
             m_GBufferMtl->shader->setUniform1i("materialID", i);
             m_GBufferMtl->shader->setUniformMat4f("uModel", m_Objects[i]->translation);
             // TODO: bind Texture Unit to G-buffer shader for each obj
+            m_GBufferMtl->bindAttribute();
 
             draw(m_VAs[i], m_IBs[i], m_GBufferMtl->shader);
         }
@@ -135,8 +136,11 @@ void Renderer::render()
         m_Objects[i]->material->shader->setUniformMat4f("uModel", m_Objects[i]->translation);
         // TODO: camera VP, camera pos
         m_Objects[i]->material->shader->setUniform3fv("uLightPos", 1, &m_Light->lightPos.x);
+        // For obj with different texture but the same shader
+        m_Objects[i]->bindTexture();
         m_Objects[i]->material->bindAttribute();
 
+        // TODO: condition with material type
         if (m_Light->material->hasShadowMap && m_Attachments.size() == 0)
         {
             m_Objects[i]->material->shader->setUniformMat4f("uLightVP", lightVP);

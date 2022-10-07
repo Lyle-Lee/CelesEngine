@@ -16,7 +16,8 @@ test::TestSSGI::TestSSGI()
 
     m_Objs.push_back(std::make_unique<MeshObject>("assets/models/TestObj.obj", m_Material));
     m_Objs.push_back(std::make_unique<MeshObject>("assets/models/floor/floor.obj", m_Material));
-    for (int i = 0; i < m_Objs.size(); ++i) {
+    for (int i = 0; i < m_Objs.size(); ++i)
+    {
         unsigned int vertexCount = m_Objs[i]->vertices.size();
         unsigned int indexCount = m_Objs[i]->indices.size();
 
