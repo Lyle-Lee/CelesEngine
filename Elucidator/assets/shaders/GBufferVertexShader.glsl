@@ -23,7 +23,7 @@ void main()
 	vTexCoord = aTexCoord;
 
 	gl_Position = uViewProj * uModel * vec4(aPosition, 1.0);
-	vDepth = gl_Position.z / gl_Position.w;
+	vDepth = gl_Position.w;
 
 	vPosFromLight = uLightVP * uModel * vec4(aPosition, 1.0);
 }

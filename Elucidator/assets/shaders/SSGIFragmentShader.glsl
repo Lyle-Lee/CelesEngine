@@ -203,7 +203,7 @@ bool HiRayMarch(vec3 ori, vec3 dir, out vec3 hitPos)
     {
         ivec2 resolution = textureSize(uGDepth, level);
         float stepSize = screenSize.x / resolution.x;
-        vec3 deltaPos = dir * stepSize;
+        vec3 deltaPos = dir / max(max(dir.x, dir.y), 1e-2) * stepSize;
         pos += deltaPos;
         vec2 uv = GetScreenCoordinate(pos);
         if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0)
@@ -255,7 +255,7 @@ void main()
         // Local to world
         vec3 T, B;
         LocalBasis(N, T, B);
-        dir = T * dir.x + B * dir.y + N * dir.z;
+        dir = normalize(T * dir.x + B * dir.y + N * dir.z);
 
         vec3 hitPos;
         //if (RayMarch(vPosWorld.xyz, dir, hitPos))
