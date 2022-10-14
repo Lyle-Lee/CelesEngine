@@ -18,7 +18,7 @@ unsigned int Shader::compileShader(unsigned int type, const std::string& source)
         glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
         char* message = (char*)alloca(length * sizeof(char));
         glGetShaderInfoLog(id, length, &length, message);
-        std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : "fragment") << " shader:" << std::endl;
+        std::cout << "Failed to compile " << (type == GL_VERTEX_SHADER ? "vertex" : type == GL_FRAGMENT_SHADER ? "fragment" : "compute") << " shader:" << std::endl;
         std::cout << message << std::endl;
         glDeleteShader(id);
         return 0;
@@ -47,6 +47,22 @@ unsigned int Shader::createShader(const std::string& vertexShaderPath, const std
     return program;
 }
 
+unsigned int Shader::createShader(const std::string& computeShaderPath)
+{
+    std::string computeProgramSource = ReadFileAsString(computeShaderPath);
+
+    unsigned int program = glCreateProgram();
+    unsigned int cs = compileShader(GL_COMPUTE_SHADER, computeProgramSource);
+
+    glAttachShader(program, cs);
+    glLinkProgram(program);
+    glValidateProgram(program);
+
+    glDeleteShader(cs);
+
+    return program;
+}
+
 int Shader::getUniformLocation(const std::string& name)
 {
     int location;
@@ -69,6 +85,12 @@ int Shader::getUniformLocation(const std::string& name)
 Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath)
 {
     m_RendererID = createShader(vertexShaderPath, fragmentShaderPath);
+    glUseProgram(m_RendererID);
+}
+
+Shader::Shader(const std::string& computeShaderPath)
+{
+    m_RendererID = createShader(computeShaderPath);
     glUseProgram(m_RendererID);
 }
 

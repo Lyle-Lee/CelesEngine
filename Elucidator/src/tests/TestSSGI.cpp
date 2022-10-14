@@ -10,6 +10,7 @@ test::TestSSGI::TestSSGI()
     m_Material = new Material("assets/shaders/SSGIVertexShader.glsl", "assets/shaders/SSGIFragmentShader.glsl");
     m_LightMtl = new EmissiveMaterial("assets/shaders/ShadowVertexShader.glsl", "assets/shaders/ShadowFragmentShader.glsl");
     m_GBufferMtl = new Material("assets/shaders/GBufferVertexShader.glsl", "assets/shaders/GBufferFragmentShader.glsl");
+    m_ComputeShader = std::make_unique<Shader>("assets/shaders/HiDepthComputeShader.glsl");
 
     m_Textures.push_back(std::make_unique<Texture>("assets/models/floor/siEoZ_2K_Albedo.jpg"));
     m_Textures.push_back(std::make_unique<Texture>("assets/models/floor/siEoZ_2K_Normal_LOD0.jpg"));
@@ -50,13 +51,16 @@ test::TestSSGI::TestSSGI()
     m_GBufferTextures.push_back(std::make_unique<Texture>(WINDOW_WIDTH, WINDOW_HEIGHT)); // Kd
     m_GBuffer->bindTexture(*m_GBufferTextures[0]);
     m_Attachments.push_back(GL_COLOR_ATTACHMENT0);
-    for (unsigned int i = 1; i < 4; ++i)
+    m_GBufferTextures.push_back(std::make_unique<Texture>(WINDOW_WIDTH, WINDOW_HEIGHT, GL_RGBA16F, GL_FLOAT, true, 4)); // depth
+    m_GBuffer->bindTexture(*m_GBufferTextures[1], 1);
+    m_Attachments.push_back(GL_COLOR_ATTACHMENT1);
+    for (unsigned int i = 2; i < m_AttachmentCnt; ++i)
     {   // Geometry infos
         m_GBufferTextures.push_back(std::make_unique<Texture>(WINDOW_WIDTH, WINDOW_HEIGHT, GL_RGBA16F, GL_FLOAT));
         m_GBuffer->bindTexture(*m_GBufferTextures[i], i);
         m_Attachments.push_back(GL_COLOR_ATTACHMENT0 + i);
     }
-    glDrawBuffers(m_Attachments.size(), &m_Attachments[0]);
+    glDrawBuffers(m_AttachmentCnt, &m_Attachments[0]);
     m_GBuffer->bindRenderBuffer();
     m_GBuffer->checkStatus();
     m_GBuffer->unbind();
@@ -132,6 +136,28 @@ void test::TestSSGI::onRender()
     }
     m_GBuffer->unbind();
 
+    // Hierarchical depth buffer
+    m_ComputeShader->bind();
+    m_GBufferTextures[1]->bind();
+    m_ComputeShader->setUniform1i("uInputDepth", 0);
+    m_ComputeShader->setUniform1i("uOutputDepth", 1);
+    unsigned int curWidth = WINDOW_WIDTH, curHeight = WINDOW_HEIGHT;
+    for (int i = 1; i < 4; ++i)
+    {
+        //m_GBufferTextures[1]->bind(i - 1, GL_READ_ONLY);
+        m_ComputeShader->setUniform1i("uPreLevel", i - 1);
+        m_GBufferTextures[1]->bind(i, GL_WRITE_ONLY, GL_RGBA16F, 1);
+
+        if (curWidth & 1)
+            ++curWidth;
+        if (curHeight & 1)
+            ++curHeight;
+        curWidth >>= 1;
+        curHeight >>= 1;
+
+        glDispatchCompute(curWidth, curHeight, 1);
+    }
+
     // Camera pass
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -143,7 +169,7 @@ void test::TestSSGI::onRender()
     m_Material->shader->setUniform3fv("uLightDir", 1, &m_Light->lightDir.x);
     m_Material->shader->setUniform3fv("uCameraPos", 1, &m_CameraPos.x);
 
-    for (int i = 0; i < m_GBufferTextures.size(); ++i)
+    for (int i = 0; i < m_AttachmentCnt; ++i)
     {
         m_GBufferTextures[i]->bind(i);
     }

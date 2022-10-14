@@ -18,9 +18,8 @@ in highp vec4 vPosWorld;
 #define TWO_PI 6.283185307
 #define INV_PI 0.31830988618
 #define INV_TWO_PI 0.15915494309
-#define Resolution 1024.0
-#define WORLD_SIZE 20.0
-#define SAMPLE_NUM 2
+#define SAMPLE_NUM 6
+#define MAX_LOD_LEVEL 3
 
 float Rand1(inout float p)
 {
@@ -163,10 +162,22 @@ vec3 EvalDirectionalLight(vec2 uv, vec3 wo)
     return Le;
 }
 
+vec2 screenSize = vec2(4.0, 3.0);
+
+float GetHierarchicalDepth(ivec2 index, int level)
+{
+    float depth = texelFetch(uGDepth, index, level).x;
+    if (depth < 1e-2)
+        depth = 1000.0;
+
+    return depth;
+}
+
 bool RayMarch(vec3 ori, vec3 dir, out vec3 hitPos)
 {
-    float stepSize = WORLD_SIZE / Resolution;
-    for (int i = 0; i < int(Resolution); ++i)
+    ivec2 resolution = textureSize(uGDepth, 0);
+    float stepSize = screenSize.x / resolution.x;
+    for (int i = 0; i < resolution.x; ++i)
     {
         vec3 pos = ori + dir * (float(i) + 0.5) * stepSize;
         vec2 uv = GetScreenCoordinate(pos);
@@ -181,6 +192,49 @@ bool RayMarch(vec3 ori, vec3 dir, out vec3 hitPos)
         }
     }
     return false;
+}
+
+bool HiRayMarch(vec3 ori, vec3 dir, out vec3 hitPos)
+{
+    int level = 0, stepCnt = 0;
+    int maxStep = textureSize(uGDepth, 0).x;
+    vec3 pos = ori;
+    while (level != -1)
+    {
+        ivec2 resolution = textureSize(uGDepth, level);
+        float stepSize = screenSize.x / resolution.x;
+        vec3 deltaPos = dir * stepSize;
+        pos += deltaPos;
+        vec2 uv = GetScreenCoordinate(pos);
+        if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0)
+        {
+            pos -= deltaPos;
+            --level;
+            if (level == -1)
+                return false;
+
+            continue;
+        }
+
+        float depth = GetDepth(pos);
+        //ivec2 index = ivec2(min(uv, vec2(1.0 - 1e-2)) * resolution);
+        if (depth + 1e-2 > GetHierarchicalDepth(ivec2(uv * resolution), level))
+        {
+            hitPos = pos;
+            pos -= deltaPos;
+            --level;
+        }
+        else if (level < MAX_LOD_LEVEL)
+        {
+            ++level;
+        }
+
+        ++stepCnt;
+        if (stepCnt == maxStep && level != -1)
+            return false;
+    }
+
+    return true;
 }
 
 void main()
@@ -204,7 +258,8 @@ void main()
         dir = T * dir.x + B * dir.y + N * dir.z;
 
         vec3 hitPos;
-        if (RayMarch(vPosWorld.xyz, dir, hitPos))
+        //if (RayMarch(vPosWorld.xyz, dir, hitPos))
+        if (HiRayMarch(vPosWorld.xyz, dir, hitPos))
         {
             vec2 uvHit = GetScreenCoordinate(hitPos);
             vec3 L = EvalDirectionalLight(uvHit, wo);

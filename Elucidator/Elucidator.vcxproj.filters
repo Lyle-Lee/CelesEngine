@@ -197,5 +197,6 @@
     <None Include="assets\shaders\GBufferFragmentShader.glsl" />
     <None Include="assets\shaders\SSGIVertexShader.glsl" />
     <None Include="assets\shaders\SSGIFragmentShader.glsl" />
+    <None Include="assets\shaders\HiDepthComputeShader.glsl" />
   </ItemGroup>
 </Project>

@@ -19,10 +19,12 @@ private:
 
 	unsigned int compileShader(unsigned int type, const std::string& source);
 	unsigned int createShader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+	unsigned int createShader(const std::string& computeShaderPath);
 
 	int getUniformLocation(const std::string& name);
 public:
 	Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
+	Shader(const std::string& computeShaderPath);
 	~Shader();
 
 	void bind() const;

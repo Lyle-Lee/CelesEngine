@@ -17,9 +17,9 @@ FrameBuffer::~FrameBuffer()
 	glDeleteFramebuffers(1, &m_BufferID);
 }
 
-void FrameBuffer::bindTexture(const Texture& texture, unsigned int slot) const
+void FrameBuffer::bindTexture(const Texture& texture, unsigned int slot, int level) const
 {
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + slot, GL_TEXTURE_2D, texture.getBufferID(), 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + slot, GL_TEXTURE_2D, texture.getBufferID(), level);
 }
 
 void FrameBuffer::bindRenderBuffer() const

@@ -83,6 +83,7 @@
     <None Include="assets\shaders\BasicVertexShader.glsl" />
     <None Include="assets\shaders\GBufferFragmentShader.glsl" />
     <None Include="assets\shaders\GBufferVertexShader.glsl" />
+    <None Include="assets\shaders\HiDepthComputeShader.glsl" />
     <None Include="assets\shaders\PhongFragmentShader.glsl" />
     <None Include="assets\shaders\PhongVertexShader.glsl" />
     <None Include="assets\shaders\ShadowFragmentShader.glsl" />

@@ -12,7 +12,7 @@ public:
 	FrameBuffer(const int width, const int height);
 	~FrameBuffer();
 
-	void bindTexture(const Texture& texture, unsigned int slot = 0) const;
+	void bindTexture(const Texture& texture, unsigned int slot = 0, int level = 0) const;
 	void bindRenderBuffer() const;
 
 	void bind() const;
