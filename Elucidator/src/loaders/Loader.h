@@ -129,7 +129,7 @@ namespace loader
     }
 
     // Get element at given index position
-    template <class T>
+    template <typename T>
     inline static const T& getElement(const std::vector<T>& elements, const std::string& index)
     {
         int idx = std::stoi(index);

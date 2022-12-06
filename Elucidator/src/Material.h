@@ -56,7 +56,7 @@ public:
 		}
 		else
 		{
-			m_Attribs.push_back(Attribute(name, value));
+			m_Attribs.emplace_back(name, value);
 			m_AttribCache[name] = m_Attribs.size() - 1;
 		}
 	}

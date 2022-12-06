@@ -2,6 +2,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 #include <glm.hpp>
 
@@ -16,6 +17,7 @@ private:
 	unsigned int m_RendererID;
 	std::string m_VertexProgramSource, m_FragmentProgramSource;
 	mutable std::unordered_map<std::string, int> m_UniformLocationCache;
+	mutable std::unordered_set<std::string> m_LogCache;
 
 	unsigned int compileShader(unsigned int type, const std::string& source);
 	unsigned int createShader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);

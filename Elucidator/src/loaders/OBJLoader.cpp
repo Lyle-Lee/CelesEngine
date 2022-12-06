@@ -164,7 +164,7 @@ bool loader::OBJLoader::loadFile(const std::string& filepath)
             genVerticesFromRawOBJ(vVerts, Positions, TCoords, Normals, curline);
 
             // Add Vertices
-            for (int i = 0; i < int(vVerts.size()); i++)
+            for (int i = 0; i < vVerts.size(); ++i)
             {
                 Vertices.push_back(vVerts[i]);
 
@@ -176,7 +176,7 @@ bool loader::OBJLoader::loadFile(const std::string& filepath)
             vertexTriangluation(iIndices, vVerts);
 
             // Add Indices
-            for (int i = 0; i < int(iIndices.size()); i++)
+            for (int i = 0; i < iIndices.size(); ++i)
             {
                 unsigned int indnum = (unsigned int)((Vertices.size()) - vVerts.size()) + iIndices[i];
                 Indices.push_back(indnum);
@@ -232,7 +232,7 @@ bool loader::OBJLoader::loadFile(const std::string& filepath)
 
             if (temp.size() != 1)
             {
-                for (int i = 0; i < temp.size() - 1; i++)
+                for (int i = 0; i < temp.size() - 1; ++i)
                 {
                     pathtomat += temp[i] + "/";
                 }
@@ -269,13 +269,13 @@ bool loader::OBJLoader::loadFile(const std::string& filepath)
     file.close();
 
     // Set Materials for each Mesh
-    for (int i = 0; i < MeshMatNames.size(); i++)
+    for (int i = 0; i < MeshMatNames.size(); ++i)
     {
         std::string matname = MeshMatNames[i];
 
         // Find corresponding material name in loaded materials
         // when found copy material variables into mesh material
-        for (int j = 0; j < LoadedMaterials.size(); j++)
+        for (int j = 0; j < LoadedMaterials.size(); ++j)
         {
             if (LoadedMaterials[j].name == matname)
             {
@@ -305,12 +305,12 @@ void loader::OBJLoader::genVerticesFromRawOBJ(std::vector<Vertex>& oVerts,
     bool noNormal = false;
 
     // For every given vertex do this
-    for (int i = 0; i < int(sface.size()); i++)
+    for (std::string& face : sface)
     {
         // See What type the vertex is.
-        int vtype;
+        int vtype = 0;
 
-        split(sface[i], svert, "/");
+        split(face, svert, "/");
 
         // Check for just position - v1
         if (svert.size() == 1)
@@ -330,7 +330,7 @@ void loader::OBJLoader::genVerticesFromRawOBJ(std::vector<Vertex>& oVerts,
         // or if Position and Normal - v1//vn1
         if (svert.size() == 3)
         {
-            if (svert[1] != "")
+            if (svert[1].size())
             {
                 // Position, Texture, and Normal
                 vtype = 4;
@@ -346,41 +346,31 @@ void loader::OBJLoader::genVerticesFromRawOBJ(std::vector<Vertex>& oVerts,
         switch (vtype)
         {
         case 1: // P
-        {
             vVert.position = getElement(iPositions, svert[0]);
             vVert.texCoord = glm::vec2(0.0f);
             noNormal = true;
             oVerts.push_back(vVert);
             break;
-        }
         case 2: // P/T
-        {
             vVert.position = getElement(iPositions, svert[0]);
             vVert.texCoord = getElement(iTCoords, svert[1]);
             noNormal = true;
             oVerts.push_back(vVert);
             break;
-        }
         case 3: // P//N
-        {
             vVert.position = getElement(iPositions, svert[0]);
             vVert.texCoord = glm::vec2(0.0f);
             vVert.normal = getElement(iNormals, svert[2]);
             oVerts.push_back(vVert);
             break;
-        }
         case 4: // P/T/N
-        {
             vVert.position = getElement(iPositions, svert[0]);
             vVert.texCoord = getElement(iTCoords, svert[1]);
             vVert.normal = getElement(iNormals, svert[2]);
             oVerts.push_back(vVert);
             break;
-        }
         default:
-        {
             break;
-        }
         }
     }
 
@@ -394,7 +384,7 @@ void loader::OBJLoader::genVerticesFromRawOBJ(std::vector<Vertex>& oVerts,
 
         glm::vec3 normal = glm::cross(A, B);
 
-        for (int i = 0; i < int(oVerts.size()); i++)
+        for (int i = 0; i < oVerts.size(); ++i)
         {
             oVerts[i].normal = normal;
         }
@@ -425,32 +415,16 @@ void loader::OBJLoader::vertexTriangluation(std::vector<unsigned int>& oIndices,
     while (true)
     {
         // For every vertex
-        for (int i = 0; i < int(tVerts.size()); i++)
+        for (int i = 0; i < tVerts.size(); ++i)
         {
             // pPrev = the previous vertex in the list
-            Vertex pPrev;
-            if (i == 0)
-            {
-                pPrev = tVerts[tVerts.size() - 1];
-            }
-            else
-            {
-                pPrev = tVerts[i - 1];
-            }
+            Vertex pPrev = tVerts[(i - 1 + tVerts.size()) % tVerts.size()];
 
             // pCur = the current vertex;
             Vertex pCur = tVerts[i];
 
             // pNext = the next vertex in the list
-            Vertex pNext;
-            if (i == tVerts.size() - 1)
-            {
-                pNext = tVerts[0];
-            }
-            else
-            {
-                pNext = tVerts[i + 1];
-            }
+            Vertex pNext = tVerts[(i + 1) % tVerts.size()];
 
             // Check to see if there are only 3 verts left
             // if so this is the last triangle
@@ -473,7 +447,7 @@ void loader::OBJLoader::vertexTriangluation(std::vector<unsigned int>& oIndices,
             if (tVerts.size() == 4)
             {
                 // Create a triangle from pCur, pPrev, pNext
-                for (int j = 0; j < int(iVerts.size()); j++)
+                for (int j = 0; j < iVerts.size(); ++j)
                 {
                     if (iVerts[j].position == pCur.position)
                         oIndices.push_back(j);
@@ -484,7 +458,7 @@ void loader::OBJLoader::vertexTriangluation(std::vector<unsigned int>& oIndices,
                 }
 
                 glm::vec3 tempVec;
-                for (int j = 0; j < int(tVerts.size()); j++)
+                for (int j = 0; j < tVerts.size(); ++j)
                 {
                     if (tVerts[j].position != pCur.position
                         && tVerts[j].position != pPrev.position
@@ -496,7 +470,7 @@ void loader::OBJLoader::vertexTriangluation(std::vector<unsigned int>& oIndices,
                 }
 
                 // Create a triangle from pCur, pPrev, pNext
-                for (int j = 0; j < int(iVerts.size()); j++)
+                for (int j = 0; j < iVerts.size(); ++j)
                 {
                     if (iVerts[j].position == pPrev.position)
                         oIndices.push_back(j);
@@ -517,7 +491,7 @@ void loader::OBJLoader::vertexTriangluation(std::vector<unsigned int>& oIndices,
 
             // If any vertices are within this triangle
             bool inTri = false;
-            for (int j = 0; j < int(iVerts.size()); j++)
+            for (int j = 0; j < iVerts.size(); ++j)
             {
                 if (inTriangle(iVerts[j].position, pPrev.position, pCur.position, pNext.position)
                     && iVerts[j].position != pPrev.position
@@ -532,7 +506,7 @@ void loader::OBJLoader::vertexTriangluation(std::vector<unsigned int>& oIndices,
                 continue;
 
             // Create a triangle from pCur, pPrev, pNext
-            for (int j = 0; j < int(iVerts.size()); j++)
+            for (int j = 0; j < iVerts.size(); ++j)
             {
                 if (iVerts[j].position == pCur.position)
                     oIndices.push_back(j);
@@ -543,7 +517,7 @@ void loader::OBJLoader::vertexTriangluation(std::vector<unsigned int>& oIndices,
             }
 
             // Delete pCur from the list
-            for (int j = 0; j < int(tVerts.size()); j++)
+            for (int j = 0; j < tVerts.size(); ++j)
             {
                 if (tVerts[j].position == pCur.position)
                 {

@@ -76,8 +76,11 @@ int Shader::getUniformLocation(const std::string& name)
         m_UniformLocationCache[name] = location;
     }
 
-    if (location == -1)
+    if (location == -1 && m_LogCache.find(name) == m_LogCache.end())
+    {
         std::cout << "Warning: uniform '" << name << "' does not exist!" << std::endl;
+        m_LogCache.insert(name);
+    }
 
     return location;
 }
