@@ -197,7 +197,8 @@ bool RayMarch(vec3 ori, vec3 dir, out vec3 hitPos)
 bool HiRayMarch(vec3 ori, vec3 dir, out vec3 hitPos)
 {
     int level = 0, stepCnt = 0;
-    int maxStep = textureSize(uGDepth, 0).x;
+    //int maxStep = textureSize(uGDepth, 0).x;
+    int maxStep = 100;
     vec3 pos = ori;
     while (level != -1)
     {
