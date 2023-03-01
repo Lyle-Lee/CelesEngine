@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Celes\Core\Timestep.h" />
+    <ClInclude Include="src\Celes\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\Celes\Events\Event.h" />
+    <ClInclude Include="src\Celes\Events\KeyEvent.h" />
+    <ClInclude Include="src\Celes\Events\MouseEvent.h" />
+    <ClInclude Include="src\Celes\GUI\GUILayer.h" />
+    <ClInclude Include="src\Celes\Input.h" />
+    <ClInclude Include="src\Celes\KeyCodes.h" />
+    <ClInclude Include="src\Celes\Layer.h" />
+    <ClInclude Include="src\Celes\LayerStack.h" />
+    <ClInclude Include="src\Celes\Log.h" />
+    <ClInclude Include="src\Celes.h" />
+    <ClInclude Include="src\Celes\Application.h" />
+    <ClInclude Include="src\Celes\Core.h" />
+    <ClInclude Include="src\Celes\EntryPoint.h" />
+    <ClInclude Include="src\Celes\MouseButtonCodes.h" />
+    <ClInclude Include="src\Celes\Renderer\Buffer.h" />
+    <ClInclude Include="src\Celes\Renderer\Camera.h" />
+    <ClInclude Include="src\Celes\Renderer\Light.h" />
+    <ClInclude Include="src\Celes\Renderer\RenderContext.h" />
+    <ClInclude Include="src\Celes\Renderer\Renderer.h" />
+    <ClInclude Include="src\Celes\Renderer\Shader.h" />
+    <ClInclude Include="src\Celes\Renderer\Texture.h" />
+    <ClInclude Include="src\Celes\Renderer\VertexArray.h" />
+    <ClInclude Include="src\Celes\Window.h" />
+    <ClInclude Include="src\ImGui\imconfig.h" />
+    <ClInclude Include="src\ImGui\imgui.h" />
+    <ClInclude Include="src\ImGui\imgui_internal.h" />
+    <ClInclude Include="src\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="src\ImGui\imstb_textedit.h" />
+    <ClInclude Include="src\ImGui\imstb_truetype.h" />
+    <ClInclude Include="src\PCH.h" />
+    <ClInclude Include="src\Platform\OpenGL\imgui_impl_glfw.h" />
+    <ClInclude Include="src\Platform\OpenGL\imgui_impl_opengl3.h" />
+    <ClInclude Include="src\Platform\OpenGL\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLCommand.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Celes\GUI\GUILayer.cpp" />
+    <ClCompile Include="src\Celes\Layer.cpp" />
+    <ClCompile Include="src\Celes\LayerStack.cpp" />
+    <ClCompile Include="src\Celes\Log.cpp" />
+    <ClCompile Include="src\Celes\Application.cpp" />
+    <ClCompile Include="src\Celes\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Celes\Renderer\Camera.cpp" />
+    <ClCompile Include="src\Celes\Renderer\Light.cpp" />
+    <ClCompile Include="src\Celes\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Celes\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Celes\Renderer\Texture.cpp" />
+    <ClCompile Include="src\Celes\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\ImGui\imgui.cpp" />
+    <ClCompile Include="src\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="src\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="src\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="src\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="src\PCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PCH.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PCH.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\imgui_impl_glfw.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLCommand.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{0db75840-17ca-4d87-ac70-0ba389b5997b}</ProjectGuid>
+    <RootNamespace>CelesEngine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\Application\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\Application\</OutDir>
+    <IntDir>$(SolutionDir)bin-int\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>CE_PLATFORM_WINDOWS;CE_BUILD_DLL;GLEW_STATIC;CE_DEBUG</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)CelesEngine\Dependencies\GLFW\lib-vc2022;$(SolutionDir)CelesEngine\Dependencies\GLEW\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>CE_PLATFORM_WINDOWS;CE_BUILD_DLL;GLEW_STATIC;CE_RELEASE</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)CelesEngine\Dependencies\GLFW\lib-vc2022;$(SolutionDir)CelesEngine\Dependencies\GLEW\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
