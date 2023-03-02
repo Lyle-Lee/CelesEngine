@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Celes/Renderer/Shader.h>
+#include "Celes/Renderer/Shader.h"
 #include <glm.hpp>
 
 // Temporary

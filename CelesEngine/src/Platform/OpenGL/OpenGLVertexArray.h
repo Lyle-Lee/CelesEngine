@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Celes/Renderer/VertexArray.h>
+#include "Celes/Renderer/VertexArray.h"
 
 namespace Celes {
 

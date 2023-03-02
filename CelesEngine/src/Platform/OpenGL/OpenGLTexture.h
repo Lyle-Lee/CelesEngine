@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Celes/Renderer/Texture.h>
+#include "Celes/Renderer/Texture.h"
 #include <GL/glew.h>
 
 namespace Celes {

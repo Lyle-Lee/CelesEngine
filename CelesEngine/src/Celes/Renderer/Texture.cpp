@@ -1,7 +1,7 @@
-#include <PCH.h>
+#include "PCH.h"
 #include "Texture.h"
 #include "Renderer.h"
-#include <Platform/OpenGL/OpenGLTexture.h>
+#include "Platform/OpenGL/OpenGLTexture.h"
 
 namespace Celes {
 

@@ -19,7 +19,7 @@ namespace Celes {
 		virtual void Init() = 0;
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 		virtual void Clear() = 0;
-		virtual void SetViewport(int width, int height) = 0;
+		virtual void SetViewport(int x, int y, int width, int height) = 0;
 		virtual void DrawIndexed(const Ref<VertexArray>& va) = 0;
 	};
 
@@ -27,6 +27,7 @@ namespace Celes {
 	{
 	public:
 		inline static void Init() { s_Cmd->Init(); }
+		static void OnWindowResize(uint32_t width, uint32_t height);
 
 		inline static void SetClearColor(const glm::vec4& color) { s_Cmd->SetClearColor(color); }
 		inline static void Clear() { s_Cmd->Clear(); }

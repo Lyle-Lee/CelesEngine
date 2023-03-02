@@ -1,6 +1,6 @@
-#include <PCH.h>
+#include "PCH.h"
 #include "OpenGLShader.h"
-#include <Celes/Core.h>
+#include "Celes/Core/Core.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <gtc/type_ptr.hpp>

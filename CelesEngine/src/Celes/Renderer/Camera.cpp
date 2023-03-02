@@ -1,4 +1,4 @@
-#include <PCH.h>
+#include "PCH.h"
 #include "Camera.h"
 #include <gtc/matrix_transform.hpp>
 
@@ -7,6 +7,12 @@ namespace Celes {
 	OrthoCamera::OrthoCamera(float left, float right, float bottom, float top)
 		: m_ProjectionMat(glm::ortho(left, right, bottom, top, 1.0f, -1.0f)), m_ViewMat(1.0f), m_Position(0.0f)
 	{
+		m_VP = m_ProjectionMat * m_ViewMat;
+	}
+
+	void OrthoCamera::SetProjection(float left, float right, float bottom, float top)
+	{
+		m_ProjectionMat = glm::ortho(left, right, bottom, top, 1.0f, -1.0f);
 		m_VP = m_ProjectionMat * m_ViewMat;
 	}
 

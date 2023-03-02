@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Celes/Layer.h>
-#include <Celes/Events/KeyEvent.h>
-#include <Celes/Events/MouseEvent.h>
-#include <Celes/Events/ApplicationEvent.h>
+#include "Celes/Core/Layer.h"
+#include "Celes/Events/KeyEvent.h"
+#include "Celes/Events/MouseEvent.h"
+#include "Celes/Events/ApplicationEvent.h"
 
 namespace Celes {
 

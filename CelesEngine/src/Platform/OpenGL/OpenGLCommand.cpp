@@ -1,4 +1,4 @@
-#include <PCH.h>
+#include "PCH.h"
 #include "OpenGLCommand.h"
 #include <GL/glew.h>
 
@@ -21,9 +21,9 @@ namespace Celes {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void OpenGLCommand::SetViewport(int width, int height)
+	void OpenGLCommand::SetViewport(int x, int y, int width, int height)
 	{
-		glViewport(0, 0, width, height);
+		glViewport(x, y, width, height);
 	}
 
 	void OpenGLCommand::DrawIndexed(const Ref<VertexArray>& va)

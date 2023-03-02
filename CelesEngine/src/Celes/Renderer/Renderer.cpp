@@ -1,13 +1,20 @@
-#include <PCH.h>
+#include "PCH.h"
 #include "Renderer.h"
-#include <Platform/OpenGL/OpenGLCommand.h>
-#include <Platform/OpenGL/OpenGLShader.h>
+#include "Platform/OpenGL/OpenGLCommand.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Celes {
 
 	GraphicsAPI Renderer::s_GAPI = GraphicsAPI::OpenGL;
 	Scope<RenderCommand> Renderer::s_Cmd = std::make_unique<OpenGLCommand>();
 	Scope<Renderer::SceneData> Renderer::s_SceneData = std::make_unique<Renderer::SceneData>();
+
+	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
+	{
+		s_Cmd->SetViewport(0, 0, width, height);
+		s_SceneData->windowWidth = width;
+		s_SceneData->windowHeight = height;
+	}
 
 	void Renderer::BeginScene(OrthoCamera& camera)
 	{
@@ -18,7 +25,7 @@ namespace Celes {
 	{
 		s_SceneData->VP = camera.GetVP();
 
-		s_Cmd->SetViewport(s_SceneData->windowWidth, s_SceneData->windowHeight);
+		s_Cmd->SetViewport(0, 0, s_SceneData->windowWidth, s_SceneData->windowHeight);
 		s_Cmd->SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		s_Cmd->Clear();
 	}
@@ -44,7 +51,7 @@ namespace Celes {
 			CE_CORE_ASSERT(light->GetFrameBuffer(), "Could not find shadow map!")
 
 			light->GetFrameBuffer()->Bind();
-			s_Cmd->SetViewport(light->GetFrameBuffer()->GetWidth(), light->GetFrameBuffer()->GetHeight());
+			s_Cmd->SetViewport(0, 0, light->GetFrameBuffer()->GetWidth(), light->GetFrameBuffer()->GetHeight());
 			s_Cmd->SetClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 			s_Cmd->Clear();
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <Celes/Core.h>
+#include "Celes/Core/Core.h"
 
 namespace Celes {
 

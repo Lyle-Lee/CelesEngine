@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Celes/Window.h>
-#include <Platform/OpenGL/OpenGLContext.h>
+#include "Celes/Core/Window.h"
+#include "Platform/OpenGL/OpenGLContext.h"
 
 namespace Celes {
 

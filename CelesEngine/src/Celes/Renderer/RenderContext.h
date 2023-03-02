@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Celes/Core.h>
+#include "Celes/Core/Core.h"
 
 namespace Celes {
 

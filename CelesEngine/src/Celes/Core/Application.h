@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Core.h"
-#include "Events/Event.h"
 #include "Window.h"
-#include "Events/ApplicationEvent.h"
+#include "Celes/Events/Event.h"
+#include "Celes/Events/ApplicationEvent.h"
 #include "LayerStack.h"
-#include "GUI/GUILayer.h"
-#include "Core/Timestep.h"
+#include "Celes/GUI/GUILayer.h"
+#include "Timestep.h"
 
 namespace Celes {
 
@@ -26,10 +26,12 @@ namespace Celes {
 		inline static Application& Get() { return *s_Instance; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 
 		std::unique_ptr<Window> m_Window;
 		GUILayer* m_GUILayer;
 		bool m_IsRunning = true;
+		bool m_Minimized = false;
 		LayerStack m_LayerStk;
 		float m_LastFrameTime = 0.0f;
 

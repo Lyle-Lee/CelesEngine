@@ -11,6 +11,7 @@ namespace Celes {
 
 		void SetPosition(const glm::vec3& pos) { m_Position = pos; UpdateViewMat(); }
 		void SetRotation(float rotation) { m_Rotation = rotation; UpdateViewMat(); }
+		void SetProjection(float left, float right, float bottom, float top);
 
 		inline const glm::vec3& GetPosition() const { return m_Position; }
 		inline const float GetRotation() const { return m_Rotation; }

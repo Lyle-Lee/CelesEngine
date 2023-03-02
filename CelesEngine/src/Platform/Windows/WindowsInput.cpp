@@ -1,6 +1,6 @@
-#include <PCH.h>
+#include "PCH.h"
 #include "WindowsInput.h"
-#include <Celes/Application.h>
+#include "Celes/Core/Application.h"
 #include <GLFW/glfw3.h>
 
 namespace Celes {

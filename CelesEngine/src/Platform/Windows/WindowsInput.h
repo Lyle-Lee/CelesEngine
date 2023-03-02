@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Celes/Input.h>
+#include "Celes/Core/Input.h"
 
 namespace Celes {
 

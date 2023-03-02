@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core.h"
-#include "Core/Timestep.h"
-#include "Events/Event.h"
+#include "Timestep.h"
+#include "Celes/Events/Event.h"
 
 namespace Celes {
 

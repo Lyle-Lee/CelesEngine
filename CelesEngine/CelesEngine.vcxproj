@@ -11,22 +11,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Celes\Renderer\CameraController.h" />
     <ClInclude Include="src\Celes\Core\Timestep.h" />
     <ClInclude Include="src\Celes\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Celes\Events\Event.h" />
     <ClInclude Include="src\Celes\Events\KeyEvent.h" />
     <ClInclude Include="src\Celes\Events\MouseEvent.h" />
     <ClInclude Include="src\Celes\GUI\GUILayer.h" />
-    <ClInclude Include="src\Celes\Input.h" />
-    <ClInclude Include="src\Celes\KeyCodes.h" />
-    <ClInclude Include="src\Celes\Layer.h" />
-    <ClInclude Include="src\Celes\LayerStack.h" />
-    <ClInclude Include="src\Celes\Log.h" />
+    <ClInclude Include="src\Celes\Core\Input.h" />
+    <ClInclude Include="src\Celes\Core\KeyCodes.h" />
+    <ClInclude Include="src\Celes\Core\Layer.h" />
+    <ClInclude Include="src\Celes\Core\LayerStack.h" />
+    <ClInclude Include="src\Celes\Core\Log.h" />
     <ClInclude Include="src\Celes.h" />
-    <ClInclude Include="src\Celes\Application.h" />
-    <ClInclude Include="src\Celes\Core.h" />
-    <ClInclude Include="src\Celes\EntryPoint.h" />
-    <ClInclude Include="src\Celes\MouseButtonCodes.h" />
+    <ClInclude Include="src\Celes\Core\Application.h" />
+    <ClInclude Include="src\Celes\Core\Core.h" />
+    <ClInclude Include="src\Celes\Core\EntryPoint.h" />
+    <ClInclude Include="src\Celes\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\Celes\Renderer\Buffer.h" />
     <ClInclude Include="src\Celes\Renderer\Camera.h" />
     <ClInclude Include="src\Celes\Renderer\Light.h" />
@@ -35,7 +36,7 @@
     <ClInclude Include="src\Celes\Renderer\Shader.h" />
     <ClInclude Include="src\Celes\Renderer\Texture.h" />
     <ClInclude Include="src\Celes\Renderer\VertexArray.h" />
-    <ClInclude Include="src\Celes\Window.h" />
+    <ClInclude Include="src\Celes\Core\Window.h" />
     <ClInclude Include="src\ImGui\imconfig.h" />
     <ClInclude Include="src\ImGui\imgui.h" />
     <ClInclude Include="src\ImGui\imgui_internal.h" />
@@ -56,11 +57,12 @@
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Celes\Renderer\CameraController.cpp" />
     <ClCompile Include="src\Celes\GUI\GUILayer.cpp" />
-    <ClCompile Include="src\Celes\Layer.cpp" />
-    <ClCompile Include="src\Celes\LayerStack.cpp" />
-    <ClCompile Include="src\Celes\Log.cpp" />
-    <ClCompile Include="src\Celes\Application.cpp" />
+    <ClCompile Include="src\Celes\Core\Layer.cpp" />
+    <ClCompile Include="src\Celes\Core\LayerStack.cpp" />
+    <ClCompile Include="src\Celes\Core\Log.cpp" />
+    <ClCompile Include="src\Celes\Core\Application.cpp" />
     <ClCompile Include="src\Celes\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Celes\Renderer\Camera.cpp" />
     <ClCompile Include="src\Celes\Renderer\Light.cpp" />

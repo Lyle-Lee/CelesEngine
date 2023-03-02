@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Celes/Renderer/Buffer.h>
+#include "Celes/Renderer/Buffer.h"
 
 namespace Celes {
 

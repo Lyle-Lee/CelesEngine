@@ -1,7 +1,7 @@
-#include <PCH.h>
+#include "PCH.h"
 #include "VertexArray.h"
 #include "Renderer.h"
-#include <Platform/OpenGL/OpenGLVertexArray.h>
+#include "Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace Celes {
 

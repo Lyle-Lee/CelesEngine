@@ -15,19 +15,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Celes\Core.h">
+    <ClInclude Include="src\Celes\Core\Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Celes\Application.h">
+    <ClInclude Include="src\Celes\Core\Application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Celes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Celes\EntryPoint.h">
+    <ClInclude Include="src\Celes\Core\EntryPoint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Celes\Log.h">
+    <ClInclude Include="src\Celes\Core\Log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Celes\Events\Event.h">
@@ -45,16 +45,16 @@
     <ClInclude Include="src\PCH.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Celes\Window.h">
+    <ClInclude Include="src\Celes\Core\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Celes\Layer.h">
+    <ClInclude Include="src\Celes\Core\Layer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Celes\LayerStack.h">
+    <ClInclude Include="src\Celes\Core\LayerStack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\imgui_impl_glfw.h">
@@ -87,16 +87,16 @@
     <ClInclude Include="src\Celes\GUI\GUILayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Celes\Input.h">
+    <ClInclude Include="src\Celes\Core\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Celes\KeyCodes.h">
+    <ClInclude Include="src\Celes\Core\KeyCodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Celes\MouseButtonCodes.h">
+    <ClInclude Include="src\Celes\Core\MouseButtonCodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Celes\Renderer\RenderContext.h">
@@ -144,12 +144,15 @@
     <ClInclude Include="src\Celes\Renderer\Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Celes\Renderer\CameraController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Celes\Application.cpp">
+    <ClCompile Include="src\Celes\Core\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Celes\Log.cpp">
+    <ClCompile Include="src\Celes\Core\Log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\PCH.cpp">
@@ -158,10 +161,10 @@
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Celes\Layer.cpp">
+    <ClCompile Include="src\Celes\Core\Layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Celes\LayerStack.cpp">
+    <ClCompile Include="src\Celes\Core\LayerStack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\imgui_impl_glfw.cpp">
@@ -228,6 +231,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Celes\Renderer\Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Celes\Renderer\CameraController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
