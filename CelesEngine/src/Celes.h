@@ -2,7 +2,6 @@
 
 // For client side
 #include "Celes/Core/Application.h"
-#include "Celes/Core/EntryPoint.h"
 #include "Celes/Core/Log.h"
 #include "Celes/Core/Timestep.h"
 

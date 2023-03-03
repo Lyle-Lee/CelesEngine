@@ -18,20 +18,13 @@
     <ClCompile Include="src\Sandbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Sandbox2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\TestVertexShader.glsl" />
-    <None Include="assets\shaders\TestFragmentShader.glsl" />
-    <None Include="assets\shaders\GBufferFragmentShader.glsl" />
-    <None Include="assets\shaders\GBufferVertexShader.glsl" />
-    <None Include="assets\shaders\HiDepthComputeShader.glsl" />
-    <None Include="assets\shaders\PBRFragmentShader.glsl" />
-    <None Include="assets\shaders\PBRVertexShader.glsl" />
-    <None Include="assets\shaders\PhongFragmentShader.glsl" />
-    <None Include="assets\shaders\PhongVertexShader.glsl" />
-    <None Include="assets\shaders\ShadowFragmentShader.glsl" />
-    <None Include="assets\shaders\ShadowVertexShader.glsl" />
-    <None Include="assets\shaders\SSGIFragmentShader.glsl" />
-    <None Include="assets\shaders\SSGIVertexShader.glsl" />
+    <ClInclude Include="src\Sandbox2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@
 
 namespace Celes {
 
-	VertexArray* VertexArray::Create()
+	Ref<VertexArray> VertexArray::Create()
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -13,7 +13,7 @@ namespace Celes {
 				CE_CORE_ASSERT(false, "No Graphics API!")
 				break;
 			case GraphicsAPI::OpenGL:
-				return new OpenGLVertexArray();
+				return std::make_shared<OpenGLVertexArray>();
 			default:
 				CE_CORE_ASSERT(false, "The target Graphics API is currently not supported!")
 				break;
