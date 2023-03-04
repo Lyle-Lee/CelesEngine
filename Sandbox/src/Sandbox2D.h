@@ -14,9 +14,9 @@ public:
 	void OnEvent(Celes::Event& e) override;
 	void OnGUIRender() override;
 private:
-	Celes::ShaderLibrary m_ShaderLib;
+	//Celes::ShaderLibrary m_ShaderLib;
 
-	Celes::Ref<Celes::VertexArray> m_VertexArray;
+	//Celes::Ref<Celes::VertexArray> m_VertexArray;
 	Celes::Ref<Celes::Texture2D> m_Texture;
 	
 	Celes::OrthoCameraController m_CameraController;

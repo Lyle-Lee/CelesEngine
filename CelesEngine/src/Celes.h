@@ -14,6 +14,7 @@
 #include "Celes/Renderer/CameraController.h"
 
 #include "Celes/Renderer/Renderer.h"
+#include "Celes/Renderer/Renderer2D.h"
 #include "Celes/Renderer/Buffer.h"
 #include "Celes/Renderer/VertexArray.h"
 #include "Celes/Renderer/Shader.h"

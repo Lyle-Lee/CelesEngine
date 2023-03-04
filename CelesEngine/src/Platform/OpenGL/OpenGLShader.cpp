@@ -86,6 +86,26 @@ namespace Celes {
 		glUseProgram(0);
 	}
 
+	void OpenGLShader::SetInt(const std::string& name, int val)
+	{
+		SetUniformInt(name, val);
+	}
+
+	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& vec)
+	{
+		SetUniformFloat3(name, vec);
+	}
+
+	void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& vec)
+	{
+		SetUniformFloat4(name, vec);
+	}
+
+	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& matrix)
+	{
+		SetUniformMat4(name, matrix);
+	}
+
 	void OpenGLShader::SetUniformInt(const std::string& name, int val)
 	{
 		glUniform1i(GetUniformLocation(name), val);
@@ -152,7 +172,7 @@ namespace Celes {
 				glDeleteShader(shader);
 
 				CE_CORE_ERROR("{0}", infoLog.data());
-				CE_CORE_ASSERT(false, "Failed to compile {0} shader!", type == GL_VERTEX_SHADER ? "vertex" : type == GL_FRAGMENT_SHADER ? "fragment" : "compute")
+				CE_CORE_ASSERT(false, "Failed to compile shader!", type == GL_VERTEX_SHADER ? "vertex" : type == GL_FRAGMENT_SHADER ? "fragment" : "compute")
 			}
 
 			glAttachShader(program, shader);

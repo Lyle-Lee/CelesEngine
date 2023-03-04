@@ -33,6 +33,7 @@
     <ClInclude Include="src\Celes\Renderer\Light.h" />
     <ClInclude Include="src\Celes\Renderer\RenderContext.h" />
     <ClInclude Include="src\Celes\Renderer\Renderer.h" />
+    <ClInclude Include="src\Celes\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Celes\Renderer\Shader.h" />
     <ClInclude Include="src\Celes\Renderer\Texture.h" />
     <ClInclude Include="src\Celes\Renderer\VertexArray.h" />
@@ -67,6 +68,7 @@
     <ClCompile Include="src\Celes\Renderer\Camera.cpp" />
     <ClCompile Include="src\Celes\Renderer\Light.cpp" />
     <ClCompile Include="src\Celes\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Celes\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Celes\Renderer\Shader.cpp" />
     <ClCompile Include="src\Celes\Renderer\Texture.cpp" />
     <ClCompile Include="src\Celes\Renderer\VertexArray.cpp" />

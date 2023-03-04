@@ -26,7 +26,7 @@ namespace Celes {
 	class CE_API Renderer
 	{
 	public:
-		inline static void Init() { s_Cmd->Init(); }
+		static void Init();
 		static void OnWindowResize(uint32_t width, uint32_t height);
 
 		inline static void SetClearColor(const glm::vec4& color) { s_Cmd->SetClearColor(color); }

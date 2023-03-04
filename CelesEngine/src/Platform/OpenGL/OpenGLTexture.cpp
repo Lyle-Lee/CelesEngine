@@ -14,32 +14,36 @@ namespace Celes {
 		m_Width = width;
 		m_Height = height;
 
-		GLenum internalFormat = 0, dataFormat = 0;
+		m_InternalFormat = 0;
+		m_DataFormat = 0;
+		m_DataType = GL_UNSIGNED_BYTE;
 		if (channels == 4)
 		{
-			internalFormat = GL_RGBA8;
-			dataFormat = GL_RGBA;
+			m_InternalFormat = GL_RGBA8;
+			m_DataFormat = GL_RGBA;
 		}
 		else if (channels == 3)
 		{
-			internalFormat = GL_RGB8;
-			dataFormat = GL_RGB;
+			m_InternalFormat = GL_RGB8;
+			m_DataFormat = GL_RGB;
 		}
-		CE_CORE_ASSERT(internalFormat && dataFormat, "Incompatible data format!")
+		CE_CORE_ASSERT(m_InternalFormat && m_DataFormat, "Incompatible data format!")
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_BufferID);
-		glTextureStorage2D(m_BufferID, 1, internalFormat, width, height);
+		glTextureStorage2D(m_BufferID, 1, m_InternalFormat, width, height);
 
 		glTextureParameteri(m_BufferID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameteri(m_BufferID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTextureParameteri(m_BufferID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(m_BufferID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		glTextureSubImage2D(m_BufferID, 0, 0, 0, width, height, dataFormat, GL_UNSIGNED_BYTE, data);
+		glTextureSubImage2D(m_BufferID, 0, 0, 0, width, height, m_DataFormat, m_DataType, data);
 
 		stbi_image_free(data);
 	}
 
-	OpenGLTexture2D::OpenGLTexture2D(int width, int height, GLenum internalFormat, GLenum dataType, bool csStorage, int levels)
-		: m_Width(width), m_Height(height)
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, GLenum internalFormat, GLenum dataType, bool csStorage, int levels)
+		: m_Width(width), m_Height(height), m_InternalFormat(internalFormat), m_DataType(dataType), m_DataFormat(GL_RGBA)
 	{
 		glGenTextures(1, &m_BufferID);
 		glBindTexture(GL_TEXTURE_2D, m_BufferID);
@@ -64,6 +68,15 @@ namespace Celes {
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
 		glDeleteTextures(1, &m_BufferID);
+	}
+
+	void OpenGLTexture2D::SetData(void* data, uint32_t size)
+	{
+		uint32_t bytesPerPixel = m_DataFormat == GL_RGBA ? 4 : 3;
+		CE_CORE_ASSERT(size == m_Width * m_Height * bytesPerPixel, "Data must be entire texture!")
+
+		//glTexImage2D(GL_TEXTURE_2D, 0, m_InternalFormat, m_Width, m_Height, 0, m_DataFormat, m_DataType, data);
+		glTextureSubImage2D(m_BufferID, 0, 0, 0, m_Width, m_Height, m_DataFormat, m_DataType, data);
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const

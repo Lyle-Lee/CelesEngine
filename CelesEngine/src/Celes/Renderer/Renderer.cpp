@@ -2,12 +2,19 @@
 #include "Renderer.h"
 #include "Platform/OpenGL/OpenGLCommand.h"
 #include "Platform/OpenGL/OpenGLShader.h"
+#include "Renderer2D.h"
 
 namespace Celes {
 
 	GraphicsAPI Renderer::s_GAPI = GraphicsAPI::OpenGL;
-	Scope<RenderCommand> Renderer::s_Cmd = std::make_unique<OpenGLCommand>();
-	Scope<Renderer::SceneData> Renderer::s_SceneData = std::make_unique<Renderer::SceneData>();
+	Scope<RenderCommand> Renderer::s_Cmd = CreateScope<OpenGLCommand>();
+	Scope<Renderer::SceneData> Renderer::s_SceneData = CreateScope<Renderer::SceneData>();
+
+	void Renderer::Init()
+	{
+		s_Cmd->Init();
+		Renderer2D::Init();
+	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
 	{
