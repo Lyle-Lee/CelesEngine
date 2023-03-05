@@ -55,11 +55,11 @@ namespace Celes {
 		ImGui::DestroyContext();
 	}
 
-	void GUILayer::OnGUIRender()
+	/*void GUILayer::OnGUIRender()
 	{
 		static bool showDemo = true;
 		ImGui::ShowDemoWindow(&showDemo);
-	}
+	}*/
 
 	/*void GUILayer::OnUpdate()
 	{

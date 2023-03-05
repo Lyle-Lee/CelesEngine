@@ -15,7 +15,7 @@ namespace Celes {
 
 		void OnAttach() override;
 		void OnDetach() override;
-		void OnGUIRender() override;
+		//void OnGUIRender() override;
 		//void OnEvent(Event& e) override;
 
 		void Begin();

@@ -21,7 +21,14 @@ private:
 	
 	Celes::OrthoCameraController m_CameraController;
 
-	glm::vec3 m_ObjPos;
-	float m_ObjMoveSpeed = 1.0f;
+	//glm::vec3 m_ObjPos;
+	//float m_ObjMoveSpeed = 1.0f;
 	glm::vec3 m_ObjColor = { 0.2f, 0.5f, 0.9f };
+
+	struct ProfileResult
+	{
+		const char* Name;
+		float Time;
+	};
+	std::vector<ProfileResult> m_ProfileResults;
 };
