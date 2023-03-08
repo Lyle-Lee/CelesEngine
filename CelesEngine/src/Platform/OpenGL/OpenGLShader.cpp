@@ -91,6 +91,11 @@ namespace Celes {
 		SetUniformInt(name, val);
 	}
 
+	void OpenGLShader::SetFloat(const std::string& name, float val)
+	{
+		SetUniformFloat(name, val);
+	}
+
 	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& vec)
 	{
 		SetUniformFloat3(name, vec);

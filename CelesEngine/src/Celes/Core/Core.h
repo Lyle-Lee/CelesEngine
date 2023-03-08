@@ -1,5 +1,27 @@
 #pragma once
 
+// Platform detection
+#ifdef _WIN32
+#ifdef _WIN64
+#define CE_PLATFORM_WINDOWS
+#else
+#error "x86 builds are not supported!"
+#endif // _WIN64
+#elif defined(__APPLE__) || defined(__MACH__)
+#include <TargetConditionals.h>
+#if TARGET_IPHONE_SIMULATOR == 1
+#error "IOS simulator is not supported!"
+#elif TARGET_OS_IPHONE == 1
+#define CE_PLATFORM_IOS
+#error "IOS is not supported!"
+#elif TARGET_OS_MAC == 1
+#define CE_PLATFORM_MACOS
+#error "MacOS is not supported!"
+#else
+#error "Unknown Apple platform!"
+#endif // TARGET_IPHONE_SIMULATOR
+#endif // _WIN32
+
 #define CE_DYNAMIC_LINK 1 // Set to 0 if link statically
 
 #ifdef CE_PLATFORM_WINDOWS

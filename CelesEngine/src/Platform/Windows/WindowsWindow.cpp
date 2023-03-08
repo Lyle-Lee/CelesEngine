@@ -8,9 +8,9 @@ namespace Celes {
 
 	static bool s_GLFWInitialized = false;
 
-	Window* Window::Create(const WindowInfo& info)
+	Scope<Window> Window::Create(const WindowInfo& info)
 	{
-		return new WindowsWindow(info);
+		return CreateScope<WindowsWindow>(info);
 	}
 
 	WindowsWindow::WindowsWindow(const WindowInfo& info)

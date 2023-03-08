@@ -28,7 +28,7 @@ namespace Celes {
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 
-		std::unique_ptr<Window> m_Window;
+		Scope<Window> m_Window;
 		GUILayer* m_GUILayer;
 		bool m_IsRunning = true;
 		bool m_Minimized = false;

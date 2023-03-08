@@ -20,6 +20,7 @@ namespace Celes {
 		void Unbind() const override;
 
 		void SetInt(const std::string& name, int val) override;
+		void SetFloat(const std::string& name, float val) override;
 		void SetFloat3(const std::string& name, const glm::vec3& vec) override;
 		void SetFloat4(const std::string& name, const glm::vec4& vec) override;
 		void SetMat4(const std::string& name, const glm::mat4& matrix) override;
