@@ -91,6 +91,11 @@ namespace Celes {
 		SetUniformInt(name, val);
 	}
 
+	void OpenGLShader::SetIntArray(const std::string& name, int* vals, uint32_t count)
+	{
+		SetUniformIntArray(name, vals, count);
+	}
+
 	void OpenGLShader::SetFloat(const std::string& name, float val)
 	{
 		SetUniformFloat(name, val);
@@ -114,6 +119,11 @@ namespace Celes {
 	void OpenGLShader::SetUniformInt(const std::string& name, int val)
 	{
 		glUniform1i(GetUniformLocation(name), val);
+	}
+
+	void OpenGLShader::SetUniformIntArray(const std::string& name, int* vals, uint32_t count)
+	{
+		glUniform1iv(GetUniformLocation(name), count, vals);
 	}
 
 	void OpenGLShader::SetUniformFloat(const std::string& name, float val)

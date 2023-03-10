@@ -10,7 +10,7 @@ namespace Celes {
 
 		if (hasShadowMap)
 		{
-			m_FBO.reset(FrameBuffer::Create(2048, 2048));
+			m_FBO = FrameBuffer::Create(2048, 2048);
 			m_ShadowMap = Texture2D::Create(m_FBO->GetWidth(), m_FBO->GetHeight());
 			m_ShadowMap->Bind();
 			m_FBO->AddAttachment(m_ShadowMap);

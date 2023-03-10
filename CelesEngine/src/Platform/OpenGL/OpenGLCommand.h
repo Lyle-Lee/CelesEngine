@@ -11,7 +11,7 @@ namespace Celes {
 		void SetClearColor(const glm::vec4& color) override;
 		void Clear() override;
 		void SetViewport(int x, int y, int width, int height) override;
-		void DrawIndexed(const Ref<VertexArray>& va) override;
+		void DrawIndexed(const Ref<VertexArray>& va, uint32_t indexCnt = 0) override;
 	};
 
 }

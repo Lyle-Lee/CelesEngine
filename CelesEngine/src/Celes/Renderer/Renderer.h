@@ -20,7 +20,7 @@ namespace Celes {
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 		virtual void Clear() = 0;
 		virtual void SetViewport(int x, int y, int width, int height) = 0;
-		virtual void DrawIndexed(const Ref<VertexArray>& va) = 0;
+		virtual void DrawIndexed(const Ref<VertexArray>& va, uint32_t indexCnt = 0) = 0;
 	};
 
 	class CE_API Renderer

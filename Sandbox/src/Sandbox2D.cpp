@@ -65,8 +65,13 @@ void Sandbox2D::OnUpdate(Celes::Timestep dTime)
 	if (Celes::Input::IsKeyPressed(CE_KEY_K)) m_ObjPos.y -= m_ObjMoveSpeed * dTime;
 	else if (Celes::Input::IsKeyPressed(CE_KEY_I)) m_ObjPos.y += m_ObjMoveSpeed * dTime;*/
 
+	Celes::Renderer2D::ResetStats();
+
 	Celes::Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	Celes::Renderer::Clear();
+
+	static float rotation = 0.0f;
+	rotation += dTime * 20.0f;
 
 	//Celes::Renderer::BeginScene(m_CameraController.GetCamera());
 	Celes::Renderer2D::BeginScene(m_CameraController.GetCamera());
@@ -78,8 +83,10 @@ void Sandbox2D::OnUpdate(Celes::Timestep dTime)
 	//Celes::Renderer::Submit(m_VertexArray, shader, glm::translate(glm::mat4(1.0f), m_ObjPos));
 
 	Celes::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.5f, 0.9f, 1.0f });
-	Celes::Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(45.0f), {0.8f, 0.2f, 0.3f, 1.0f});
+	Celes::Renderer2D::DrawRotatedQuad({ -1.0f, 1.0f }, { 0.8f, 0.8f }, glm::radians(45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
+	Celes::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 	Celes::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.1f }, { 10.0f, 10.0f }, m_Texture, 10.0f);
+	Celes::Renderer2D::DrawRotatedQuad({ -0.5f, -0.5f, -0.1}, { 1.0f, 1.0f }, glm::radians(rotation), m_Texture, 20.0f);
 
 	//Celes::Renderer::EndScene();
 	Celes::Renderer2D::EndScene();
@@ -93,6 +100,14 @@ void Sandbox2D::OnEvent(Celes::Event& e)
 void Sandbox2D::OnGUIRender()
 {
 	ImGui::Begin("Settings");
+
+	auto stats = Celes::Renderer2D::GetStats();
+	ImGui::Text("Renderer2D Stats:");
+	ImGui::Text("Draw Calls: %d", stats.DrawCallsCnt);
+	ImGui::Text("Quads: %d", stats.QuadCnt);
+	ImGui::Text("Vertices: %d", stats.GetTotalVertexCnt());
+	ImGui::Text("Indices: %d", stats.GetTotalIndexCnt());
+
 	ImGui::ColorEdit3("Object Color", &m_ObjColor.x);
 
 	for (auto& result : m_ProfileResults)

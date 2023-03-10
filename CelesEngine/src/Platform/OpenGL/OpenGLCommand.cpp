@@ -26,9 +26,10 @@ namespace Celes {
 		glViewport(x, y, width, height);
 	}
 
-	void OpenGLCommand::DrawIndexed(const Ref<VertexArray>& va)
+	void OpenGLCommand::DrawIndexed(const Ref<VertexArray>& va, uint32_t indexCnt)
 	{
-		glDrawElements(GL_TRIANGLES, va->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+		uint32_t count = indexCnt ? indexCnt : va->GetIndexBuffer()->GetCount();
+		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 	}
 
 }

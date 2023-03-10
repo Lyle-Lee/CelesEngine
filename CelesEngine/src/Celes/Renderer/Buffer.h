@@ -130,7 +130,10 @@ namespace Celes {
 		virtual void SetLayout(const BufferLayout& layout) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 
-		static VertexBuffer* Create(float* vertices, uint32_t size);
+		virtual void SetData(const void* data, uint32_t size) = 0;
+
+		static Ref<VertexBuffer> Create(uint32_t size);
+		static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
 	};
 
 	class CE_API IndexBuffer
@@ -142,7 +145,7 @@ namespace Celes {
 		virtual void Unbind() const = 0;
 		virtual uint32_t GetCount() const = 0;
 
-		static IndexBuffer* Create(uint32_t* indices, uint32_t size);
+		static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t size);
 	};
 
 	class CE_API FrameBuffer
@@ -159,7 +162,7 @@ namespace Celes {
 
 		virtual void AddAttachment(const Ref<Texture>& texture) = 0;
 
-		static FrameBuffer* Create(uint32_t width, uint32_t height);
+		static Ref<FrameBuffer> Create(uint32_t width, uint32_t height);
 	};
 
 }

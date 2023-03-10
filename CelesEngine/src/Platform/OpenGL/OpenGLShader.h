@@ -20,6 +20,7 @@ namespace Celes {
 		void Unbind() const override;
 
 		void SetInt(const std::string& name, int val) override;
+		void SetIntArray(const std::string& name, int* vals, uint32_t count) override;
 		void SetFloat(const std::string& name, float val) override;
 		void SetFloat3(const std::string& name, const glm::vec3& vec) override;
 		void SetFloat4(const std::string& name, const glm::vec4& vec) override;
@@ -28,6 +29,7 @@ namespace Celes {
 		inline const std::string& GetName() const override { return m_Name; }
 
 		void SetUniformInt(const std::string& name, int val);
+		void SetUniformIntArray(const std::string& name, int* vals, uint32_t count);
 
 		void SetUniformFloat(const std::string& name, float val);
 		void SetUniformFloat2(const std::string& name, const glm::vec2& vec);
