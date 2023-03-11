@@ -17,7 +17,7 @@ namespace Celes {
 	bool WindowsInput::IsMouseButtonPressedImpl(int button)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
-		int status = glfwGetKey(window, button);
+		int status = glfwGetMouseButton(window, button);
 		return status == GLFW_PRESS;
 	}
 
