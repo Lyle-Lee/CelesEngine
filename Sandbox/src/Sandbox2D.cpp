@@ -47,6 +47,14 @@ Sandbox2D::Sandbox2D(): Layer("Sandbox2D"), m_CameraController(16.0f / 9.0f, tru
 void Sandbox2D::OnAttach()
 {
 	m_Texture = Celes::Texture2D::Create("assets/textures/checkerbox.png");
+
+	m_ParticleInfo.ColorBegin = { 254.0f / 255.0f, 212.0f / 255.0f, 123.0f / 255.0f, 1.0f };
+	m_ParticleInfo.ColorEnd = { 254.0f / 255.0f, 109.0f / 255.0f, 41.0f / 255.0f, 1.0f };
+	m_ParticleInfo.SizeBegin = 0.5f, m_ParticleInfo.SizeVariation = 0.3f, m_ParticleInfo.SizeEnd = 0.0f;
+	m_ParticleInfo.LifeTime = 1.0f;
+	m_ParticleInfo.Position = { 0.0f, 0.0f };
+	m_ParticleInfo.Velocity = { 0.0f, 0.0f };
+	m_ParticleInfo.VelocityVariation = { 3.0f, 1.0f };
 }
 
 void Sandbox2D::OnDetach()
@@ -90,6 +98,23 @@ void Sandbox2D::OnUpdate(Celes::Timestep dTime)
 
 	//Celes::Renderer::EndScene();
 	Celes::Renderer2D::EndScene();
+
+	if (Celes::Input::IsMouseBottonPressed(CE_MOUSE_BUTTON_LEFT))
+	{
+		auto [x, y] = Celes::Input::GetMousePos();
+		auto width = Celes::Application::Get().GetWindow().GetWidth();
+		auto height = Celes::Application::Get().GetWindow().GetHeight();
+
+		auto bounds = m_CameraController.GetBounds();
+		auto pos = m_CameraController.GetCamera().GetPosition();
+		x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+		y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+		m_ParticleInfo.Position = { x + pos.x, y + pos.y };
+		for (int i = 0; i < 5; ++i) m_ParticleSystem.Emit(m_ParticleInfo);
+	}
+
+	m_ParticleSystem.OnUpdate(dTime);
+	m_ParticleSystem.OnRender(m_CameraController.GetCamera());
 }
 
 void Sandbox2D::OnEvent(Celes::Event& e)

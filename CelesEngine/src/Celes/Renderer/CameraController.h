@@ -7,6 +7,14 @@
 
 namespace Celes {
 
+	struct OrthoCameraBounds
+	{
+		float Left, Right, Bottom, Top;
+
+		float GetWidth() { return Right - Left; }
+		float GetHeight() { return Top - Bottom; }
+	};
+
 	class CE_API OrthoCameraController
 	{
 	public:
@@ -17,11 +25,14 @@ namespace Celes {
 
 		inline OrthoCamera& GetCamera() { return m_Camera; }
 		inline const OrthoCamera& GetCamera() const { return m_Camera; }
+
+		inline const OrthoCameraBounds& GetBounds() const { return m_Bounds; }
 	private:
 		bool OnMouseScroll(MouseScrollEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 
 		float m_AspectRatio, m_ZoomLevel = 1.0f;
+		OrthoCameraBounds m_Bounds;
 		OrthoCamera m_Camera;
 		
 		glm::vec3 m_CameraPos = glm::vec3(0.0f);

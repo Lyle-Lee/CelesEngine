@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Celes.h>
+#include "ParticleSystem.h"
 
 class Sandbox2D : public Celes::Layer
 {
@@ -31,4 +32,7 @@ private:
 		float Time;
 	};
 	std::vector<ProfileResult> m_ProfileResults;
+
+	ParticleSystem m_ParticleSystem;
+	ParticleInfo m_ParticleInfo;
 };
