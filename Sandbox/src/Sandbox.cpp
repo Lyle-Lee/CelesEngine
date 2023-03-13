@@ -8,7 +8,7 @@
 class ExampleLayer : public Celes::Layer
 {
 public:
-	ExampleLayer() : Layer("Example"), m_Camera(glm::pi<float>() / 2.0f, 16.0f / 9.0f, 1.0f, -5.0f), m_CameraPos(0.0f, 0.0f, 1.5f), m_ObjPos(0.0f)
+	ExampleLayer() : Layer("Example"), m_Camera(glm::pi<float>() / 2.0f, 16.0f / 9.0f, 1.0f, 10.0f), m_CameraPos(0.0f, 0.0f, 1.5f), m_ObjPos(0.0f)
 	{
 		m_VertexArray = Celes::VertexArray::Create();
 		m_QuadVA = Celes::VertexArray::Create();
@@ -32,8 +32,7 @@ public:
 			 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
 			-1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f 
 		};
-		Celes::Ref<Celes::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(Celes::VertexBuffer::Create(vertices, sizeof(vertices)));
+		Celes::Ref<Celes::VertexBuffer> vertexBuffer = Celes::VertexBuffer::Create(vertices, sizeof(vertices));
 
 		vertexBuffer->SetLayout({
 			{"aPosition", Celes::ShaderDataType::Float3},
@@ -54,26 +53,23 @@ public:
 		uint32_t quadIndices[6] = {
 			0, 1, 2, 2, 3, 0
 		};
-		Celes::Ref<Celes::IndexBuffer> indexBuffer;
-		indexBuffer.reset(Celes::IndexBuffer::Create(indices, sizeof(indices)));
+		Celes::Ref<Celes::IndexBuffer> indexBuffer = Celes::IndexBuffer::Create(indices, sizeof(indices));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
 		// Quad
-		vertexBuffer.reset(Celes::VertexBuffer::Create(quadVertices, sizeof(quadVertices)));
+		vertexBuffer = Celes::VertexBuffer::Create(quadVertices, sizeof(quadVertices));
 		vertexBuffer->SetLayout({
 			{"aPosition", Celes::ShaderDataType::Float3},
 			{"aNormal", Celes::ShaderDataType::Float3},
 			{"aTexCoord", Celes::ShaderDataType::Float2}
 			});
 		m_QuadVA->AddVertexBuffer(vertexBuffer);
-		indexBuffer.reset(Celes::IndexBuffer::Create(quadIndices, sizeof(quadIndices)));
+		indexBuffer = Celes::IndexBuffer::Create(quadIndices, sizeof(quadIndices));
 		m_QuadVA->SetIndexBuffer(indexBuffer);
 
 		auto shader = m_ShaderLib.Load("assets/shaders/PhongVertexShader.glsl", "assets/shaders/PhongFragmentShader.glsl");
 
-		//m_Texture = Celes::Texture2D::Create("assets/textures/checkerbox.png");
 		std::dynamic_pointer_cast<Celes::OpenGLShader>(shader)->Bind();
-		//std::dynamic_pointer_cast<Celes::OpenGLShader>(shader)->SetUniformInt("uTexture", 0);
 		std::dynamic_pointer_cast<Celes::OpenGLShader>(shader)->SetUniformFloat3("uKa", glm::vec3(0.0f, 0.5f, 1.0f));
 		//std::dynamic_pointer_cast<Celes::OpenGLShader>(shader)->SetUniformFloat3("uKd", glm::vec3(0.796f, 0.52f, 0.482f));
 		std::dynamic_pointer_cast<Celes::OpenGLShader>(shader)->SetUniformFloat3("uKs", glm::vec3(0.5f, 0.5f, 0.5f));
@@ -86,9 +82,21 @@ public:
 	{
 		//CE_TRACE("Delta time: {0}s ({1}ms)", dTime.GetSeconds(), dTime.GetMilliseconds());
 
+		glm::vec4 move(0.0f);
+		if (Celes::Input::IsKeyPressed(CE_KEY_A)) move.x -= m_CameraMoveSpeed * dTime;
+		else if (Celes::Input::IsKeyPressed(CE_KEY_D)) move.x += m_CameraMoveSpeed * dTime;
+		if (Celes::Input::IsKeyPressed(CE_KEY_S)) move.y -= m_CameraMoveSpeed * dTime;
+		else if (Celes::Input::IsKeyPressed(CE_KEY_W)) move.y += m_CameraMoveSpeed * dTime;
+		if (move.x != 0.0f || move.y != 0.0f)
+		{
+			move = glm::inverse(m_Camera.GetViewMat()) * move;
+			m_CameraPos.x += move.x;
+			m_CameraPos.y += move.y;
+		}
+
 		// For 3D camera
-		if (Celes::Input::IsKeyPressed(CE_KEY_A)) m_CameraViewDist += m_CameraMoveSpeed * dTime;
-		else if (Celes::Input::IsKeyPressed(CE_KEY_D)) m_CameraViewDist -= m_CameraMoveSpeed * dTime;
+		if (Celes::Input::IsKeyPressed(CE_KEY_Q)) m_CameraViewDist += m_CameraMoveSpeed * dTime;
+		else if (Celes::Input::IsKeyPressed(CE_KEY_E)) m_CameraViewDist -= m_CameraMoveSpeed * dTime;
 
 		if (Celes::Input::IsKeyPressed(CE_KEY_J)) m_ObjPos.x -= m_ObjMoveSpeed * dTime;
 		else if (Celes::Input::IsKeyPressed(CE_KEY_L)) m_ObjPos.x += m_ObjMoveSpeed * dTime;
@@ -140,7 +148,6 @@ private:
 	Celes::ShaderLibrary m_ShaderLib;
 
 	Celes::Ref<Celes::VertexArray> m_VertexArray, m_QuadVA;
-	//Celes::Ref<Celes::Texture2D> m_Texture;
 
 	Celes::PerspectiveCamera m_Camera;
 	glm::vec3 m_CameraPos;

@@ -21,7 +21,7 @@ namespace Celes {
 
 	void DirectionalLight::UpdateViewMat()
 	{
-		m_ViewMat = glm::lookAtRH(m_Position, m_Position - m_Direction, glm::vec3(1.0f, 0.0f, 0.0f));
+		m_ViewMat = glm::lookAtRH(m_Position, m_Position - m_Direction, glm::vec3(0.0f, 1.0f, 0.0f));
 		m_VP = m_ProjectionMat * m_ViewMat;
 	}
 

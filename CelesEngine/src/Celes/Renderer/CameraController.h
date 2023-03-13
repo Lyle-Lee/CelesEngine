@@ -27,9 +27,13 @@ namespace Celes {
 		inline const OrthoCamera& GetCamera() const { return m_Camera; }
 
 		inline const OrthoCameraBounds& GetBounds() const { return m_Bounds; }
+
+		void SetZoomLevel(float level) { m_ZoomLevel = level; FitZoom(); }
 	private:
 		bool OnMouseScroll(MouseScrollEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
+
+		void FitZoom();
 
 		float m_AspectRatio, m_ZoomLevel = 1.0f;
 		OrthoCameraBounds m_Bounds;

@@ -95,7 +95,7 @@ namespace Celes {
 	void OpenGLFrameBuffer::SetRenderBuffer() const
 	{
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_RenderBufferID);
-		CE_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is not complete!")
+		CE_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!")
 	}
 
 	void OpenGLFrameBuffer::AddAttachment(const Ref<Texture>& texture)
