@@ -96,8 +96,8 @@ void Sandbox2D::OnUpdate(Celes::Timestep dTime)
 	Celes::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.5f, 0.9f, 1.0f });
 	Celes::Renderer2D::DrawRotatedQuad({ -1.0f, 1.0f }, { 0.8f, 0.8f }, glm::radians(45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
 	Celes::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-	Celes::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.1f }, { 10.0f, 10.0f }, m_Texture, 10.0f);
-	Celes::Renderer2D::DrawRotatedQuad({ -0.5f, -0.5f, -0.1}, { 1.0f, 1.0f }, glm::radians(rotation), m_Texture, 20.0f);
+	Celes::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_Texture, 10.0f);
+	Celes::Renderer2D::DrawRotatedQuad({ -0.5f, -0.5f, 0.1}, { 1.0f, 1.0f }, glm::radians(rotation), m_Texture, 20.0f);
 
 	//Celes::Renderer::EndScene();
 	Celes::Renderer2D::EndScene();

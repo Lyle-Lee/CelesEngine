@@ -61,7 +61,7 @@ void ParticleSystem::OnRender(Celes::OrthoCamera& camera)
 
 		float size = glm::lerp(ptc.SizeEnd, ptc.SizeBegin, life);
 
-		Celes::Renderer2D::DrawRotatedQuad({ ptc.Position.x, ptc.Position.y, -0.2f }, { size, size }, ptc.Rotation, color);
+		Celes::Renderer2D::DrawRotatedQuad({ ptc.Position.x, ptc.Position.y, 0.2f }, { size, size }, ptc.Rotation, color);
 	}
 	Celes::Renderer2D::EndScene();
 }
