@@ -19,6 +19,8 @@ private:
 
 	//Celes::Ref<Celes::VertexArray> m_VertexArray;
 	Celes::Ref<Celes::Texture2D> m_Texture;
+	Celes::Ref<Celes::Texture2D> m_SpriteSheet;
+	Celes::Ref<Celes::SubTexture2D> m_TextureStairs, m_TextureTree;
 	
 	Celes::OrthoCameraController m_CameraController;
 

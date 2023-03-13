@@ -47,6 +47,9 @@ Sandbox2D::Sandbox2D(): Layer("Sandbox2D"), m_CameraController(16.0f / 9.0f, tru
 void Sandbox2D::OnAttach()
 {
 	m_Texture = Celes::Texture2D::Create("assets/textures/checkerbox.png");
+	m_SpriteSheet = Celes::Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
+	m_TextureStairs = Celes::SubTexture2D::CreateFromCoord(m_SpriteSheet, { 7, 6 }, { 128, 128 });
+	m_TextureTree = Celes::SubTexture2D::CreateFromCoord(m_SpriteSheet, { 2, 1 }, { 128, 128 }, { 1, 2 });
 
 	m_ParticleInfo.ColorBegin = { 254.0f / 255.0f, 212.0f / 255.0f, 123.0f / 255.0f, 1.0f };
 	m_ParticleInfo.ColorEnd = { 254.0f / 255.0f, 109.0f / 255.0f, 41.0f / 255.0f, 1.0f };
@@ -77,7 +80,7 @@ void Sandbox2D::OnUpdate(Celes::Timestep dTime)
 
 	Celes::Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	Celes::Renderer::Clear();
-
+#if 0
 	static float rotation = 0.0f;
 	rotation += dTime * 20.0f;
 
@@ -98,7 +101,7 @@ void Sandbox2D::OnUpdate(Celes::Timestep dTime)
 
 	//Celes::Renderer::EndScene();
 	Celes::Renderer2D::EndScene();
-
+#endif
 	if (Celes::Input::IsMouseBottonPressed(CE_MOUSE_BUTTON_LEFT))
 	{
 		auto [x, y] = Celes::Input::GetMousePos();
@@ -112,6 +115,11 @@ void Sandbox2D::OnUpdate(Celes::Timestep dTime)
 		m_ParticleInfo.Position = { x + pos.x, y + pos.y };
 		for (int i = 0; i < 5; ++i) m_ParticleSystem.Emit(m_ParticleInfo);
 	}
+
+	Celes::Renderer2D::BeginScene(m_CameraController.GetCamera());
+	Celes::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureStairs);
+	Celes::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);
+	Celes::Renderer2D::EndScene();
 
 	m_ParticleSystem.OnUpdate(dTime);
 	m_ParticleSystem.OnRender(m_CameraController.GetCamera());

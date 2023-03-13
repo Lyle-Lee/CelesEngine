@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <glm.hpp>
 #include "Celes/Core/Core.h"
 
 namespace Celes {
@@ -26,6 +27,20 @@ namespace Celes {
 	public:
 		static Ref<Texture2D> Create(const std::string& path);
 		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
+	};
+
+	class CE_API SubTexture2D
+	{
+	public:
+		SubTexture2D(const Ref<Texture2D>& texture, const glm::vec2& minBound, const glm::vec2& maxBound);
+
+		inline const Ref<Texture2D> GetTexture() const { return m_Texture; }
+		inline const glm::vec2* GetTexCoords() const { return m_TexCoords; }
+
+		static Ref<SubTexture2D> CreateFromCoord(const Ref<Texture2D>& texture, const glm::vec2& coord, const glm::vec2& spriteSize, const glm::vec2& cellUnitCnt = { 1.0f, 1.0f });
+	private:
+		Ref<Texture2D> m_Texture;
+		glm::vec2 m_TexCoords[4];
 	};
 
 }

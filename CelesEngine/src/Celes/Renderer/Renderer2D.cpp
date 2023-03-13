@@ -218,6 +218,9 @@ namespace Celes {
 
 		if (texID == 0.0f)
 		{
+			if (s_Data.TexIndex >= Renderer2DStorage::MaxTextureSlots)
+				StartNewBatch();
+
 			texID = (float)s_Data.TexIndex;
 			s_Data.TexSlots[s_Data.TexIndex++] = texture;
 		}
@@ -251,6 +254,53 @@ namespace Celes {
 		s_Data.QuadVBPtr->TexID = texID;
 		s_Data.QuadVBPtr->TilingFactor = tilingFactor;
 		s_Data.QuadVBPtr++;
+
+		s_Data.QuadIndexCnt += 6;
+
+		s_Data.Stats.QuadCnt++;
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size, const Ref<SubTexture2D>& subTexture, float tilingFactor)
+	{
+		DrawQuad({ pos.x, pos.y, 0.0f }, size, subTexture, tilingFactor);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size, const Ref<SubTexture2D>& subTexture, float tilingFactor)
+	{
+		if (s_Data.QuadIndexCnt >= Renderer2DStorage::MaxIndicesCnt)
+			StartNewBatch();
+
+		float texID = 0.0f;
+		for (uint32_t i = 1; i < s_Data.TexIndex; ++i)
+		{
+			if (s_Data.TexSlots[i]->GetBufferID() == subTexture->GetTexture()->GetBufferID())
+			{
+				texID = (float)i;
+				break;
+			}
+		}
+
+		if (texID == 0.0f)
+		{
+			if (s_Data.TexIndex >= Renderer2DStorage::MaxTextureSlots)
+				StartNewBatch();
+
+			texID = (float)s_Data.TexIndex;
+			s_Data.TexSlots[s_Data.TexIndex++] = subTexture->GetTexture();
+		}
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		const glm::vec2* texCoords = subTexture->GetTexCoords();
+
+		for (int i = 0; i < 4; ++i)
+		{
+			s_Data.QuadVBPtr->Position = transform * s_Data.QuadVertexPositions[i];
+			s_Data.QuadVBPtr->Color = glm::vec4(1.0f);
+			s_Data.QuadVBPtr->TexCoord = texCoords[i];
+			s_Data.QuadVBPtr->TexID = texID;
+			s_Data.QuadVBPtr->TilingFactor = tilingFactor;
+			s_Data.QuadVBPtr++;
+		}
 
 		s_Data.QuadIndexCnt += 6;
 
@@ -324,6 +374,9 @@ namespace Celes {
 
 		if (texID == 0.0f)
 		{
+			if (s_Data.TexIndex >= Renderer2DStorage::MaxTextureSlots)
+				StartNewBatch();
+
 			texID = (float)s_Data.TexIndex;
 			s_Data.TexSlots[s_Data.TexIndex++] = texture;
 		}
@@ -357,6 +410,53 @@ namespace Celes {
 		s_Data.QuadVBPtr->TexID = texID;
 		s_Data.QuadVBPtr->TilingFactor = tilingFactor;
 		s_Data.QuadVBPtr++;
+
+		s_Data.QuadIndexCnt += 6;
+
+		s_Data.Stats.QuadCnt++;
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subTexture, float tilingFactor)
+	{
+		DrawRotatedQuad({ pos.x, pos.y, 0.0f }, size, rotation, subTexture, tilingFactor);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subTexture, float tilingFactor)
+	{
+		if (s_Data.QuadIndexCnt >= Renderer2DStorage::MaxIndicesCnt)
+			StartNewBatch();
+
+		float texID = 0.0f;
+		for (uint32_t i = 1; i < s_Data.TexIndex; ++i)
+		{
+			if (s_Data.TexSlots[i]->GetBufferID() == subTexture->GetTexture()->GetBufferID())
+			{
+				texID = (float)i;
+				break;
+			}
+		}
+
+		if (texID == 0.0f)
+		{
+			if (s_Data.TexIndex >= Renderer2DStorage::MaxTextureSlots)
+				StartNewBatch();
+
+			texID = (float)s_Data.TexIndex;
+			s_Data.TexSlots[s_Data.TexIndex++] = subTexture->GetTexture();
+		}
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f }) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		const glm::vec2* texCoords = subTexture->GetTexCoords();
+
+		for (int i = 0; i < 4; ++i)
+		{
+			s_Data.QuadVBPtr->Position = transform * s_Data.QuadVertexPositions[i];
+			s_Data.QuadVBPtr->Color = glm::vec4(1.0f);
+			s_Data.QuadVBPtr->TexCoord = texCoords[i];
+			s_Data.QuadVBPtr->TexID = texID;
+			s_Data.QuadVBPtr->TilingFactor = tilingFactor;
+			s_Data.QuadVBPtr++;
+		}
 
 		s_Data.QuadIndexCnt += 6;
 
