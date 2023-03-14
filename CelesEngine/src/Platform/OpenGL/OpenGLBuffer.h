@@ -42,17 +42,19 @@ namespace Celes {
 		virtual ~OpenGLFrameBuffer();
 
 		void Bind() const override;
-		void UnBind() const override;
+		void Unbind() const override;
 		void SetRenderBuffer() const override;
 
 		inline uint32_t GetWidth() const override { return m_Width; }
 		inline uint32_t GetHeight() const override { return m_Height; }
 
-		void AddAttachment(const Ref<Texture>& texture) override;
+		void AddAttachment(const Ref<Texture2D>& texture) override;
+
+		void Resize(uint32_t width, uint32_t height) override;
 	private:
-		uint32_t m_BufferID, m_RenderBufferID;
+		uint32_t m_BufferID = 0, m_RenderBufferID;
 		uint32_t m_Width, m_Height;
-		std::vector<Ref<Texture>> m_Textures;
+		std::vector<Ref<Texture2D>> m_Textures;
 		std::vector<unsigned int> m_Attachments;
 	};
 

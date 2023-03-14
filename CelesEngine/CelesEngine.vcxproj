@@ -58,6 +58,7 @@
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Celes\Core\Window.cpp" />
     <ClCompile Include="src\Celes\Renderer\CameraController.cpp" />
     <ClCompile Include="src\Celes\GUI\GUILayer.cpp" />
     <ClCompile Include="src\Celes\Core\Layer.cpp" />

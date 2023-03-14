@@ -86,7 +86,7 @@ namespace Celes {
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	void OpenGLFrameBuffer::UnBind() const
+	void OpenGLFrameBuffer::Unbind() const
 	{
 		//glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -98,12 +98,41 @@ namespace Celes {
 		CE_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!")
 	}
 
-	void OpenGLFrameBuffer::AddAttachment(const Ref<Texture>& texture)
+	void OpenGLFrameBuffer::AddAttachment(const Ref<Texture2D>& texture)
 	{
 		m_Textures.push_back(texture);
 		GLenum slot = GL_COLOR_ATTACHMENT0 + m_Attachments.size();
 		glFramebufferTexture2D(GL_FRAMEBUFFER, slot, GL_TEXTURE_2D, texture->GetBufferID(), 0);
 		m_Attachments.push_back(slot);
+	}
+
+	void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height)
+	{
+		if (m_BufferID) glDeleteFramebuffers(1, &m_BufferID);
+
+		m_Width = width;
+		m_Height = height;
+
+		glGenFramebuffers(1, &m_BufferID);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_BufferID);
+
+		glGenRenderbuffers(1, &m_RenderBufferID);
+		glBindRenderbuffer(GL_RENDERBUFFER, m_RenderBufferID);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
+
+		size_t n = m_Textures.size();
+		if (n)
+		{
+			Bind();
+			for (int i = 0; i < n; ++i)
+			{
+				m_Textures[i]->Resize(width, height);
+				glFramebufferTexture2D(GL_FRAMEBUFFER, m_Attachments[i], GL_TEXTURE_2D, m_Textures[i]->GetBufferID(), 0);
+			}
+
+			SetRenderBuffer();
+			Unbind();
+		}
 	}
 
 }

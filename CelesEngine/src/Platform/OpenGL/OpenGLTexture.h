@@ -20,10 +20,12 @@ namespace Celes {
 
 		void Bind(uint32_t slot = 0) const override;
 
+		void Resize(uint32_t width, uint32_t height) override;
+
 		bool operator==(const Texture& other) const override { return m_BufferID == other.GetBufferID(); }
 	private:
 		std::string m_Path;
-		uint32_t m_Width, m_Height, m_BufferID;
+		uint32_t m_Width, m_Height, m_BufferID = 0;
 		GLenum m_InternalFormat, m_DataType, m_DataFormat;
 	};
 

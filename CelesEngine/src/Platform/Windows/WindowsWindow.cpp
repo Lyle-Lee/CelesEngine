@@ -8,11 +8,6 @@ namespace Celes {
 
 	static bool s_GLFWInitialized = false;
 
-	Scope<Window> Window::Create(const WindowInfo& info)
-	{
-		return CreateScope<WindowsWindow>(info);
-	}
-
 	WindowsWindow::WindowsWindow(const WindowInfo& info)
 	{
 		Init(info);

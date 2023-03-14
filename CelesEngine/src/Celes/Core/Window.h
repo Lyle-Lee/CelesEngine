@@ -9,9 +9,9 @@ namespace Celes {
 	struct WindowInfo
 	{
 		std::string Title;
-		unsigned int Width, Height;
+		uint32_t Width, Height;
 
-		WindowInfo(const std::string& title = "Celes Engine", unsigned int width = 1280, unsigned int height = 720)
+		WindowInfo(const std::string& title = "Celes Engine", uint32_t width = 1280, uint32_t height = 720)
 			: Title(title), Width(width), Height(height) {}
 	};
 
@@ -24,8 +24,8 @@ namespace Celes {
 		virtual ~Window() {}
 
 		virtual void OnUpdate() = 0;
-		virtual unsigned int GetWidth() const = 0;
-		virtual unsigned int GetHeight() const = 0;
+		virtual uint32_t GetWidth() const = 0;
+		virtual uint32_t GetHeight() const = 0;
 
 		// Window attributes
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;

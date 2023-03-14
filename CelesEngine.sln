@@ -7,20 +7,39 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CelesEngine", "CelesEngine\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox", "Sandbox\Sandbox.vcxproj", "{12F1551F-8C0E-431E-9AC9-8C509D1BF911}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CelesEditor", "CelesEditor\CelesEditor.vcxproj", "{84109F90-F60C-47EC-AD2D-E7213CB819FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0DB75840-17CA-4D87-AC70-0BA389B5997B}.Debug|x64.ActiveCfg = Debug|x64
 		{0DB75840-17CA-4D87-AC70-0BA389B5997B}.Debug|x64.Build.0 = Debug|x64
+		{0DB75840-17CA-4D87-AC70-0BA389B5997B}.Debug|x86.ActiveCfg = Debug|x64
+		{0DB75840-17CA-4D87-AC70-0BA389B5997B}.Debug|x86.Build.0 = Debug|x64
 		{0DB75840-17CA-4D87-AC70-0BA389B5997B}.Release|x64.ActiveCfg = Release|x64
 		{0DB75840-17CA-4D87-AC70-0BA389B5997B}.Release|x64.Build.0 = Release|x64
+		{0DB75840-17CA-4D87-AC70-0BA389B5997B}.Release|x86.ActiveCfg = Release|x64
+		{0DB75840-17CA-4D87-AC70-0BA389B5997B}.Release|x86.Build.0 = Release|x64
 		{12F1551F-8C0E-431E-9AC9-8C509D1BF911}.Debug|x64.ActiveCfg = Debug|x64
 		{12F1551F-8C0E-431E-9AC9-8C509D1BF911}.Debug|x64.Build.0 = Debug|x64
+		{12F1551F-8C0E-431E-9AC9-8C509D1BF911}.Debug|x86.ActiveCfg = Debug|x64
+		{12F1551F-8C0E-431E-9AC9-8C509D1BF911}.Debug|x86.Build.0 = Debug|x64
 		{12F1551F-8C0E-431E-9AC9-8C509D1BF911}.Release|x64.ActiveCfg = Release|x64
 		{12F1551F-8C0E-431E-9AC9-8C509D1BF911}.Release|x64.Build.0 = Release|x64
+		{12F1551F-8C0E-431E-9AC9-8C509D1BF911}.Release|x86.ActiveCfg = Release|x64
+		{12F1551F-8C0E-431E-9AC9-8C509D1BF911}.Release|x86.Build.0 = Release|x64
+		{84109F90-F60C-47EC-AD2D-E7213CB819FC}.Debug|x64.ActiveCfg = Debug|x64
+		{84109F90-F60C-47EC-AD2D-E7213CB819FC}.Debug|x64.Build.0 = Debug|x64
+		{84109F90-F60C-47EC-AD2D-E7213CB819FC}.Debug|x86.ActiveCfg = Debug|x64
+		{84109F90-F60C-47EC-AD2D-E7213CB819FC}.Debug|x86.Build.0 = Debug|x64
+		{84109F90-F60C-47EC-AD2D-E7213CB819FC}.Release|x64.ActiveCfg = Release|x64
+		{84109F90-F60C-47EC-AD2D-E7213CB819FC}.Release|x64.Build.0 = Release|x64
+		{84109F90-F60C-47EC-AD2D-E7213CB819FC}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

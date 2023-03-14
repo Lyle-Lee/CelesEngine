@@ -76,7 +76,7 @@ namespace Celes {
 				s_Cmd->DrawIndexed(va);
 			}
 
-			light->GetFrameBuffer()->UnBind();
+			light->GetFrameBuffer()->Unbind();
 		}
 	}
 

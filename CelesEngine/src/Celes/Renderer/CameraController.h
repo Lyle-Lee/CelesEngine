@@ -27,6 +27,7 @@ namespace Celes {
 		inline const OrthoCamera& GetCamera() const { return m_Camera; }
 
 		inline const OrthoCameraBounds& GetBounds() const { return m_Bounds; }
+		void ResizeBounds(float width, float height);
 
 		void SetZoomLevel(float level) { m_ZoomLevel = level; FitZoom(); }
 	private:

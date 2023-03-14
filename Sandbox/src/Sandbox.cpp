@@ -164,10 +164,10 @@ private:
 class Sandbox : public Celes::Application
 {
 public:
-	Sandbox()
+	Sandbox(): Application("Celes Engine")
 	{
-		PushLayer(new ExampleLayer());
-		//PushLayer(new Sandbox2D());
+		//PushLayer(new ExampleLayer());
+		PushLayer(new Sandbox2D());
 		//PushOverlay(new Celes::GUILayer());
 	}
 

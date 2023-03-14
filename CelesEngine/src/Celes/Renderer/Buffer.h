@@ -154,13 +154,15 @@ namespace Celes {
 		virtual ~FrameBuffer() = default;
 
 		virtual void Bind() const = 0;
-		virtual void UnBind() const = 0;
+		virtual void Unbind() const = 0;
 		virtual void SetRenderBuffer() const = 0;
 
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 
-		virtual void AddAttachment(const Ref<Texture>& texture) = 0;
+		virtual void AddAttachment(const Ref<Texture2D>& texture) = 0;
+
+		virtual void Resize(uint32_t width, uint32_t height) = 0;
 
 		static Ref<FrameBuffer> Create(uint32_t width, uint32_t height);
 	};

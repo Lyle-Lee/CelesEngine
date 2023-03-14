@@ -43,6 +43,12 @@ namespace Celes {
 		dispatcher.Dispatch<WindowResizeEvent>(std::bind(&OrthoCameraController::OnWindowResize, this, std::placeholders::_1));
 	}
 
+	void OrthoCameraController::ResizeBounds(float width, float height)
+	{
+		m_AspectRatio = width / height;
+		FitZoom();
+	}
+
 	bool OrthoCameraController::OnMouseScroll(MouseScrollEvent& e)
 	{
 		m_ZoomLevel -= e.GetOffsetY() * 0.25f;
@@ -54,8 +60,7 @@ namespace Celes {
 
 	bool OrthoCameraController::OnWindowResize(WindowResizeEvent& e)
 	{
-		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
-		FitZoom();
+		ResizeBounds((float)e.GetWidth(), (float)e.GetHeight());
 
 		return false;
 	}

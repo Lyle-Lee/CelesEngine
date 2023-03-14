@@ -39,7 +39,4 @@ private:
 	ParticleInfo m_ParticleInfo;
 
 	std::unordered_map<char, Celes::Ref<Celes::SubTexture2D>> m_TextureMap;
-
-	Celes::Ref<Celes::FrameBuffer> m_FrameBuffer;
-	Celes::Ref<Celes::Texture2D> m_FBColorAttachment;
 };

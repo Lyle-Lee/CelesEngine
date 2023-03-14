@@ -15,7 +15,7 @@ namespace Celes {
 			m_ShadowMap->Bind();
 			m_FBO->AddAttachment(m_ShadowMap);
 			m_FBO->SetRenderBuffer();
-			m_FBO->UnBind();
+			m_FBO->Unbind();
 		}
 	}
 

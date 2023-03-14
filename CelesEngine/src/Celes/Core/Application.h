@@ -13,7 +13,7 @@ namespace Celes {
 	class CE_API Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Celes App");
 		virtual ~Application();
 
 		void Run();

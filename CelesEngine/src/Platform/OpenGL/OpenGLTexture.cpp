@@ -53,7 +53,7 @@ namespace Celes {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // horizontal clamp
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // vertical clamp
 
-		if (csStorage)
+		if (csStorage) // For compute shader
 		{
 			glTexStorage2D(GL_TEXTURE_2D, levels, internalFormat, m_Width, m_Height);
 		}
@@ -83,6 +83,24 @@ namespace Celes {
 	{
 		//glBindTextures(slot, 1, &m_BufferID);
 		glBindTextureUnit(slot, m_BufferID);
+	}
+
+	void OpenGLTexture2D::Resize(uint32_t width, uint32_t height)
+	{
+		if (m_BufferID) glDeleteTextures(1, &m_BufferID);
+
+		m_Width = width;
+		m_Height = height;
+
+		glGenTextures(1, &m_BufferID);
+		glBindTexture(GL_TEXTURE_2D, m_BufferID);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // horizontal clamp
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // vertical clamp
+
+		glTexImage2D(GL_TEXTURE_2D, 0, m_InternalFormat, m_Width, m_Height, 0, GL_RGBA, m_DataType, nullptr);
 	}
 
 }
