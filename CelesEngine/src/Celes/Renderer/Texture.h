@@ -26,11 +26,10 @@ namespace Celes {
 
 	class CE_API Texture2D : public Texture
 	{
+		friend class OpenGLFrameBuffer;
 	public:
 		static Ref<Texture2D> Create(const std::string& path);
 		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
-
-		friend class OpenGLFrameBuffer;
 	protected:
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 	};
