@@ -4,6 +4,8 @@
 
 namespace Celes {
 
+	static const uint32_t s_MaxFrameBufferSize = 8192;
+
 	// Vertex Buffer
 	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
 	{
@@ -108,6 +110,12 @@ namespace Celes {
 
 	void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height)
 	{
+		if (width == 0 || height == 0 || width > s_MaxFrameBufferSize || height > s_MaxFrameBufferSize)
+		{
+			CE_CORE_WARN("Attempted to resize frame buffer to ({0}, {1})", width, height);
+			return;
+		}
+
 		if (m_BufferID) glDeleteFramebuffers(1, &m_BufferID);
 
 		m_Width = width;

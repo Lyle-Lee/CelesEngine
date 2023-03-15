@@ -20,6 +20,14 @@
 #else
 #error "Unknown Apple platform!"
 #endif // TARGET_IPHONE_SIMULATOR
+#elif defined(__ANDROID__)
+#define CE_PLATFORM_ANDROID
+#error "Android is not supported!"
+#elif defined(__linux__)
+#define CE_PLATFORM_LINUX
+#error "Linux is not supported!"
+#else
+#error "Unknown platform!"
 #endif // _WIN32
 
 #define CE_DYNAMIC_LINK 1 // Set to 0 if link statically
@@ -41,12 +49,22 @@
 #endif // CE_PLATFORM_WINDOWS
 
 #ifdef CE_DEBUG
+#if defined(CE_PLATFORM_WINDOWS)
+#define CE_DEBUGBREAK() __debugbreak()
+#elif defined(CE_PLATFORM_LINUX)
+#include <signal.h>
+#define CE_DEBUGBREAK() raise(SIGTRAP)
+#else
+#error "Platform does not support debugbreak yet!"
+#endif
 #define CE_ENABLE_ASSERTS
+#else
+#define CE_DEBUGBREAK()
 #endif // CE_DEBUG
 
 #ifdef  CE_ENABLE_ASSERTS
-#define CE_ASSERT(x, ...) { if (!(x)) { CE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-#define CE_CORE_ASSERT(x, ...) { if (!(x)) { CE_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#define CE_ASSERT(x, ...) { if (!(x)) { CE_ERROR("Assertion Failed: {0}", __VA_ARGS__); CE_DEBUGBREAK(); } }
+#define CE_CORE_ASSERT(x, ...) { if (!(x)) { CE_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); CE_DEBUGBREAK(); } }
 #else
 #define CE_ASSERT(x, ...)
 #define CE_CORE_ASSERT(x, ...)
