@@ -1,27 +1,25 @@
 #include "PCH.h"
-#include "WindowsInput.h"
+#include "Celes/Core/Input.h"
 #include "Celes/Core/Application.h"
 #include <GLFW/glfw3.h>
 
 namespace Celes {
 
-	Input* Input::s_Instance = new WindowsInput();
-
-	bool WindowsInput::IsKeyPressedImpl(int keyCode)
+	bool Input::IsKeyPressed(int keyCode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		int status = glfwGetKey(window, keyCode);
 		return status == GLFW_PRESS || status == GLFW_REPEAT;
 	}
 
-	bool WindowsInput::IsMouseButtonPressedImpl(int button)
+	bool Input::IsMouseButtonPressed(int button)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		int status = glfwGetMouseButton(window, button);
 		return status == GLFW_PRESS;
 	}
 
-	std::pair<float, float> WindowsInput::GetMousePosImpl()
+	std::pair<float, float> Input::GetMousePos()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		double xPos, yPos;
@@ -30,15 +28,15 @@ namespace Celes {
 		return {(float)xPos, (float)yPos};
 	}
 
-	float WindowsInput::GetMouseXImpl()
+	float Input::GetMouseX()
 	{
-		auto [x, _] = GetMousePosImpl();
+		auto [x, _] = GetMousePos();
 		return x;
 	}
 
-	float WindowsInput::GetMouseYImpl()
+	float Input::GetMouseY()
 	{
-		auto [_, y] = GetMousePosImpl();
+		auto [_, y] = GetMousePos();
 		return y;
 	}
 

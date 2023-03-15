@@ -122,7 +122,7 @@ void Sandbox2D::OnUpdate(Celes::Timestep dTime)
 	//Celes::Renderer::EndScene();
 	Celes::Renderer2D::EndScene();
 #endif
-	if (Celes::Input::IsMouseBottonPressed(CE_MOUSE_BUTTON_LEFT))
+	if (Celes::Input::IsMouseButtonPressed(CE_MOUSE_BUTTON_LEFT))
 	{
 		auto [x, y] = Celes::Input::GetMousePos();
 		auto width = Celes::Application::Get().GetWindow().GetWidth();

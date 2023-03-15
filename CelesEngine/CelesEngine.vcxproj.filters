@@ -90,9 +90,6 @@
     <ClInclude Include="src\Celes\Core\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\WindowsInput.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Celes\Core\KeyCodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
