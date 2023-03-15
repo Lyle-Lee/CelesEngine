@@ -24,6 +24,7 @@ namespace Celes {
 
 		inline Window& GetWindow() { return *m_Window; }
 		inline static Application& Get() { return *s_Instance; }
+		inline GUILayer* GetGUILayer() { return m_GUILayer; }
 
 		void Close() { m_IsRunning = false; }
 	private:

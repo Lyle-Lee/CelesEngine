@@ -81,6 +81,26 @@ namespace Celes {
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}*/
 
+	void GUILayer::OnEvent(Event& e)
+	{
+		/*EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<MouseButtonPressEvent>(BIND_EVENT_FN_GUI(OnMouseButtonPressEvent));
+		dispatcher.Dispatch<MouseButtonReleaseEvent>(BIND_EVENT_FN_GUI(OnMouseButtonReleaseEvent));
+		dispatcher.Dispatch<MouseMoveEvent>(BIND_EVENT_FN_GUI(OnMouseMoveEvent));
+		dispatcher.Dispatch<MouseScrollEvent>(BIND_EVENT_FN_GUI(OnMouseScrollEvent));
+		dispatcher.Dispatch<KeyPressEvent>(BIND_EVENT_FN_GUI(OnKeyPressEvent));
+		dispatcher.Dispatch<KeyReleaseEvent>(BIND_EVENT_FN_GUI(OnKeyReleaseEvent));
+		dispatcher.Dispatch<KeyTypeEvent>(BIND_EVENT_FN_GUI(OnKeyTypeEvent));
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN_GUI(OnWindowResizeEvent));*/
+
+		if (m_BlockEvents)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			e.m_Handled |= e.IsInCategory(Mouse) && io.WantCaptureMouse;
+			e.m_Handled |= e.IsInCategory(Keyboard) && io.WantCaptureKeyboard;
+		}
+	}
+
 	void GUILayer::Begin()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
@@ -108,20 +128,7 @@ namespace Celes {
 		}
 	}
 
-	/*void GUILayer::OnEvent(Event& e)
-	{
-		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<MouseButtonPressEvent>(BIND_EVENT_FN_GUI(OnMouseButtonPressEvent));
-		dispatcher.Dispatch<MouseButtonReleaseEvent>(BIND_EVENT_FN_GUI(OnMouseButtonReleaseEvent));
-		dispatcher.Dispatch<MouseMoveEvent>(BIND_EVENT_FN_GUI(OnMouseMoveEvent));
-		dispatcher.Dispatch<MouseScrollEvent>(BIND_EVENT_FN_GUI(OnMouseScrollEvent));
-		dispatcher.Dispatch<KeyPressEvent>(BIND_EVENT_FN_GUI(OnKeyPressEvent));
-		dispatcher.Dispatch<KeyReleaseEvent>(BIND_EVENT_FN_GUI(OnKeyReleaseEvent));
-		dispatcher.Dispatch<KeyTypeEvent>(BIND_EVENT_FN_GUI(OnKeyTypeEvent));
-		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN_GUI(OnWindowResizeEvent));
-	}
-
-	bool GUILayer::OnMouseButtonPressEvent(MouseButtonPressEvent& e)
+	/*bool GUILayer::OnMouseButtonPressEvent(MouseButtonPressEvent& e)
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		io.MouseDown[e.GetMouseButton()] = true;

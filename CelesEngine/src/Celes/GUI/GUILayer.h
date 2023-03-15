@@ -16,10 +16,12 @@ namespace Celes {
 		void OnAttach() override;
 		void OnDetach() override;
 		//void OnGUIRender() override;
-		//void OnEvent(Event& e) override;
+		void OnEvent(Event& e) override;
 
 		void Begin();
 		void End();
+
+		void BlockEvents(bool isEnabled) { m_BlockEvents = isEnabled; }
 	private:
 		/*bool OnMouseButtonPressEvent(MouseButtonPressEvent& e);
 		bool OnMouseButtonReleaseEvent(MouseButtonReleaseEvent& e);
@@ -31,6 +33,7 @@ namespace Celes {
 		bool OnWindowResizeEvent(WindowResizeEvent& e);*/
 
 		float m_Time = 0.0f;
+		bool m_BlockEvents = true;
 	};
 
 }

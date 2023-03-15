@@ -90,7 +90,7 @@ namespace Celes {
 		//Timer timer("EditorLayer::OnUpdate", [&](auto profileRes) { m_ProfileResults.push_back(profileRes); });
 		PROFILE_SCOPE("EditorLayer::OnUpdate");
 
-		m_CameraController.OnUpdate(dTime);
+		if (m_ViewportFocused) m_CameraController.OnUpdate(dTime);
 
 		Renderer2D::ResetStats();
 
@@ -221,6 +221,11 @@ namespace Celes {
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("Viewport");
+
+		m_ViewportFocused = ImGui::IsWindowFocused();
+		m_ViewportHovered = ImGui::IsWindowHovered();
+		Application::Get().GetGUILayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
+
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 		if (m_ViewportSize != *((glm::vec2*)&viewportSize))
 		{
@@ -231,6 +236,7 @@ namespace Celes {
 		}
 		uint32_t texBufferID = m_FBColorAttachment->GetBufferID();
 		ImGui::Image((void*)texBufferID, ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2(0, 1), ImVec2(1, 0));
+
 		ImGui::End();
 		ImGui::PopStyleVar();
 

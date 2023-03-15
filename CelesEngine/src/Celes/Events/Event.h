@@ -5,6 +5,8 @@
 
 namespace Celes {
 
+	class GUILayer;
+
 	// Event System
 
 	enum class EventType
@@ -35,6 +37,7 @@ namespace Celes {
 	class CE_API Event
 	{
 		friend class EventDispatcher;
+		friend class GUILayer;
 	public:
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
