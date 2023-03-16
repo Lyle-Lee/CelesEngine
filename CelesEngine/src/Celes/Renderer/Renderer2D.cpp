@@ -158,42 +158,9 @@ namespace Celes {
 
 	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size, const glm::vec4& color)
 	{
-		if (s_Data.QuadIndexCnt >= Renderer2DStorage::MaxIndicesCnt)
-			StartNewBatch();
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		glm::vec2 stride = size * 0.5f;
-
-		s_Data.QuadVBPtr->Position = { pos.x - stride.x, pos.y - stride.y, 0.0f };
-		s_Data.QuadVBPtr->Color = color;
-		s_Data.QuadVBPtr->TexCoord = { 0.0f, 0.0f };
-		s_Data.QuadVBPtr->TexID = 0.0f;
-		s_Data.QuadVBPtr->TilingFactor = 1.0f;
-		s_Data.QuadVBPtr++;
-
-		s_Data.QuadVBPtr->Position = { pos.x + stride.x, pos.y - stride.y, 0.0f };
-		s_Data.QuadVBPtr->Color = color;
-		s_Data.QuadVBPtr->TexCoord = { 1.0f, 0.0f };
-		s_Data.QuadVBPtr->TexID = 0.0f;
-		s_Data.QuadVBPtr->TilingFactor = 1.0f;
-		s_Data.QuadVBPtr++;
-
-		s_Data.QuadVBPtr->Position = { pos.x + stride.x, pos.y + stride.y, 0.0f };
-		s_Data.QuadVBPtr->Color = color;
-		s_Data.QuadVBPtr->TexCoord = { 1.0f, 1.0f };
-		s_Data.QuadVBPtr->TexID = 0.0f;
-		s_Data.QuadVBPtr->TilingFactor = 1.0f;
-		s_Data.QuadVBPtr++;
-
-		s_Data.QuadVBPtr->Position = { pos.x - stride.x, pos.y + stride.y, 0.0f };
-		s_Data.QuadVBPtr->Color = color;
-		s_Data.QuadVBPtr->TexCoord = { 0.0f, 1.0f };
-		s_Data.QuadVBPtr->TexID = 0.0f;
-		s_Data.QuadVBPtr->TilingFactor = 1.0f;
-		s_Data.QuadVBPtr++;
-
-		s_Data.QuadIndexCnt += 6;
-
-		s_Data.Stats.QuadCnt++;
+		DrawQuad(transform, color);
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor)
@@ -203,61 +170,9 @@ namespace Celes {
 
 	void Renderer2D::DrawQuad(const glm::vec3& pos, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor)
 	{
-		if (s_Data.QuadIndexCnt >= Renderer2DStorage::MaxIndicesCnt)
-			StartNewBatch();
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		float texID = 0.0f;
-		for (uint32_t i = 1; i < s_Data.TexIndex; ++i)
-		{
-			if (s_Data.TexSlots[i]->GetBufferID() == texture->GetBufferID())
-			{
-				texID = (float)i;
-				break;
-			}
-		}
-
-		if (texID == 0.0f)
-		{
-			if (s_Data.TexIndex >= Renderer2DStorage::MaxTextureSlots)
-				StartNewBatch();
-
-			texID = (float)s_Data.TexIndex;
-			s_Data.TexSlots[s_Data.TexIndex++] = texture;
-		}
-
-		glm::vec2 stride = size * 0.5f;
-
-		s_Data.QuadVBPtr->Position = { pos.x - stride.x, pos.y - stride.y, 0.0f };
-		s_Data.QuadVBPtr->Color = glm::vec4(1.0f);
-		s_Data.QuadVBPtr->TexCoord = { 0.0f, 0.0f };
-		s_Data.QuadVBPtr->TexID = texID;
-		s_Data.QuadVBPtr->TilingFactor = tilingFactor;
-		s_Data.QuadVBPtr++;
-
-		s_Data.QuadVBPtr->Position = { pos.x + stride.x, pos.y - stride.y, 0.0f };
-		s_Data.QuadVBPtr->Color = glm::vec4(1.0f);
-		s_Data.QuadVBPtr->TexCoord = { 1.0f, 0.0f };
-		s_Data.QuadVBPtr->TexID = texID;
-		s_Data.QuadVBPtr->TilingFactor = tilingFactor;
-		s_Data.QuadVBPtr++;
-
-		s_Data.QuadVBPtr->Position = { pos.x + stride.x, pos.y + stride.y, 0.0f };
-		s_Data.QuadVBPtr->Color = glm::vec4(1.0f);
-		s_Data.QuadVBPtr->TexCoord = { 1.0f, 1.0f };
-		s_Data.QuadVBPtr->TexID = texID;
-		s_Data.QuadVBPtr->TilingFactor = tilingFactor;
-		s_Data.QuadVBPtr++;
-
-		s_Data.QuadVBPtr->Position = { pos.x - stride.x, pos.y + stride.y, 0.0f };
-		s_Data.QuadVBPtr->Color = glm::vec4(1.0f);
-		s_Data.QuadVBPtr->TexCoord = { 0.0f, 1.0f };
-		s_Data.QuadVBPtr->TexID = texID;
-		s_Data.QuadVBPtr->TilingFactor = tilingFactor;
-		s_Data.QuadVBPtr++;
-
-		s_Data.QuadIndexCnt += 6;
-
-		s_Data.Stats.QuadCnt++;
+		DrawQuad(transform, texture, tilingFactor);
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size, const Ref<SubTexture2D>& subTexture, float tilingFactor)
@@ -291,6 +206,69 @@ namespace Celes {
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		const glm::vec2* texCoords = subTexture->GetTexCoords();
+
+		for (int i = 0; i < 4; ++i)
+		{
+			s_Data.QuadVBPtr->Position = transform * s_Data.QuadVertexPositions[i];
+			s_Data.QuadVBPtr->Color = glm::vec4(1.0f);
+			s_Data.QuadVBPtr->TexCoord = texCoords[i];
+			s_Data.QuadVBPtr->TexID = texID;
+			s_Data.QuadVBPtr->TilingFactor = tilingFactor;
+			s_Data.QuadVBPtr++;
+		}
+
+		s_Data.QuadIndexCnt += 6;
+
+		s_Data.Stats.QuadCnt++;
+	}
+
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
+	{
+		if (s_Data.QuadIndexCnt >= Renderer2DStorage::MaxIndicesCnt)
+			StartNewBatch();
+
+		constexpr glm::vec2 texCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+
+		for (int i = 0; i < 4; ++i)
+		{
+			s_Data.QuadVBPtr->Position = transform * s_Data.QuadVertexPositions[i];
+			s_Data.QuadVBPtr->Color = color;
+			s_Data.QuadVBPtr->TexCoord = texCoords[i];
+			s_Data.QuadVBPtr->TexID = 0.0f;
+			s_Data.QuadVBPtr->TilingFactor = 1.0f;
+			s_Data.QuadVBPtr++;
+		}
+
+		s_Data.QuadIndexCnt += 6;
+
+		s_Data.Stats.QuadCnt++;
+	}
+
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor)
+	{
+		if (s_Data.QuadIndexCnt >= Renderer2DStorage::MaxIndicesCnt)
+			StartNewBatch();
+
+		float texID = 0.0f;
+		for (uint32_t i = 1; i < s_Data.TexIndex; ++i)
+		{
+			if (s_Data.TexSlots[i]->GetBufferID() == texture->GetBufferID())
+			{
+				texID = (float)i;
+				break;
+			}
+		}
+
+		if (texID == 0.0f)
+		{
+			if (s_Data.TexIndex >= Renderer2DStorage::MaxTextureSlots)
+				StartNewBatch();
+
+			texID = (float)s_Data.TexIndex;
+			s_Data.TexSlots[s_Data.TexIndex++] = texture;
+		}
+
+		constexpr glm::vec2 texCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
 		for (int i = 0; i < 4; ++i)
 		{
