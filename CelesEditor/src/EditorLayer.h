@@ -42,6 +42,9 @@ namespace Celes {
 		Ref<Texture2D> m_FBColorAttachment;
 		glm::vec2 m_ViewportSize = { 1280.0f, 720.0f };
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
+
+		Entity m_SquareEntity;
+		Ref<Scene> m_ActiveScene;
 	};
 
 }

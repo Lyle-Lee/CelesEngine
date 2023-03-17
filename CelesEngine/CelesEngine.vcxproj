@@ -38,6 +38,9 @@
     <ClInclude Include="src\Celes\Renderer\Texture.h" />
     <ClInclude Include="src\Celes\Renderer\VertexArray.h" />
     <ClInclude Include="src\Celes\Core\Window.h" />
+    <ClInclude Include="src\Celes\Scene\Entity.h" />
+    <ClInclude Include="src\Celes\Scene\EntityComponent.h" />
+    <ClInclude Include="src\Celes\Scene\Scene.h" />
     <ClInclude Include="src\ImGui\imconfig.h" />
     <ClInclude Include="src\ImGui\imgui.h" />
     <ClInclude Include="src\ImGui\imgui_internal.h" />
@@ -72,6 +75,8 @@
     <ClCompile Include="src\Celes\Renderer\Shader.cpp" />
     <ClCompile Include="src\Celes\Renderer\Texture.cpp" />
     <ClCompile Include="src\Celes\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Celes\Scene\Entity.cpp" />
+    <ClCompile Include="src\Celes\Scene\Scene.cpp" />
     <ClCompile Include="src\ImGui\imgui.cpp" />
     <ClCompile Include="src\ImGui\imgui_demo.cpp" />
     <ClCompile Include="src\ImGui\imgui_draw.cpp" />
@@ -139,10 +144,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>CE_PLATFORM_WINDOWS;CE_BUILD_DLL;GLEW_STATIC;CE_DEBUG</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;CE_BUILD_DLL;GLEW_STATIC;CE_DEBUG</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image;$(SolutionDir)CelesEngine\Dependencies\EnTT\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -159,10 +164,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>CE_PLATFORM_WINDOWS;CE_BUILD_DLL;GLEW_STATIC;CE_RELEASE</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;CE_BUILD_DLL;GLEW_STATIC;CE_RELEASE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image;$(SolutionDir)CelesEngine\Dependencies\EnTT\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
     </ClCompile>

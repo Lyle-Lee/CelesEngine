@@ -21,3 +21,7 @@
 #include "Celes/Renderer/Texture.h"
 #include "Celes/Renderer/Camera.h"
 #include "Celes/Renderer/Light.h"
+
+#include "Celes/Scene/Scene.h"
+#include "Celes/Scene/Entity.h"
+#include "Celes/Scene/EntityComponent.h"

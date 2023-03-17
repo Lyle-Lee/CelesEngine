@@ -79,6 +79,10 @@ namespace Celes {
 		m_FrameBuffer->AddAttachment(m_FBColorAttachment);
 		m_FrameBuffer->SetRenderBuffer();
 		m_FrameBuffer->Unbind();
+
+		m_ActiveScene = CreateRef<Scene>();
+		m_SquareEntity = m_ActiveScene->CreateEntity("Square");
+		m_SquareEntity.AddComponent<SpriteRenderComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 	}
 
 	void EditorLayer::OnDetach()
@@ -94,34 +98,14 @@ namespace Celes {
 
 		Renderer2D::ResetStats();
 
-		Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-		Renderer::Clear();
+		//Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		//Renderer::Clear();
 
 		m_FrameBuffer->Bind();
 		Celes::Renderer::ChangeViewport(m_FrameBuffer->GetWidth(), m_FrameBuffer->GetHeight(), glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+
+		Celes::Renderer2D::BeginScene(m_CameraController.GetCamera());
 #if 0
-		static float rotation = 0.0f;
-		rotation += dTime * 20.0f;
-
-		//Celes::Renderer::BeginScene(m_CameraController.GetCamera());
-		Celes::Renderer2D::BeginScene(m_CameraController.GetCamera());
-
-		//auto shader = m_ShaderLib.Get("Test");
-		//std::dynamic_pointer_cast<Celes::OpenGLShader>(shader)->Bind();
-		//m_Texture->Bind();
-
-		//Celes::Renderer::Submit(m_VertexArray, shader, glm::translate(glm::mat4(1.0f), m_ObjPos));
-
-		Celes::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.5f, 0.9f, 1.0f });
-		Celes::Renderer2D::DrawRotatedQuad({ -1.0f, 1.0f }, { 0.8f, 0.8f }, glm::radians(45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
-		Celes::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-		Celes::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_Texture, 10.0f);
-		Celes::Renderer2D::DrawRotatedQuad({ -0.5f, -0.5f, 0.1 }, { 1.0f, 1.0f }, glm::radians(rotation), m_Texture, 20.0f);
-
-		//Celes::Renderer::EndScene();
-		Celes::Renderer2D::EndScene();
-#endif
-		Celes::Renderer2D::BeginScene(m_CameraController.GetCamera());
 		//Celes::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureStairs);
 		//Celes::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);
 
@@ -140,6 +124,9 @@ namespace Celes {
 				Celes::Renderer2D::DrawQuad({ (float)x - (float)s_MapWidth / 2.0f, (float)s_MapHeight / 2.0f - (float)y }, { 1.0f, 1.0f }, targetTexture);
 			}
 		}
+#endif
+		m_ActiveScene->OnUpdate(dTime);
+
 		Celes::Renderer2D::EndScene();
 
 		m_FrameBuffer->Unbind();
@@ -206,7 +193,15 @@ namespace Celes {
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCnt());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCnt());
 
-		ImGui::ColorEdit3("Object Color", &m_ObjColor.x);
+		if (m_SquareEntity)
+		{
+			ImGui::Separator();
+			ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
+
+			auto& squareColor = m_SquareEntity.GetComponent<SpriteRenderComponent>().Color;
+			ImGui::ColorEdit3("Object Color", &squareColor.x);
+			ImGui::Separator();
+		}
 
 		for (auto& result : m_ProfileResults)
 		{
