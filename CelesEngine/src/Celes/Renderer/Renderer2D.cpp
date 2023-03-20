@@ -119,6 +119,19 @@ namespace Celes {
 		//delete s_Data;
 	}
 
+	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
+	{
+		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
+
+		s_Data.TestShader->Bind();
+		s_Data.TestShader->SetMat4("uViewProj", viewProj);
+
+		s_Data.QuadIndexCnt = 0;
+		s_Data.QuadVBPtr = s_Data.QuadVBBase;
+
+		s_Data.TexIndex = 1;
+	}
+
 	void Renderer2D::BeginScene(const OrthoCamera& camera)
 	{
 		//s_Data.FlatColorShader->Bind();
