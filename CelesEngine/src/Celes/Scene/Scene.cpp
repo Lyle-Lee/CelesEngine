@@ -44,12 +44,60 @@ namespace Celes {
 
 	void Scene::OnUpdate(Timestep dTime)
 	{
-		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRenderComponent>);
-		for (auto& entity : group)
+		m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
 		{
-			auto [transform, sprite] = group.get<TransformComponent, SpriteRenderComponent>(entity);
+			if (!nsc.Instance)
+			{
+				nsc.Instance = nsc.InstantiateScript();
+				nsc.Instance->m_Entity = Entity(entity, this);
+				nsc.Instance->OnCreate();
+			}
 
-			Renderer2D::DrawQuad(transform, sprite.Color);
+			nsc.Instance->OnUpdate(dTime);
+		});
+
+		Camera* mainCamera = nullptr;
+		glm::mat4* cameraTransform = nullptr;
+		auto view = m_Registry.view<TransformComponent, CameraComponent>();
+		for (auto& entity : view)
+		{
+			auto [transformCompo, cameraCompo] = view.get<TransformComponent, CameraComponent>(entity);
+
+			if (cameraCompo.Primary)
+			{
+				mainCamera = &cameraCompo.Camera;
+				cameraTransform = &transformCompo.Transform;
+				break;
+			}
+		}
+
+		if (mainCamera)
+		{
+			Renderer2D::BeginScene(*mainCamera, *cameraTransform);
+
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRenderComponent>);
+			for (auto& entity : group)
+			{
+				auto [transformCompo, spriteCompo] = group.get<TransformComponent, SpriteRenderComponent>(entity);
+
+				Renderer2D::DrawQuad(transformCompo, spriteCompo.Color);
+			}
+
+			Renderer2D::EndScene();
+		}
+	}
+
+	void Scene::OnViewportResize(uint32_t width, uint32_t height)
+	{
+		m_ViewportWidth = width;
+		m_ViewportHeight = height;
+
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto& entity : view)
+		{
+			auto& cameraCompo = view.get<CameraComponent>(entity);
+			if (!cameraCompo.FixedAspectRatio)
+				cameraCompo.Camera.SetViewportSize(width, height);
 		}
 	}
 

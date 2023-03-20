@@ -41,6 +41,7 @@
     <ClInclude Include="src\Celes\Scene\Entity.h" />
     <ClInclude Include="src\Celes\Scene\EntityComponent.h" />
     <ClInclude Include="src\Celes\Scene\Scene.h" />
+    <ClInclude Include="src\Celes\Scene\SceneCamera.h" />
     <ClInclude Include="src\ImGui\imconfig.h" />
     <ClInclude Include="src\ImGui\imgui.h" />
     <ClInclude Include="src\ImGui\imgui_internal.h" />
@@ -77,6 +78,7 @@
     <ClCompile Include="src\Celes\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Celes\Scene\Entity.cpp" />
     <ClCompile Include="src\Celes\Scene\Scene.cpp" />
+    <ClCompile Include="src\Celes\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\ImGui\imgui.cpp" />
     <ClCompile Include="src\ImGui\imgui_demo.cpp" />
     <ClCompile Include="src\ImGui\imgui_draw.cpp" />

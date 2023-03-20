@@ -40,9 +40,31 @@ namespace Celes {
 		}
 
 		operator bool() const { return m_EntityObject != entt::null; }
+		operator uint32_t() const { return (uint32_t)m_EntityObject; }
+		bool operator==(const Entity& other) const { return m_EntityObject == other.m_EntityObject && m_Scene == other.m_Scene; }
+		bool operator!=(const Entity& other) const { return !(*this == other); }
 	private:
 		entt::entity m_EntityObject = entt::null;
 		Scene* m_Scene = nullptr;
+	};
+
+	class CE_API ScriptableEntity
+	{
+		friend class Scene;
+	public:
+		virtual ~ScriptableEntity() = default;
+
+		template<typename T>
+		T& GetComponent()
+		{
+			return m_Entity.GetComponent<T>();
+		}
+	protected:
+		virtual void OnCreate() {}
+		virtual void OnDestroy() {}
+		virtual void OnUpdate(Timestep dTime) {}
+	private:
+		Entity m_Entity;
 	};
 
 }

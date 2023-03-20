@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Celes.h>
+#include "Panels/SceneHierarchyPanel.h"
 
 namespace Celes {
 
@@ -44,7 +45,11 @@ namespace Celes {
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 
 		Entity m_SquareEntity;
+		Entity m_CameraEntity1, m_CameraEntity2;
+		bool m_MainCamera = true;
 		Ref<Scene> m_ActiveScene;
+
+		SceneHierarchyPanel m_SHPanel;
 	};
 
 }

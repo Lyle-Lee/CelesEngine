@@ -83,6 +83,35 @@ namespace Celes {
 		m_ActiveScene = CreateRef<Scene>();
 		m_SquareEntity = m_ActiveScene->CreateEntity("Square");
 		m_SquareEntity.AddComponent<SpriteRenderComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+
+		m_CameraEntity1 = m_ActiveScene->CreateEntity("Camera Entity");
+		m_CameraEntity1.AddComponent<CameraComponent>();
+
+		m_CameraEntity2 = m_ActiveScene->CreateEntity("Clip-Space Entity");
+		auto& cameraCompo = m_CameraEntity2.AddComponent<CameraComponent>();
+		cameraCompo.Primary = false;
+
+		class CameraController : public ScriptableEntity
+		{
+		public:
+			void OnCreate() override {}
+			void OnDestroy() override {}
+
+			void OnUpdate(Timestep dTime) override
+			{
+				auto& transform = GetComponent<TransformComponent>().Transform;
+				float speed = 5.0f;
+
+				if (Input::IsKeyPressed(CE_KEY_A)) transform[3][0] -= speed * dTime;
+				if (Input::IsKeyPressed(CE_KEY_D)) transform[3][0] += speed * dTime;
+				if (Input::IsKeyPressed(CE_KEY_S)) transform[3][1] -= speed * dTime;
+				if (Input::IsKeyPressed(CE_KEY_W)) transform[3][1] += speed * dTime;
+			}
+		};
+
+		m_CameraEntity1.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+
+		m_SHPanel.SetContext(m_ActiveScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -94,6 +123,15 @@ namespace Celes {
 		//Timer timer("EditorLayer::OnUpdate", [&](auto profileRes) { m_ProfileResults.push_back(profileRes); });
 		PROFILE_SCOPE("EditorLayer::OnUpdate");
 
+		if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
+			(m_ViewportSize.x != m_FrameBuffer->GetWidth() || m_ViewportSize.y != m_FrameBuffer->GetHeight()))
+		{
+			m_FrameBuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_CameraController.ResizeBounds(m_ViewportSize.x, m_ViewportSize.y);
+
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		}
+
 		if (m_ViewportFocused) m_CameraController.OnUpdate(dTime);
 
 		Renderer2D::ResetStats();
@@ -104,8 +142,8 @@ namespace Celes {
 		m_FrameBuffer->Bind();
 		Celes::Renderer::ChangeViewport(m_FrameBuffer->GetWidth(), m_FrameBuffer->GetHeight(), glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
-		Celes::Renderer2D::BeginScene(m_CameraController.GetCamera());
 #if 0
+		Celes::Renderer2D::BeginScene(m_CameraController.GetCamera());
 		//Celes::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureStairs);
 		//Celes::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 1.0f, 2.0f }, m_TextureTree);
 
@@ -127,7 +165,7 @@ namespace Celes {
 #endif
 		m_ActiveScene->OnUpdate(dTime);
 
-		Celes::Renderer2D::EndScene();
+		//Celes::Renderer2D::EndScene();
 
 		m_FrameBuffer->Unbind();
 	}
@@ -184,6 +222,8 @@ namespace Celes {
 			ImGui::EndMenuBar();
 		}
 
+		m_SHPanel.OnGUIRender();
+
 		ImGui::Begin("Settings");
 
 		auto stats = Celes::Renderer2D::GetStats();
@@ -201,6 +241,19 @@ namespace Celes {
 			auto& squareColor = m_SquareEntity.GetComponent<SpriteRenderComponent>().Color;
 			ImGui::ColorEdit3("Object Color", &squareColor.x);
 			ImGui::Separator();
+		}
+
+		if (ImGui::Checkbox("Main Camera", &m_MainCamera))
+		{
+			m_CameraEntity1.GetComponent<CameraComponent>().Primary = m_MainCamera;
+			m_CameraEntity2.GetComponent<CameraComponent>().Primary = !m_MainCamera;
+		}
+
+		{
+			auto& camera = m_CameraEntity2.GetComponent<CameraComponent>().Camera;
+			float orthoSize = camera.GetOrthoSize();
+			if (ImGui::DragFloat("Clip Camera Ortho Size", &orthoSize))
+				camera.SetOrthoSize(orthoSize);
 		}
 
 		for (auto& result : m_ProfileResults)
@@ -223,12 +276,8 @@ namespace Celes {
 
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 		if (m_ViewportSize != *((glm::vec2*)&viewportSize))
-		{
-			m_FrameBuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 			m_ViewportSize = { viewportSize.x, viewportSize.y };
 
-			m_CameraController.ResizeBounds(viewportSize.x, viewportSize.y);
-		}
 		uint32_t texBufferID = m_FBColorAttachment->GetBufferID();
 		ImGui::Image((void*)texBufferID, ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2(0, 1), ImVec2(1, 0));
 
