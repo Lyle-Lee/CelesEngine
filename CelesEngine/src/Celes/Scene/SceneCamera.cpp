@@ -11,9 +11,19 @@ namespace Celes {
 
 	void SceneCamera::SetOrthoInfo(float size, float nearClip, float farClip)
 	{
+		m_ProjType = ProjectionType::Orthographic;
 		m_OrthoSize = size;
 		m_OrthoNear = nearClip;
 		m_OrthoFar = farClip;
+		CalcProjection();
+	}
+
+	void SceneCamera::SetPerspectiveInfo(float fov, float nearClip, float farClip)
+	{
+		m_ProjType = ProjectionType::Perspective;
+		m_PerspectiveFOV = fov;
+		m_PerspectiveNear = nearClip;
+		m_PerspectiveFar = farClip;
 		CalcProjection();
 	}
 
@@ -25,11 +35,18 @@ namespace Celes {
 
 	void SceneCamera::CalcProjection()
 	{
-		float bottom = -m_OrthoSize * 0.5f;
-		float top = -bottom;
-		float left = m_ViewportAspectRatio * bottom;
-		float right = -left;
-		m_Projection = glm::ortho(left, right, bottom, top, m_OrthoNear, m_OrthoFar);
+		if (m_ProjType == ProjectionType::Orthographic)
+		{
+			float bottom = -m_OrthoSize * 0.5f;
+			float top = -bottom;
+			float left = m_ViewportAspectRatio * bottom;
+			float right = -left;
+			m_Projection = glm::ortho(left, right, bottom, top, m_OrthoNear, m_OrthoFar);
+		}
+		else
+		{
+			m_Projection = glm::perspective(m_PerspectiveFOV, m_ViewportAspectRatio, m_PerspectiveNear, m_PerspectiveFar);
+		}
 	}
 
 }

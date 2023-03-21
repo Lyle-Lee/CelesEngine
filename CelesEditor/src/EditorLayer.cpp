@@ -81,13 +81,15 @@ namespace Celes {
 		m_FrameBuffer->Unbind();
 
 		m_ActiveScene = CreateRef<Scene>();
-		m_SquareEntity = m_ActiveScene->CreateEntity("Square");
+		m_SquareEntity = m_ActiveScene->CreateEntity("Square1");
 		m_SquareEntity.AddComponent<SpriteRenderComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+		auto redSquare = m_ActiveScene->CreateEntity("Square2");
+		redSquare.AddComponent<SpriteRenderComponent>(glm::vec4(1.0, 0.0f, 0.0f, 1.0f));
 
-		m_CameraEntity1 = m_ActiveScene->CreateEntity("Camera Entity");
+		m_CameraEntity1 = m_ActiveScene->CreateEntity("Camera A");
 		m_CameraEntity1.AddComponent<CameraComponent>();
 
-		m_CameraEntity2 = m_ActiveScene->CreateEntity("Clip-Space Entity");
+		m_CameraEntity2 = m_ActiveScene->CreateEntity("Camera B");
 		auto& cameraCompo = m_CameraEntity2.AddComponent<CameraComponent>();
 		cameraCompo.Primary = false;
 
@@ -224,7 +226,7 @@ namespace Celes {
 
 		m_SHPanel.OnGUIRender();
 
-		ImGui::Begin("Settings");
+		ImGui::Begin("Stats");
 
 		auto stats = Celes::Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Stats:");
@@ -232,29 +234,6 @@ namespace Celes {
 		ImGui::Text("Quads: %d", stats.QuadCnt);
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCnt());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCnt());
-
-		if (m_SquareEntity)
-		{
-			ImGui::Separator();
-			ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
-
-			auto& squareColor = m_SquareEntity.GetComponent<SpriteRenderComponent>().Color;
-			ImGui::ColorEdit3("Object Color", &squareColor.x);
-			ImGui::Separator();
-		}
-
-		if (ImGui::Checkbox("Main Camera", &m_MainCamera))
-		{
-			m_CameraEntity1.GetComponent<CameraComponent>().Primary = m_MainCamera;
-			m_CameraEntity2.GetComponent<CameraComponent>().Primary = !m_MainCamera;
-		}
-
-		{
-			auto& camera = m_CameraEntity2.GetComponent<CameraComponent>().Camera;
-			float orthoSize = camera.GetOrthoSize();
-			if (ImGui::DragFloat("Clip Camera Ortho Size", &orthoSize))
-				camera.SetOrthoSize(orthoSize);
-		}
 
 		for (auto& result : m_ProfileResults)
 		{

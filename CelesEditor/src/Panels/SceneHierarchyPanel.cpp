@@ -77,6 +77,74 @@ namespace Celes {
 				ImGui::TreePop();
 			}
 		}
+
+		if (entity.HasComponent<CameraComponent>())
+		{
+			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Camera"))
+			{
+				auto& cameraCompo = entity.GetComponent<CameraComponent>();
+				auto& camera = cameraCompo.Camera;
+
+				ImGui::Checkbox("Primary", &cameraCompo.Primary);
+
+				const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
+				const char* curType = projectionTypeStrings[(int)camera.GetProjectionType()];
+				if (ImGui::BeginCombo("Projection", curType))
+				{
+					for (int i = 0; i < 2; ++i)
+					{
+						bool isSelected = curType == projectionTypeStrings[i];
+						if (ImGui::Selectable(projectionTypeStrings[i], isSelected))
+						{
+							curType = projectionTypeStrings[i];
+							camera.SetProjectionType((SceneCamera::ProjectionType)i);
+						}
+
+						if (isSelected) ImGui::SetItemDefaultFocus();
+					}
+
+					ImGui::EndCombo();
+				}
+
+				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
+				{
+					float fov = glm::degrees(camera.GetPerspectiveFOV());
+					if (ImGui::DragFloat("Field of View", &fov)) camera.SetPerspectiveFOV(glm::radians(fov));
+
+					float perspectiveNear = camera.GetPerspectiveNearClip();
+					if (ImGui::DragFloat("Near", &perspectiveNear)) camera.SetPerspectiveNearClip(perspectiveNear);
+
+					float perspectiveFar = camera.GetPerspectiveFarClip();
+					if (ImGui::DragFloat("Far", &perspectiveFar)) camera.SetPerspectiveFarClip(perspectiveFar);
+				}
+				else if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
+				{
+					float orthoSize = camera.GetOrthoSize();
+					if (ImGui::DragFloat("Size", &orthoSize)) camera.SetOrthoSize(orthoSize);
+
+					float orthoNear = camera.GetOrthoNearClip();
+					if (ImGui::DragFloat("Near", &orthoNear)) camera.SetOrthoNearClip(orthoNear);
+
+					float orthoFar = camera.GetOrthoFarClip();
+					if (ImGui::DragFloat("Far", &orthoFar)) camera.SetOrthoFarClip(orthoFar);
+
+					ImGui::Checkbox("Fixed Aspect Ratio", &cameraCompo.FixedAspectRatio);
+				}
+
+				ImGui::TreePop();
+			}
+		}
+
+		if (entity.HasComponent<SpriteRenderComponent>())
+		{
+			if (ImGui::TreeNodeEx((void*)typeid(SpriteRenderComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer"))
+			{
+				auto& srCompo = entity.GetComponent<SpriteRenderComponent>();
+				ImGui::ColorEdit4("Color", &srCompo.Color.r);
+
+				ImGui::TreePop();
+			}
+		}
 	}
 
 }
