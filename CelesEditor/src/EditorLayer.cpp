@@ -101,13 +101,13 @@ namespace Celes {
 
 			void OnUpdate(Timestep dTime) override
 			{
-				auto& transform = GetComponent<TransformComponent>().Transform;
+				auto& translation = GetComponent<TransformComponent>().Translation;
 				float speed = 5.0f;
 
-				if (Input::IsKeyPressed(CE_KEY_A)) transform[3][0] -= speed * dTime;
-				if (Input::IsKeyPressed(CE_KEY_D)) transform[3][0] += speed * dTime;
-				if (Input::IsKeyPressed(CE_KEY_S)) transform[3][1] -= speed * dTime;
-				if (Input::IsKeyPressed(CE_KEY_W)) transform[3][1] += speed * dTime;
+				if (Input::IsKeyPressed(CE_KEY_A)) translation.x -= speed * dTime;
+				if (Input::IsKeyPressed(CE_KEY_D)) translation.x += speed * dTime;
+				if (Input::IsKeyPressed(CE_KEY_S)) translation.y -= speed * dTime;
+				if (Input::IsKeyPressed(CE_KEY_W)) translation.y += speed * dTime;
 			}
 		};
 

@@ -57,7 +57,7 @@ namespace Celes {
 		});
 
 		Camera* mainCamera = nullptr;
-		glm::mat4* cameraTransform = nullptr;
+		glm::mat4 cameraTransform;
 		auto view = m_Registry.view<TransformComponent, CameraComponent>();
 		for (auto& entity : view)
 		{
@@ -66,21 +66,21 @@ namespace Celes {
 			if (cameraCompo.Primary)
 			{
 				mainCamera = &cameraCompo.Camera;
-				cameraTransform = &transformCompo.Transform;
+				cameraTransform = transformCompo.GetTransform();
 				break;
 			}
 		}
 
 		if (mainCamera)
 		{
-			Renderer2D::BeginScene(*mainCamera, *cameraTransform);
+			Renderer2D::BeginScene(*mainCamera, cameraTransform);
 
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRenderComponent>);
 			for (auto& entity : group)
 			{
 				auto [transformCompo, spriteCompo] = group.get<TransformComponent, SpriteRenderComponent>(entity);
 
-				Renderer2D::DrawQuad(transformCompo, spriteCompo.Color);
+				Renderer2D::DrawQuad(transformCompo.GetTransform(), spriteCompo.Color);
 			}
 
 			Renderer2D::EndScene();
