@@ -22,6 +22,8 @@ namespace Celes {
 		void End();
 
 		void BlockEvents(bool isEnabled) { m_BlockEvents = isEnabled; }
+
+		void SetDarkThemeColors();
 	private:
 		/*bool OnMouseButtonPressEvent(MouseButtonPressEvent& e);
 		bool OnMouseButtonReleaseEvent(MouseButtonReleaseEvent& e);

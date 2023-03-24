@@ -20,7 +20,9 @@ namespace Celes {
 		{
 			CE_CORE_ASSERT(!HasComponent<T>(), "Entity already has the component!")
 
-			return m_Scene->m_Registry.emplace<T>(m_EntityObject, std::forward<Args>(args)...);
+			T& compo = m_Scene->m_Registry.emplace<T>(m_EntityObject, std::forward<Args>(args)...);
+			m_Scene->OnComponentAdd<T>(*this, compo);
+			return compo;
 		}
 
 		template<typename T>
@@ -40,6 +42,7 @@ namespace Celes {
 		}
 
 		operator bool() const { return m_EntityObject != entt::null; }
+		operator entt::entity() const { return m_EntityObject; }
 		operator uint32_t() const { return (uint32_t)m_EntityObject; }
 		bool operator==(const Entity& other) const { return m_EntityObject == other.m_EntityObject && m_Scene == other.m_Scene; }
 		bool operator!=(const Entity& other) const { return !(*this == other); }

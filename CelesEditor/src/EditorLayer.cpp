@@ -206,12 +206,18 @@ namespace Celes {
 
 		if (opt_fullscreen) ImGui::PopStyleVar(2);
 
+		// Dock space
 		ImGuiIO& io = ImGui::GetIO();
+		ImGuiStyle& style = ImGui::GetStyle();
+		float minWindowSize = style.WindowMinSize.x;
+		style.WindowMinSize.x = 370.0f;
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
+
+		style.WindowMinSize.x = minWindowSize;
 
 		if (ImGui::BeginMenuBar())
 		{

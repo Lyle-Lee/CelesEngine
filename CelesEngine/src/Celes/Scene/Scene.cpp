@@ -14,18 +14,7 @@ namespace Celes {
 
 	Scene::Scene()
 	{
-#if 0
-		entt::entity entity = m_Registry.create();
-		m_Registry.emplace<TransformComponent>(entity, glm::mat4(1.0f));
-
-		TransformComponent& transformCompo = m_Registry.get<TransformComponent>(entity);
-
-		auto view = m_Registry.view<TransformComponent>();
-		for (auto entity : view)
-		{
-			TransformComponent& transform = view.get<TransformComponent>(entity);
-		}
-#endif
+		//m_Registry.on_construct<CameraComponent>().connect<&OnComponentAdd<CameraComponent>>();
 	}
 
 	Scene::~Scene()
@@ -40,6 +29,11 @@ namespace Celes {
 		tagCompo.Tag = name.empty() ? "Entity" : name;
 
 		return entity;
+	}
+
+	void Scene::DestroyEntity(Entity entity)
+	{
+		m_Registry.destroy(entity);
 	}
 
 	void Scene::OnUpdate(Timestep dTime)
@@ -100,5 +94,33 @@ namespace Celes {
 				cameraCompo.Camera.SetViewportSize(width, height);
 		}
 	}
+
+	template<typename T>
+	void Scene::OnComponentAdd(Entity entity, T& component)
+	{
+		//static_assert(false);
+	}
+
+	template<>
+	void Scene::OnComponentAdd<TransformComponent>(Entity entity, TransformComponent& component)
+	{}
+
+	template<>
+	void Scene::OnComponentAdd<CameraComponent>(Entity entity, CameraComponent& component)
+	{
+		component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
+	}
+
+	template<>
+	void Scene::OnComponentAdd<TagComponent>(Entity entity, TagComponent& component)
+	{}
+
+	template<>
+	void Scene::OnComponentAdd<SpriteRenderComponent>(Entity entity, SpriteRenderComponent& component)
+	{}
+
+	template<>
+	void Scene::OnComponentAdd<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
+	{}
 
 }
