@@ -7,6 +7,7 @@ namespace Celes {
 
 	class Entity;
 	class SceneHierarchyPanel;
+	class SceneSerializer;
 	struct CameraComponent;
 	struct SpriteRenderComponent;
 	struct NativeScriptComponent;
@@ -15,6 +16,7 @@ namespace Celes {
 	{
 		friend class Entity;
 		friend class SceneHierarchyPanel;
+		friend class SceneSerializer;
 	public:
 		Scene();
 		~Scene();

@@ -25,3 +25,4 @@
 #include "Celes/Scene/Scene.h"
 #include "Celes/Scene/Entity.h"
 #include "Celes/Scene/EntityComponent.h"
+#include "Celes/Scene/SceneSerializer.h"

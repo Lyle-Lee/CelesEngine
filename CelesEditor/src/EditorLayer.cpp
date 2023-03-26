@@ -81,6 +81,7 @@ namespace Celes {
 		m_FrameBuffer->Unbind();
 
 		m_ActiveScene = CreateRef<Scene>();
+#if 0
 		m_SquareEntity = m_ActiveScene->CreateEntity("Square1");
 		m_SquareEntity.AddComponent<SpriteRenderComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 		auto redSquare = m_ActiveScene->CreateEntity("Square2");
@@ -112,7 +113,7 @@ namespace Celes {
 		};
 
 		m_CameraEntity1.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-
+#endif
 		m_SHPanel.SetContext(m_ActiveScene);
 	}
 
@@ -223,6 +224,18 @@ namespace Celes {
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				if (ImGui::MenuItem("Save Scene"))
+				{
+					SceneSerializer serializer(m_ActiveScene);
+					serializer.Serialize("assets/scenes/Example.celes");
+				}
+
+				if (ImGui::MenuItem("Load Scene"))
+				{
+					SceneSerializer serializer(m_ActiveScene);
+					serializer.Deserialize("assets/scenes/Example.celes");
+				}
+
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
 				ImGui::EndMenu();
 			}

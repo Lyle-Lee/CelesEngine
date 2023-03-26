@@ -37,6 +37,7 @@
 #ifdef CE_BUILD_DLL
 #define CE_API __declspec(dllexport)
 #define IMGUI_API __declspec(dllexport)
+#define yaml_cpp_EXPORTS
 #else
 #define CE_API __declspec(dllimport)
 #define IMGUI_API __declspec(dllimport)
