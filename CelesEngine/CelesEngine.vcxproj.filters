@@ -339,6 +339,9 @@
     <ClInclude Include="src\yaml-cpp\include\yaml-cpp\yaml.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Celes\Utils\PlatformUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Celes\Core\Application.cpp">
@@ -537,6 +540,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\yaml-cpp\src\tag.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

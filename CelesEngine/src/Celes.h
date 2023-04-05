@@ -26,3 +26,5 @@
 #include "Celes/Scene/Entity.h"
 #include "Celes/Scene/EntityComponent.h"
 #include "Celes/Scene/SceneSerializer.h"
+
+#include "Celes/Utils/PlatformUtils.h"

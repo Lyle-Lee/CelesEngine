@@ -43,6 +43,7 @@
     <ClInclude Include="src\Celes\Scene\Scene.h" />
     <ClInclude Include="src\Celes\Scene\SceneCamera.h" />
     <ClInclude Include="src\Celes\Scene\SceneSerializer.h" />
+    <ClInclude Include="src\Celes\Utils\PlatformUtils.h" />
     <ClInclude Include="src\ImGui\imconfig.h" />
     <ClInclude Include="src\ImGui\imgui.h" />
     <ClInclude Include="src\ImGui\imgui_internal.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsUtils.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\yaml-cpp\src\binary.cpp" />
     <ClCompile Include="src\yaml-cpp\src\contrib\graphbuilder.cpp" />

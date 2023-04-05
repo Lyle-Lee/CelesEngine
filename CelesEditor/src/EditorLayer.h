@@ -50,6 +50,11 @@ namespace Celes {
 		Ref<Scene> m_ActiveScene;
 
 		SceneHierarchyPanel m_SHPanel;
+
+		bool OnKeyPress(KeyPressEvent& e);
+		void NewScene();
+		void SaveSceneAs();
+		void OpenScene();
 	};
 
 }

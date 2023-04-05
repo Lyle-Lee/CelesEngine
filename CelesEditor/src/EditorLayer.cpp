@@ -1,6 +1,6 @@
 #include "EditorLayer.h"
 #include <ImGui/imgui.h>
-#include <Platform/OpenGL/OpenGLShader.h>
+//#include <Platform/OpenGL/OpenGLShader.h>
 #include <gtc/matrix_transform.hpp>
 #include <chrono>
 
@@ -176,6 +176,9 @@ namespace Celes {
 	void EditorLayer::OnEvent(Celes::Event& e)
 	{
 		m_CameraController.OnEvent(e);
+
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<KeyPressEvent>(std::bind(&EditorLayer::OnKeyPress, this, std::placeholders::_1));
 	}
 
 	void EditorLayer::OnGUIRender()
@@ -224,17 +227,11 @@ namespace Celes {
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("Save Scene"))
-				{
-					SceneSerializer serializer(m_ActiveScene);
-					serializer.Serialize("assets/scenes/Example.celes");
-				}
+				if (ImGui::MenuItem("New", "Ctrl+N")) NewScene();
 
-				if (ImGui::MenuItem("Load Scene"))
-				{
-					SceneSerializer serializer(m_ActiveScene);
-					serializer.Deserialize("assets/scenes/Example.celes");
-				}
+				if (ImGui::MenuItem("Save As", "Ctrl+Shift+S")) SaveSceneAs();
+
+				if (ImGui::MenuItem("Open...", "Ctrl+O")) OpenScene();
 
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
 				ImGui::EndMenu();
@@ -283,6 +280,62 @@ namespace Celes {
 		ImGui::PopStyleVar();
 
 		ImGui::End();
+	}
+
+	bool EditorLayer::OnKeyPress(KeyPressEvent& e)
+	{
+		// Shortcuts
+		if (e.GetRepeatCount() > 0) return false;
+
+		bool ctrl = Input::IsKeyPressed(CE_KEY_LEFT_CONTROL) || Input::IsKeyPressed(CE_KEY_RIGHT_CONTROL);
+		bool shift = Input::IsKeyPressed(CE_KEY_LEFT_SHIFT) || Input::IsKeyPressed(CE_KEY_RIGHT_SHIFT);
+
+		switch (e.GetKeyCode())
+		{
+			case CE_KEY_N:
+				if (ctrl) NewScene();
+				break;
+			case CE_KEY_S:
+				if (ctrl && shift) SaveSceneAs();
+				break;
+			case CE_KEY_O:
+				if (ctrl) OpenScene();
+				break;
+			default:
+				break;
+		}
+		return false;
+	}
+
+	void EditorLayer::NewScene()
+	{
+		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SHPanel.SetContext(m_ActiveScene);
+	}
+
+	void EditorLayer::SaveSceneAs()
+	{
+		std::string filepath = FileDialogs::SaveFile("Celes Scene (*.celes)\0*.celes\0");
+		if (!filepath.empty())
+		{
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Serialize(filepath);
+		}
+	}
+
+	void EditorLayer::OpenScene()
+	{
+		std::string filepath = FileDialogs::OpenFile("Celes Scene (*.celes)\0*.celes\0");
+		if (!filepath.empty())
+		{
+			m_ActiveScene = CreateRef<Scene>();
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_SHPanel.SetContext(m_ActiveScene);
+
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Deserialize(filepath);
+		}
 	}
 
 }
