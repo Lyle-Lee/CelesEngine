@@ -1,5 +1,6 @@
 #include "EditorLayer.h"
 #include <ImGui/imgui.h>
+#include <ImGuizmo/ImGuizmo.h>
 //#include <Platform/OpenGL/OpenGLShader.h>
 #include <gtc/matrix_transform.hpp>
 #include <chrono>
@@ -267,14 +268,58 @@ namespace Celes {
 
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
-		Application::Get().GetGUILayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
+		Application::Get().GetGUILayer()->BlockEvents(!m_ViewportFocused && !m_ViewportHovered);
 
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 		if (m_ViewportSize != *((glm::vec2*)&viewportSize))
 			m_ViewportSize = { viewportSize.x, viewportSize.y };
 
 		uint32_t texBufferID = m_FBColorAttachment->GetBufferID();
-		ImGui::Image((void*)texBufferID, ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image(reinterpret_cast<void*>(texBufferID), ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2(0, 1), ImVec2(1, 0));
+
+		// Guizmos
+		Entity selectedEntity = m_SHPanel.GetSelectedEntity();
+		if (selectedEntity && m_GuizmoType != -1)
+		{
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+
+			float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeight = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			// Camera
+			auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+			const glm::mat4& cameraProj = camera.GetProjection();
+			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+			// Entity transform
+			auto& transformCompo = selectedEntity.GetComponent<TransformComponent>();
+			glm::mat4 transform = transformCompo.GetTransform();
+
+			// Snapping
+			bool snap = Input::IsKeyPressed(CE_KEY_LEFT_CONTROL);
+			float snapValue = 0.5f; // Snap to 0.5m for translation/scale
+			// Snap to 45 degrees for rotation
+			if (m_GuizmoType == ImGuizmo::OPERATION::ROTATE)
+				snapValue = 45.0f;
+
+			float snapValues[3] = { snapValue, snapValue, snapValue };
+
+			ImGuizmo::Manipulate(&cameraView[0].x, &cameraProj[0].x, (ImGuizmo::OPERATION)m_GuizmoType, ImGuizmo::LOCAL, &transform[0].x, nullptr, snap ? snapValues : nullptr);
+
+			if (ImGuizmo::IsUsing())
+			{
+				glm::vec3 translation, rotation, scale;
+				Math::DecomposeTransform(transform, translation, rotation, scale);
+
+				glm::vec3 deltaRotation = rotation - transformCompo.Rotation;
+				transformCompo.Translation = translation;
+				transformCompo.Rotation += deltaRotation;
+				transformCompo.Scale = scale;
+			}
+		}
 
 		ImGui::End();
 		ImGui::PopStyleVar();
@@ -300,6 +345,19 @@ namespace Celes {
 				break;
 			case CE_KEY_O:
 				if (ctrl) OpenScene();
+				break;
+			// Guizmos
+			case CE_KEY_Q:
+				m_GuizmoType = -1;
+				break;
+			case CE_KEY_W:
+				m_GuizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			case CE_KEY_E:
+				m_GuizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			case CE_KEY_R:
+				m_GuizmoType = ImGuizmo::OPERATION::SCALE;
 				break;
 			default:
 				break;

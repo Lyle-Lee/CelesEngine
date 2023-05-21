@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Celes\Math\Math.h" />
     <ClInclude Include="src\Celes\Renderer\CameraController.h" />
     <ClInclude Include="src\Celes\Core\Timestep.h" />
     <ClInclude Include="src\Celes\Events\ApplicationEvent.h" />
@@ -44,6 +45,12 @@
     <ClInclude Include="src\Celes\Scene\SceneCamera.h" />
     <ClInclude Include="src\Celes\Scene\SceneSerializer.h" />
     <ClInclude Include="src\Celes\Utils\PlatformUtils.h" />
+    <ClInclude Include="src\ImGuizmo\GraphEditor.h" />
+    <ClInclude Include="src\ImGuizmo\ImCurveEdit.h" />
+    <ClInclude Include="src\ImGuizmo\ImGradient.h" />
+    <ClInclude Include="src\ImGuizmo\ImGuizmo.h" />
+    <ClInclude Include="src\ImGuizmo\ImSequencer.h" />
+    <ClInclude Include="src\ImGuizmo\ImZoomSlider.h" />
     <ClInclude Include="src\ImGui\imconfig.h" />
     <ClInclude Include="src\ImGui\imgui.h" />
     <ClInclude Include="src\ImGui\imgui_internal.h" />
@@ -123,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Celes\Core\Window.cpp" />
+    <ClCompile Include="src\Celes\Math\Math.cpp" />
     <ClCompile Include="src\Celes\Renderer\CameraController.cpp" />
     <ClCompile Include="src\Celes\GUI\GUILayer.cpp" />
     <ClCompile Include="src\Celes\Core\Layer.cpp" />
@@ -141,6 +149,11 @@
     <ClCompile Include="src\Celes\Scene\Scene.cpp" />
     <ClCompile Include="src\Celes\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\Celes\Scene\SceneSerializer.cpp" />
+    <ClCompile Include="src\ImGuizmo\GraphEditor.cpp" />
+    <ClCompile Include="src\ImGuizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="src\ImGuizmo\ImGradient.cpp" />
+    <ClCompile Include="src\ImGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="src\ImGuizmo\ImSequencer.cpp" />
     <ClCompile Include="src\ImGui\imgui.cpp" />
     <ClCompile Include="src\ImGui\imgui_demo.cpp" />
     <ClCompile Include="src\ImGui\imgui_draw.cpp" />

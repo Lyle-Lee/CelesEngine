@@ -51,6 +51,8 @@ namespace Celes {
 
 		SceneHierarchyPanel m_SHPanel;
 
+		int m_GuizmoType = -1;
+
 		bool OnKeyPress(KeyPressEvent& e);
 		void NewScene();
 		void SaveSceneAs();

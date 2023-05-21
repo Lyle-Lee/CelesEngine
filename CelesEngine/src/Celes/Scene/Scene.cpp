@@ -95,6 +95,19 @@ namespace Celes {
 		}
 	}
 
+	Entity Scene::GetPrimaryCameraEntity()
+	{
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			auto& cameraCompo = view.get<CameraComponent>(entity);
+			if (cameraCompo.Primary)
+				return Entity(entity, this);
+		}
+
+		return {};
+	}
+
 	template<typename T>
 	void Scene::OnComponentAdd(Entity entity, T& component)
 	{

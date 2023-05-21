@@ -28,3 +28,5 @@
 #include "Celes/Scene/SceneSerializer.h"
 
 #include "Celes/Utils/PlatformUtils.h"
+
+#include "Celes/Math/Math.h"
