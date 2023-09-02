@@ -25,6 +25,7 @@ namespace Celes {
 		Ref<SubTexture2D> m_TextureStairs, m_TextureTree;
 
 		OrthoCameraController m_CameraController;
+		EditorCamera m_EditorCamera;
 
 		//glm::vec3 m_ObjPos;
 		//float m_ObjMoveSpeed = 1.0f;

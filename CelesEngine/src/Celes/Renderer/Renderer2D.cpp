@@ -132,6 +132,19 @@ namespace Celes {
 		s_Data.TexIndex = 1;
 	}
 
+	void Renderer2D::BeginScene(const EditorCamera& camera)
+	{
+		glm::mat4 viewProj = camera.GetVP();
+
+		s_Data.TestShader->Bind();
+		s_Data.TestShader->SetMat4("uViewProj", viewProj);
+
+		s_Data.QuadIndexCnt = 0;
+		s_Data.QuadVBPtr = s_Data.QuadVBBase;
+
+		s_Data.TexIndex = 1;
+	}
+
 	void Renderer2D::BeginScene(const OrthoCamera& camera)
 	{
 		//s_Data.FlatColorShader->Bind();

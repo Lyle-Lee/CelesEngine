@@ -31,6 +31,7 @@
     <ClInclude Include="src\Celes\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\Celes\Renderer\Buffer.h" />
     <ClInclude Include="src\Celes\Renderer\Camera.h" />
+    <ClInclude Include="src\Celes\Renderer\EditorCamera.h" />
     <ClInclude Include="src\Celes\Renderer\Light.h" />
     <ClInclude Include="src\Celes\Renderer\RenderContext.h" />
     <ClInclude Include="src\Celes\Renderer\Renderer.h" />
@@ -139,6 +140,7 @@
     <ClCompile Include="src\Celes\Core\Application.cpp" />
     <ClCompile Include="src\Celes\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Celes\Renderer\Camera.cpp" />
+    <ClCompile Include="src\Celes\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\Celes\Renderer\Light.cpp" />
     <ClCompile Include="src\Celes\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Celes\Renderer\Renderer2D.cpp" />

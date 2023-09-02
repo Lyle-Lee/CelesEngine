@@ -82,6 +82,8 @@ namespace Celes {
 		m_FrameBuffer->Unbind();
 
 		m_ActiveScene = CreateRef<Scene>();
+
+		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 #if 0
 		m_SquareEntity = m_ActiveScene->CreateEntity("Square1");
 		m_SquareEntity.AddComponent<SpriteRenderComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
@@ -132,12 +134,18 @@ namespace Celes {
 		{
 			m_FrameBuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 			m_CameraController.ResizeBounds(m_ViewportSize.x, m_ViewportSize.y);
+			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 
 			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
 
-		if (m_ViewportFocused) m_CameraController.OnUpdate(dTime);
+		if (m_ViewportFocused)
+		{
+			m_CameraController.OnUpdate(dTime);
+			m_EditorCamera.OnUpdate(dTime);
+		}
 
+		// Render
 		Renderer2D::ResetStats();
 
 		//Renderer::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
@@ -167,7 +175,8 @@ namespace Celes {
 			}
 		}
 #endif
-		m_ActiveScene->OnUpdate(dTime);
+		// Update scene
+		m_ActiveScene->OnUpdateEditor(dTime, m_EditorCamera);
 
 		//Celes::Renderer2D::EndScene();
 
@@ -177,6 +186,7 @@ namespace Celes {
 	void EditorLayer::OnEvent(Celes::Event& e)
 	{
 		m_CameraController.OnEvent(e);
+		m_EditorCamera.OnEvent(e);
 
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<KeyPressEvent>(std::bind(&EditorLayer::OnKeyPress, this, std::placeholders::_1));
@@ -289,10 +299,15 @@ namespace Celes {
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
 			// Camera
-			auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
-			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
-			const glm::mat4& cameraProj = camera.GetProjection();
-			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+			// Runtime camera from entity
+			// auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+			// const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+			// const glm::mat4& cameraProj = camera.GetProjection();
+			// glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+			// Editor camera
+			const glm::mat4& cameraProj = m_EditorCamera.GetProjection();
+			glm::mat4 cameraView = m_EditorCamera.GetViewMat();
 
 			// Entity transform
 			auto& transformCompo = selectedEntity.GetComponent<TransformComponent>();

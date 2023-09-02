@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Celes/Core/Timestep.h"
+#include "Celes/Renderer/EditorCamera.h"
 #include <entt.hpp>
 
 namespace Celes {
@@ -24,7 +25,8 @@ namespace Celes {
 		Entity CreateEntity(const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
 
-		void OnUpdate(Timestep dTime);
+		void OnUpdate(Timestep dTime); // Update run time
+		void OnUpdateEditor(Timestep dTime, EditorCamera& camera);
 		void OnViewportResize(uint32_t width, uint32_t height);
 
 		Entity GetPrimaryCameraEntity();

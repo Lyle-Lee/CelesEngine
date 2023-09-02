@@ -2,6 +2,7 @@
 
 #include "Camera.h"
 #include "Renderer.h"
+#include "EditorCamera.h"
 
 namespace Celes {
 
@@ -12,7 +13,8 @@ namespace Celes {
 		static void Shutdown();
 
 		static void BeginScene(const Camera& camera, const glm::mat4& transform);
-		static void BeginScene(const OrthoCamera& camera);
+		static void BeginScene(const EditorCamera& camera);
+		static void BeginScene(const OrthoCamera& camera); // TODO: remove
 		static void EndScene();
 		static void Flush();
 

@@ -81,6 +81,21 @@ namespace Celes {
 		}
 	}
 
+	void Scene::OnUpdateEditor(Timestep dTime, EditorCamera& camera)
+	{
+		Renderer2D::BeginScene(camera);
+
+		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRenderComponent>);
+		for (auto& entity : group)
+		{
+			auto [transformCompo, spriteCompo] = group.get<TransformComponent, SpriteRenderComponent>(entity);
+
+			Renderer2D::DrawQuad(transformCompo.GetTransform(), spriteCompo.Color);
+		}
+
+		Renderer2D::EndScene();
+	}
+
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)
 	{
 		m_ViewportWidth = width;
