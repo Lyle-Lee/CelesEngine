@@ -74,12 +74,11 @@ namespace Celes {
 
 		m_CameraController.SetZoomLevel(5.0f);
 
-		m_FrameBuffer = FrameBuffer::Create((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		m_FBColorAttachment = Texture2D::Create(m_FrameBuffer->GetWidth(), m_FrameBuffer->GetHeight());
-		m_FBColorAttachment->Bind();
-		m_FrameBuffer->AddAttachment(m_FBColorAttachment);
-		m_FrameBuffer->SetRenderBuffer();
-		m_FrameBuffer->Unbind();
+		FrameBufferDesc fbDesc;
+		fbDesc.Width = m_ViewportSize.x;
+		fbDesc.Height = m_ViewportSize.y;
+		fbDesc.AttachmentDesc = { TextureFormat::RGBA8, TextureFormat::RGBA8, TextureFormat::DEPTH16 };
+		m_FrameBuffer = FrameBuffer::Create(fbDesc);
 
 		m_ActiveScene = CreateRef<Scene>();
 
@@ -284,7 +283,7 @@ namespace Celes {
 		if (m_ViewportSize != *((glm::vec2*)&viewportSize))
 			m_ViewportSize = { viewportSize.x, viewportSize.y };
 
-		uint32_t texBufferID = m_FBColorAttachment->GetBufferID();
+		uint32_t texBufferID = m_FrameBuffer->GetAttachmentBufferID();
 		ImGui::Image(reinterpret_cast<void*>(texBufferID), ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2(0, 1), ImVec2(1, 0));
 
 		// Guizmos

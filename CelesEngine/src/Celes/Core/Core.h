@@ -45,6 +45,7 @@
 #else
 #define CE_API
 #endif // CE_DYNAMIC_LINK
+#define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING
 #else
 #error Celes only supports Windows currently!
 #endif // CE_PLATFORM_WINDOWS

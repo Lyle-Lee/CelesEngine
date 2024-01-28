@@ -148,6 +148,35 @@ namespace Celes {
 		static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t size);
 	};
 
+	struct FrameBufferTextureDesc
+	{
+		FrameBufferTextureDesc() = default;
+		FrameBufferTextureDesc(TextureFormat format, uint32_t samples = 1)
+			: TexFormat(format), Samples(samples) {}
+
+		TextureFormat TexFormat = TextureFormat::None;
+		uint32_t Samples = 1;
+		// TODO: filtering/warp
+	};
+
+	struct FrameBufferAttachmentDesc
+	{
+		FrameBufferAttachmentDesc() = default;
+		FrameBufferAttachmentDesc(std::initializer_list<FrameBufferTextureDesc> attachments)
+			: Attachments(attachments) {}
+
+		std::vector<FrameBufferTextureDesc> Attachments;
+	};
+
+	struct FrameBufferDesc
+	{
+		uint32_t Width = 0, Height = 0;
+		FrameBufferAttachmentDesc AttachmentDesc;
+		//uint32_t Samples = 1;
+
+		bool SwapChainTarget = false;
+	};
+
 	class CE_API FrameBuffer
 	{
 	public:
@@ -160,11 +189,13 @@ namespace Celes {
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 
-		virtual void AddAttachment(const Ref<Texture2D>& texture) = 0;
+		virtual void AddAttachment(const FrameBufferTextureDesc& texDesc) = 0;
+		virtual uint32_t GetAttachmentBufferID(size_t idx = 0) = 0;
+		virtual Ref<Texture2D>& GetAttachmentTexture(size_t idx = 0) = 0;
 
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 
-		static Ref<FrameBuffer> Create(uint32_t width, uint32_t height);
+		static Ref<FrameBuffer> Create(const FrameBufferDesc& fbDesc);
 	};
 
 }

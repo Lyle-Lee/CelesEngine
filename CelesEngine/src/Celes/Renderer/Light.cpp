@@ -10,18 +10,18 @@ namespace Celes {
 
 		if (hasShadowMap)
 		{
-			m_FBO = FrameBuffer::Create(2048, 2048);
-			m_ShadowMap = Texture2D::Create(m_FBO->GetWidth(), m_FBO->GetHeight());
-			m_ShadowMap->Bind();
-			m_FBO->AddAttachment(m_ShadowMap);
-			m_FBO->SetRenderBuffer();
-			m_FBO->Unbind();
+			FrameBufferDesc fbDesc;
+			fbDesc.Width = 2048;
+			fbDesc.Height = 2048;
+			fbDesc.AttachmentDesc = { TextureFormat::DEPTH16 };
+			m_FBO = FrameBuffer::Create(fbDesc);
 		}
 	}
 
 	void DirectionalLight::UpdateViewMat()
 	{
-		m_ViewMat = glm::lookAtRH(m_Position, m_Position - m_Direction, glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::vec3 upDir = glm::cross(m_Direction, glm::cross(m_Direction, glm::normalize(-m_Position)));
+		m_ViewMat = glm::lookAtRH(m_Position, m_Position - m_Direction, upDir);
 		m_VP = m_ProjectionMat * m_ViewMat;
 	}
 

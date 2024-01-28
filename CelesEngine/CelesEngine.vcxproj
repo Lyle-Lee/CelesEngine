@@ -255,7 +255,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NOMINMAX;CE_BUILD_DLL;GLEW_STATIC;CE_DEBUG</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;CE_BUILD_DLL;GLEW_STATIC;CE_DEBUG;_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image;$(SolutionDir)CelesEngine\Dependencies\EnTT\include</AdditionalIncludeDirectories>

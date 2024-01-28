@@ -22,7 +22,7 @@ namespace Celes {
 		return nullptr;
 	}
 
-	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height)
+	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, TextureFormat format, uint32_t sampleCnt)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -30,13 +30,34 @@ namespace Celes {
 				CE_CORE_ASSERT(false, "No Graphics API!")
 				break;
 			case GraphicsAPI::OpenGL:
-				return CreateRef<OpenGLTexture2D>(width, height);
+				return CreateRef<OpenGLTexture2D>(width, height, format, sampleCnt);
 			default:
 				CE_CORE_ASSERT(false, "The target Graphics API is currently not supported!")
 				break;
 		}
 
 		return nullptr;
+	}
+
+	bool Texture2D::IsDepthBuffer() const
+	{
+		switch (m_Format)
+		{
+		case TextureFormat::None:
+			break;
+		case TextureFormat::RGBA8:
+			break;
+		case TextureFormat::DEPTH16:
+			return true;
+		case TextureFormat::DEPTH32:
+			return true;
+		case TextureFormat::DEPTH24STENCIL8:
+			return true;
+		default:
+			break;
+		}
+
+		return false;
 	}
 
 	SubTexture2D::SubTexture2D(const Ref<Texture2D>& texture, const glm::vec2& minBound, const glm::vec2& maxBound)

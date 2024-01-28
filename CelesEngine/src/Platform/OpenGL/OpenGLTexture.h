@@ -9,7 +9,7 @@ namespace Celes {
 	{
 	public:
 		OpenGLTexture2D(const std::string& path);
-		OpenGLTexture2D(uint32_t width, uint32_t height, GLenum internalFormat = GL_RGBA, GLenum dataType = GL_UNSIGNED_BYTE, bool csStorage = false, int levels = 0);
+		OpenGLTexture2D(uint32_t width, uint32_t height, TextureFormat internalFormat, uint32_t sampleCnt, GLenum dataType = GL_UNSIGNED_BYTE, uint32_t levels = 0);
 		virtual ~OpenGLTexture2D();
 
 		inline uint32_t GetWidth() const override { return m_Width; }
@@ -24,9 +24,13 @@ namespace Celes {
 
 		bool operator==(const Texture& other) const override { return m_BufferID == other.GetBufferID(); }
 	private:
+		void SetResource();
+
 		std::string m_Path;
-		uint32_t m_Width, m_Height, m_BufferID = 0;
+		uint32_t m_Width, m_Height;
+		uint32_t m_BufferID = 0;
 		GLenum m_InternalFormat, m_DataType, m_DataFormat;
+		uint32_t m_MipLevel = 0;
 	};
 
 }

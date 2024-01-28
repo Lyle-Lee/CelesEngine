@@ -31,7 +31,7 @@ namespace Celes {
 		inline const glm::vec3& GetLightDir() const { return m_Direction; }
 		inline const glm::vec3& GetRadiance() const { return m_Radiance; }
 		inline const Ref<FrameBuffer>& GetFrameBuffer() const { return m_FBO; }
-		inline const Ref<Texture2D>& GetShadowMap() const { return m_ShadowMap; }
+		inline const Ref<Texture2D>& GetShadowMap() const { return m_FBO->GetAttachmentTexture(); }
 	private:
 		void UpdateViewMat();
 
@@ -39,7 +39,7 @@ namespace Celes {
 		glm::mat4 m_ViewMat, m_VP;
 		glm::vec3 m_Position, m_Direction, m_Radiance;
 		Ref<FrameBuffer> m_FBO = nullptr;
-		Ref<Texture2D> m_ShadowMap = nullptr;
+		//Ref<Texture2D> m_ShadowMap = nullptr;
 	};
 
 }

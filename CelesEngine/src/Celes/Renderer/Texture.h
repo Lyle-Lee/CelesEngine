@@ -8,6 +8,19 @@ namespace Celes {
 
 	class OpenGLFrameBuffer;
 
+	enum class TextureFormat
+	{
+		None = 0,
+
+		// Color
+		RGBA8,
+
+		// Depth/Stencil
+		DEPTH16,
+		DEPTH32,
+		DEPTH24STENCIL8
+	};
+
 	class CE_API Texture
 	{
 	public:
@@ -29,9 +42,16 @@ namespace Celes {
 		friend class OpenGLFrameBuffer;
 	public:
 		static Ref<Texture2D> Create(const std::string& path);
-		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
+		static Ref<Texture2D> Create(uint32_t width, uint32_t height, TextureFormat format = TextureFormat::RGBA8, uint32_t sampleCnt = 1);
+		bool IsDepthBuffer() const;
+		inline bool IsMultiSampled() const { return m_SampleCnt > 1; }
 	protected:
+		Texture2D() = default;
+		Texture2D(TextureFormat format, uint32_t sampleCnt = 1): m_Format(format), m_SampleCnt(sampleCnt) {}
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
+
+		TextureFormat m_Format = TextureFormat::None;
+		uint32_t m_SampleCnt = 1; // For super sampling.
 	};
 
 	class CE_API SubTexture2D

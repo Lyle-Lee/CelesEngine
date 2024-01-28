@@ -56,7 +56,7 @@ namespace Celes {
 		return nullptr;
 	}
 
-	Ref<FrameBuffer> FrameBuffer::Create(uint32_t width, uint32_t height)
+	Ref<FrameBuffer> FrameBuffer::Create(const FrameBufferDesc& fbDesc)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -64,7 +64,7 @@ namespace Celes {
 				CE_CORE_ASSERT(false, "No Graphics API!")
 				break;
 			case GraphicsAPI::OpenGL:
-				return CreateRef<OpenGLFrameBuffer>(width, height);
+				return CreateRef<OpenGLFrameBuffer>(fbDesc);
 			default:
 				CE_CORE_ASSERT(false, "The target Graphics API is currently not supported!")
 				break;

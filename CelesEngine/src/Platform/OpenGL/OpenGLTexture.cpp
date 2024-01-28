@@ -42,27 +42,33 @@ namespace Celes {
 		stbi_image_free(data);
 	}
 
-	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, GLenum internalFormat, GLenum dataType, bool csStorage, int levels)
-		: m_Width(width), m_Height(height), m_InternalFormat(internalFormat), m_DataType(dataType), m_DataFormat(GL_RGBA)
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, TextureFormat internalFormat, uint32_t sampleCnt, GLenum dataType, uint32_t levels)
+		:Texture2D(internalFormat, sampleCnt), m_Width(width), m_Height(height), m_DataType(dataType), m_DataFormat(GL_RGBA), m_MipLevel(levels)
 	{
-		glGenTextures(1, &m_BufferID);
-		glBindTexture(GL_TEXTURE_2D, m_BufferID);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // horizontal clamp
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // vertical clamp
-
-		if (csStorage) // For compute shader
+		switch (internalFormat)
 		{
-			glTexStorage2D(GL_TEXTURE_2D, levels, internalFormat, m_Width, m_Height);
+		case TextureFormat::None:
+			CE_CORE_ERROR("Incompatible data format!");
+			m_InternalFormat = GL_RGBA8;
+			break;
+		case TextureFormat::RGBA8:
+			m_InternalFormat = GL_RGBA8;
+			break;
+		case TextureFormat::DEPTH16:
+			m_InternalFormat = GL_DEPTH_COMPONENT16;
+			break;
+		case TextureFormat::DEPTH32:
+			m_InternalFormat = GL_DEPTH_COMPONENT32;
+			break;
+		case TextureFormat::DEPTH24STENCIL8:
+			m_InternalFormat = GL_DEPTH24_STENCIL8;
+			break;
+		default:
+			m_InternalFormat = GL_RGBA8;
+			break;
 		}
-		else
-		{
-			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_Width, m_Height, 0, GL_RGBA, dataType, nullptr);
-			if (levels > 0)
-				glGenerateMipmap(GL_TEXTURE_2D);
-		}
+
+		SetResource();
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()
@@ -92,15 +98,40 @@ namespace Celes {
 		m_Width = width;
 		m_Height = height;
 
+		SetResource();
+	}
+
+	void OpenGLTexture2D::SetResource()
+	{
+		GLenum target = IsMultiSampled() ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
 		glGenTextures(1, &m_BufferID);
-		glBindTexture(GL_TEXTURE_2D, m_BufferID);
+		glBindTexture(target, m_BufferID);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // horizontal clamp
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // vertical clamp
+		if (IsDepthBuffer())
+		{
+			glTexStorage2D(GL_TEXTURE_2D, m_MipLevel + 1, m_InternalFormat, m_Width, m_Height);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, m_InternalFormat, m_Width, m_Height, 0, GL_RGBA, m_DataType, nullptr);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // horizontal clamp
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // vertical clamp
+		}
+		else
+		{
+			if (IsMultiSampled())
+			{
+				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, m_SampleCnt, m_InternalFormat, m_Width, m_Height, GL_FALSE);
+			}
+			else
+			{
+				glTexImage2D(GL_TEXTURE_2D, m_MipLevel, m_InternalFormat, m_Width, m_Height, 0, GL_RGBA, m_DataType, nullptr);
+
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // horizontal clamp
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); // vertical clamp
+			}
+		}
 	}
 
 }

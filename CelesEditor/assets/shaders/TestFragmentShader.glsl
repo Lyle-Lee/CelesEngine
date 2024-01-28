@@ -1,6 +1,7 @@
 #version 330 core
 
 layout(location = 0) out vec4 color;
+layout(location = 1) out vec4 color1;
 
 uniform sampler2D uTexture[32];
 
@@ -15,4 +16,5 @@ void main()
 	//color = vec4(vPosition * 0.5 + 0.5, 1.0);
 	//color = vColor;
 	color = texture(uTexture[int(vTexID)], vTexCoord * vTilingFactor) * vColor;
+	color1 = vec4(0.2, 0.3, 0.9, 1.0);
 }

@@ -38,7 +38,7 @@ namespace Celes {
 	class OpenGLFrameBuffer : public FrameBuffer
 	{
 	public:
-		OpenGLFrameBuffer(uint32_t width, uint32_t height);
+		OpenGLFrameBuffer(const FrameBufferDesc& fbDesc);
 		virtual ~OpenGLFrameBuffer();
 
 		void Bind() const override;
@@ -48,14 +48,17 @@ namespace Celes {
 		inline uint32_t GetWidth() const override { return m_Width; }
 		inline uint32_t GetHeight() const override { return m_Height; }
 
-		void AddAttachment(const Ref<Texture2D>& texture) override;
+		void AddAttachment(const FrameBufferTextureDesc& texDesc) override;
+		uint32_t GetAttachmentBufferID(size_t idx) override;
+		Ref<Texture2D>& GetAttachmentTexture(size_t idx) override;
 
 		void Resize(uint32_t width, uint32_t height) override;
 	private:
-		uint32_t m_BufferID = 0, m_RenderBufferID;
+		uint32_t m_BufferID = 0;
 		uint32_t m_Width, m_Height;
 		std::vector<Ref<Texture2D>> m_Textures;
-		std::vector<unsigned int> m_Attachments;
+		std::vector<uint32_t> m_Attachments;
+		uint32_t m_ColorAttachmentsCnt = 0;
 	};
 
 }
