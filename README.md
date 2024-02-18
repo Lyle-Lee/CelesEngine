@@ -17,6 +17,16 @@ Start by cloning the repository with `git clone git@github.com:Lyle-Lee/CelesEng
 Download GLEW and put `glew32.lib` and `glew32s.lib` under `CelesEngine/Dependencies/GLEW/lib/x64/`.
 Then build the project.
 
-<ins>**3. Create a test:**</ins>
+# Main features to come:
 
-Test a feature follow the examples in the Sandbox, you can interact with the window GUI via [ImGui](https://github.com/ocornut/imgui).
+* Fast 2D rendering (UI, particles, etc.).
+* High quality real-time physically-based 3D rendering.
+* Support for MacOS, iOS, Android and Linux.
+	* Native graphics API support (DirectX, Vulkan, Metal).
+* Fully featured viewer and editor applications.
+* Fully scripted interaction and behavior.
+* Integrated 3rd party 2D and 3D physics engine.
+* Procedural terrain and world generation.
+* Artificial Inteligence.
+* Audio system.
+
