@@ -74,7 +74,8 @@ namespace Celes {
 			{
 				auto [transformCompo, spriteCompo] = group.get<TransformComponent, SpriteRenderComponent>(entity);
 
-				Renderer2D::DrawQuad(transformCompo.GetTransform(), spriteCompo.Color);
+				//Renderer2D::DrawQuad(transformCompo.GetTransform(), spriteCompo.Color);
+				Renderer2D::DrawSprite(transformCompo.GetTransform(), spriteCompo, (int)entity);
 			}
 
 			Renderer2D::EndScene();
@@ -90,7 +91,8 @@ namespace Celes {
 		{
 			auto [transformCompo, spriteCompo] = group.get<TransformComponent, SpriteRenderComponent>(entity);
 
-			Renderer2D::DrawQuad(transformCompo.GetTransform(), spriteCompo.Color);
+			//Renderer2D::DrawQuad(transformCompo.GetTransform(), spriteCompo.Color);
+			Renderer2D::DrawSprite(transformCompo.GetTransform(), spriteCompo, (int)entity);
 		}
 
 		Renderer2D::EndScene();

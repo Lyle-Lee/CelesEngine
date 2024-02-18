@@ -15,6 +15,7 @@ namespace Celes {
 		inline uint32_t GetWidth() const override { return m_Width; }
 		inline uint32_t GetHeight() const override { return m_Height; }
 		inline uint32_t GetBufferID() const override { return m_BufferID; }
+		inline GLenum GetDataFormat() const { return m_DataFormat; }
 
 		void SetData(void* data, uint32_t size) override;
 

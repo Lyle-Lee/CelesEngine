@@ -43,10 +43,6 @@ namespace Celes {
 	{
 		switch (m_Format)
 		{
-		case TextureFormat::None:
-			break;
-		case TextureFormat::RGBA8:
-			break;
 		case TextureFormat::DEPTH16:
 			return true;
 		case TextureFormat::DEPTH32:

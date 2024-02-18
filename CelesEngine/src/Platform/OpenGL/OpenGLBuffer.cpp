@@ -1,5 +1,6 @@
 #include "PCH.h"
 #include "OpenGLBuffer.h"
+#include "OpenGLTexture.h"
 #include <GL/glew.h>
 
 namespace Celes {
@@ -135,6 +136,9 @@ namespace Celes {
 		case TextureFormat::RGBA8:
 			slot = GL_COLOR_ATTACHMENT0 + m_ColorAttachmentsCnt++;
 			break;
+		case TextureFormat::R32INT:
+			slot = GL_COLOR_ATTACHMENT0 + m_ColorAttachmentsCnt++;
+			break;
 		case TextureFormat::DEPTH16:
 			slot = GL_DEPTH_ATTACHMENT;
 			break;
@@ -200,6 +204,24 @@ namespace Celes {
 			SetRenderBuffer();
 			Unbind();
 		}
+	}
+
+	int OpenGLFrameBuffer::ReadPixel(uint32_t attachmentIdx, int x, int y)
+	{
+		CE_CORE_ASSERT(attachmentIdx < m_Attachments.size(), "Access attachment texture violation!")
+
+		glReadBuffer(m_Attachments[attachmentIdx]);
+		int pixelData;
+		glReadPixels(x, y, 1, 1, std::dynamic_pointer_cast<OpenGLTexture2D>(m_Textures[attachmentIdx])->GetDataFormat(), GL_INT, &pixelData);
+		
+		return pixelData;
+	}
+
+	void OpenGLFrameBuffer::ClearAttachment(uint32_t attachmentIdx, int value)
+	{
+		CE_CORE_ASSERT(attachmentIdx < m_Attachments.size(), "Access attachment texture violation!")
+
+		glClearTexImage(GetAttachmentBufferID(attachmentIdx), 0, std::dynamic_pointer_cast<OpenGLTexture2D>(m_Textures[attachmentIdx])->GetDataFormat(), GL_INT, &value);
 	}
 
 }

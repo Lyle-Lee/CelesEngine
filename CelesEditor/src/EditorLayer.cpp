@@ -77,7 +77,7 @@ namespace Celes {
 		FrameBufferDesc fbDesc;
 		fbDesc.Width = m_ViewportSize.x;
 		fbDesc.Height = m_ViewportSize.y;
-		fbDesc.AttachmentDesc = { TextureFormat::RGBA8, TextureFormat::RGBA8, TextureFormat::DEPTH16 };
+		fbDesc.AttachmentDesc = { TextureFormat::RGBA8, TextureFormat::R32INT, TextureFormat::DEPTH16 };
 		m_FrameBuffer = FrameBuffer::Create(fbDesc);
 
 		m_ActiveScene = CreateRef<Scene>();
@@ -153,6 +153,9 @@ namespace Celes {
 		m_FrameBuffer->Bind();
 		Celes::Renderer::ChangeViewport(m_FrameBuffer->GetWidth(), m_FrameBuffer->GetHeight(), glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
+		// Clear our entity ID attachment to -1
+		m_FrameBuffer->ClearAttachment(1, -1);
+
 #if 0
 		Celes::Renderer2D::BeginScene(m_CameraController.GetCamera());
 		//Celes::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_TextureStairs);
@@ -178,6 +181,16 @@ namespace Celes {
 		m_ActiveScene->OnUpdateEditor(dTime, m_EditorCamera);
 
 		//Celes::Renderer2D::EndScene();
+
+		auto [mx, my] = ImGui::GetMousePos();
+		mx -= m_ViewportMinBound.x;
+		my = m_ViewportMinBound.y - my;
+		if (mx >= 0.0f && mx < m_ViewportSize.x && my >= 0.0f && my < m_ViewportSize.y)
+		{
+			int pixelData = m_FrameBuffer->ReadPixel(1, (int)mx, (int)my);
+			//CE_CORE_WARN("Pixel data = {0}", pixelData);
+			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
+		}
 
 		m_FrameBuffer->Unbind();
 	}
@@ -254,6 +267,11 @@ namespace Celes {
 
 		ImGui::Begin("Stats");
 
+		std::string name = "None";
+		if (m_HoveredEntity)
+			name = m_HoveredEntity.GetComponent<TagComponent>().Tag;
+		ImGui::Text("Hovered Entity: %s", name.c_str());
+
 		auto stats = Celes::Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Stats:");
 		ImGui::Text("Draw Calls: %d", stats.DrawCallsCnt);
@@ -280,11 +298,16 @@ namespace Celes {
 		Application::Get().GetGUILayer()->BlockEvents(!m_ViewportFocused && !m_ViewportHovered);
 
 		ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-		if (m_ViewportSize != *((glm::vec2*)&viewportSize))
-			m_ViewportSize = { viewportSize.x, viewportSize.y };
+		m_ViewportSize = { viewportSize.x, viewportSize.y };
 
 		uint32_t texBufferID = m_FrameBuffer->GetAttachmentBufferID();
 		ImGui::Image(reinterpret_cast<void*>(texBufferID), ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2(0, 1), ImVec2(1, 0));
+
+		auto viewportOffset = ImGui::GetCursorPos(); // Includes tab bar
+		auto minBound = ImGui::GetWindowPos();
+		minBound.x += viewportOffset.x;
+		minBound.y += viewportOffset.y;
+		m_ViewportMinBound = { minBound.x, minBound.y };
 
 		// Guizmos
 		Entity selectedEntity = m_SHPanel.GetSelectedEntity();

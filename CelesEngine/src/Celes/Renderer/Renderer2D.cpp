@@ -14,6 +14,9 @@ namespace Celes {
 		glm::vec2 TexCoord;
 		float TexID;
 		float TilingFactor;
+
+		// Editor only
+		int EntityID;
 	};
 
 	struct Renderer2DStorage
@@ -71,7 +74,8 @@ namespace Celes {
 			{"aColor", ShaderDataType::Float4},
 			{"aTexCoord", ShaderDataType::Float2},
 			{"aTexID", ShaderDataType::Float},
-			{"aTilingFactor", ShaderDataType::Float}
+			{"aTilingFactor", ShaderDataType::Float},
+			{"aEntityID", ShaderDataType::Int}
 			});
 		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
 
@@ -248,7 +252,7 @@ namespace Celes {
 		s_Data.Stats.QuadCnt++;
 	}
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entityID)
 	{
 		if (s_Data.QuadIndexCnt >= Renderer2DStorage::MaxIndicesCnt)
 			StartNewBatch();
@@ -262,6 +266,7 @@ namespace Celes {
 			s_Data.QuadVBPtr->TexCoord = texCoords[i];
 			s_Data.QuadVBPtr->TexID = 0.0f;
 			s_Data.QuadVBPtr->TilingFactor = 1.0f;
+			s_Data.QuadVBPtr->EntityID = entityID;
 			s_Data.QuadVBPtr++;
 		}
 
@@ -270,7 +275,7 @@ namespace Celes {
 		s_Data.Stats.QuadCnt++;
 	}
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor, int entityID)
 	{
 		if (s_Data.QuadIndexCnt >= Renderer2DStorage::MaxIndicesCnt)
 			StartNewBatch();
@@ -303,12 +308,18 @@ namespace Celes {
 			s_Data.QuadVBPtr->TexCoord = texCoords[i];
 			s_Data.QuadVBPtr->TexID = texID;
 			s_Data.QuadVBPtr->TilingFactor = tilingFactor;
+			s_Data.QuadVBPtr->EntityID = entityID;
 			s_Data.QuadVBPtr++;
 		}
 
 		s_Data.QuadIndexCnt += 6;
 
 		s_Data.Stats.QuadCnt++;
+	}
+
+	void Renderer2D::DrawSprite(const glm::mat4& transform, SpriteRenderComponent& src, int entityID)
+	{
+		DrawQuad(transform, src.Color, entityID);
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size, float rotation, const glm::vec4& color)

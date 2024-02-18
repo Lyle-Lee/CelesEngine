@@ -69,13 +69,40 @@ namespace Celes {
 		uint32_t index = 0;
 		for (const auto& element : vb->GetLayout())
 		{
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index, element.GetComponentCount(),
-				ShaderDataTypeToGLBaseType(element.Type),
-				element.Normalized ? GL_TRUE : GL_FALSE,
-				vb->GetLayout().GetStride(),
-				(const void*)element.Offset);
-			++index;
+			switch (element.Type)
+			{
+			case ShaderDataType::Float:
+			case ShaderDataType::Float2:
+			case ShaderDataType::Float3:
+			case ShaderDataType::Float4:
+			case ShaderDataType::Mat3:
+			case ShaderDataType::Mat4:
+			{
+				glEnableVertexAttribArray(index);
+				glVertexAttribPointer(index, element.GetComponentCount(),
+					ShaderDataTypeToGLBaseType(element.Type),
+					element.Normalized ? GL_TRUE : GL_FALSE,
+					vb->GetLayout().GetStride(),
+					(const void*)element.Offset);
+				++index;
+				break;
+			}
+			case ShaderDataType::Int:
+			case ShaderDataType::Int2:
+			case ShaderDataType::Int3:
+			{
+				glEnableVertexAttribArray(index);
+				glVertexAttribIPointer(index, element.GetComponentCount(),
+					ShaderDataTypeToGLBaseType(element.Type),
+					vb->GetLayout().GetStride(),
+					(const void*)element.Offset);
+				++index;
+				break;
+			}
+			default:
+				CE_CORE_ASSERT(false, "Unknown shader data type!")
+				break;
+			}
 		}
 
 		m_VertexBuffers.push_back(vb);

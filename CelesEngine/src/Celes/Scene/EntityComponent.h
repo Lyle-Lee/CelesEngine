@@ -2,6 +2,7 @@
 
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
+#include "Entity.h"
 #include "SceneCamera.h"
 
 namespace Celes {

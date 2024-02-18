@@ -54,6 +54,10 @@ namespace Celes {
 		case TextureFormat::RGBA8:
 			m_InternalFormat = GL_RGBA8;
 			break;
+		case TextureFormat::R32INT:
+			m_InternalFormat = GL_R32I;
+			m_DataFormat = GL_RED_INTEGER;
+			break;
 		case TextureFormat::DEPTH16:
 			m_InternalFormat = GL_DEPTH_COMPONENT16;
 			break;
@@ -124,7 +128,7 @@ namespace Celes {
 			}
 			else
 			{
-				glTexImage2D(GL_TEXTURE_2D, m_MipLevel, m_InternalFormat, m_Width, m_Height, 0, GL_RGBA, m_DataType, nullptr);
+				glTexImage2D(GL_TEXTURE_2D, m_MipLevel, m_InternalFormat, m_Width, m_Height, 0, m_DataFormat, m_DataType, nullptr);
 
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

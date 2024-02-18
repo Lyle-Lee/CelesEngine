@@ -14,6 +14,7 @@ namespace Celes {
 
 		// Color
 		RGBA8,
+		R32INT,
 
 		// Depth/Stencil
 		DEPTH16,

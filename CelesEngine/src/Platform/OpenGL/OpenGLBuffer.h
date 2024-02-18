@@ -53,6 +53,9 @@ namespace Celes {
 		Ref<Texture2D>& GetAttachmentTexture(size_t idx) override;
 
 		void Resize(uint32_t width, uint32_t height) override;
+
+		int ReadPixel(uint32_t attachmentIdx, int x, int y) override;
+		void ClearAttachment(uint32_t attachmentIdx, int value) override;
 	private:
 		uint32_t m_BufferID = 0;
 		uint32_t m_Width, m_Height;

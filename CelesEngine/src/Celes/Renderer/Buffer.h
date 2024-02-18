@@ -195,6 +195,9 @@ namespace Celes {
 
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 
+		virtual int ReadPixel(uint32_t attachmentIdx, int x, int y) = 0;
+		virtual void ClearAttachment(uint32_t attachmentIdx, int value) = 0;
+
 		static Ref<FrameBuffer> Create(const FrameBufferDesc& fbDesc);
 	};
 

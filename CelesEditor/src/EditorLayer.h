@@ -41,12 +41,13 @@ namespace Celes {
 		std::unordered_map<char, Ref<SubTexture2D>> m_TextureMap;
 
 		Ref<FrameBuffer> m_FrameBuffer;
-		//Ref<Texture2D> m_FBColorAttachment;
 		glm::vec2 m_ViewportSize = { 1280.0f, 720.0f };
+		glm::vec2 m_ViewportMinBound = { 0.0f, 0.0f };
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 
 		Entity m_SquareEntity;
 		Entity m_CameraEntity1, m_CameraEntity2;
+		Entity m_HoveredEntity;
 		bool m_MainCamera = true;
 		Ref<Scene> m_ActiveScene;
 
