@@ -56,6 +56,8 @@ namespace Celes {
 		int m_GuizmoType = -1;
 
 		bool OnKeyPress(KeyPressEvent& e);
+		bool OnMouseButtonPress(MouseButtonPressEvent& e);
+
 		void NewScene();
 		void SaveSceneAs();
 		void OpenScene();

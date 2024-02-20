@@ -184,7 +184,7 @@ namespace Celes {
 
 		auto [mx, my] = ImGui::GetMousePos();
 		mx -= m_ViewportMinBound.x;
-		my = m_ViewportMinBound.y - my;
+		my = m_ViewportSize.y - (my - m_ViewportMinBound.y);
 		if (mx >= 0.0f && mx < m_ViewportSize.x && my >= 0.0f && my < m_ViewportSize.y)
 		{
 			int pixelData = m_FrameBuffer->ReadPixel(1, (int)mx, (int)my);
@@ -202,6 +202,7 @@ namespace Celes {
 
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<KeyPressEvent>(std::bind(&EditorLayer::OnKeyPress, this, std::placeholders::_1));
+		dispatcher.Dispatch<MouseButtonPressEvent>(std::bind(&EditorLayer::OnMouseButtonPress, this, std::placeholders::_1));
 	}
 
 	void EditorLayer::OnGUIRender()
@@ -268,7 +269,7 @@ namespace Celes {
 		ImGui::Begin("Stats");
 
 		std::string name = "None";
-		if (m_HoveredEntity)
+		if ((bool)m_HoveredEntity)
 			name = m_HoveredEntity.GetComponent<TagComponent>().Tag;
 		ImGui::Text("Hovered Entity: %s", name.c_str());
 
@@ -303,8 +304,8 @@ namespace Celes {
 		uint32_t texBufferID = m_FrameBuffer->GetAttachmentBufferID();
 		ImGui::Image(reinterpret_cast<void*>(texBufferID), ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2(0, 1), ImVec2(1, 0));
 
-		auto viewportOffset = ImGui::GetCursorPos(); // Includes tab bar
-		auto minBound = ImGui::GetWindowPos();
+		auto viewportOffset = ImGui::GetWindowContentRegionMin(); // Tab bar size
+		auto minBound = ImGui::GetWindowPos(); // Top left corner
 		minBound.x += viewportOffset.x;
 		minBound.y += viewportOffset.y;
 		m_ViewportMinBound = { minBound.x, minBound.y };
@@ -316,9 +317,7 @@ namespace Celes {
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
 
-			float windowWidth = (float)ImGui::GetWindowWidth();
-			float windowHeight = (float)ImGui::GetWindowHeight();
-			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+			ImGuizmo::SetRect(m_ViewportMinBound.x, m_ViewportMinBound.y, m_ViewportSize.x, m_ViewportSize.y);
 
 			// Camera
 			// Runtime camera from entity
@@ -399,6 +398,14 @@ namespace Celes {
 			default:
 				break;
 		}
+		return false;
+	}
+
+	bool EditorLayer::OnMouseButtonPress(MouseButtonPressEvent& e)
+	{
+		if (m_ViewportHovered && e.GetMouseButton() == CE_MOUSE_BUTTON_LEFT && !ImGuizmo::IsOver() && !Input::IsKeyPressed(CE_KEY_LEFT_ALT))
+			m_SHPanel.SetSelectedEntity(m_HoveredEntity);
+
 		return false;
 	}
 
