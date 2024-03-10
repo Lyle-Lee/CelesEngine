@@ -42,6 +42,13 @@ namespace Celes {
 
 		glm::vec4 QuadVertexPositions[4];
 
+		struct CameraData
+		{
+			glm::mat4 ViewProjection;
+		};
+		CameraData CameraBuffer;
+		Ref<UniformBuffer> CameraUniformBuffer;
+
 		Renderer2D::Statistics Stats;
 	};
 
@@ -112,10 +119,11 @@ namespace Celes {
 
 		//s_Data->FlatColorShader = Shader::Create("assets/shaders/FlatColorVertexShader.glsl", "assets/shaders/FlatColorFragmentShader.glsl", true);
 		s_Data.TestShader = Shader::Create("assets/shaders/TestVertexShader.glsl", "assets/shaders/TestFragmentShader.glsl", true);
-		s_Data.TestShader->Bind();
-		s_Data.TestShader->SetIntArray("uTexture", samplers, s_Data.MaxTextureSlots);
+		//s_Data.TestShader->Bind();
+		//s_Data.TestShader->SetIntArray("uTextures", samplers, s_Data.MaxTextureSlots);
 
 		s_Data.TexSlots[0] = s_Data.BlankTexture;
+		s_Data.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer2DStorage::CameraData), 0);
 	}
 
 	void Renderer2D::Shutdown()
@@ -125,10 +133,11 @@ namespace Celes {
 
 	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
 	{
-		glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
+		s_Data.CameraBuffer.ViewProjection = camera.GetProjection() * glm::inverse(transform);
 
-		s_Data.TestShader->Bind();
-		s_Data.TestShader->SetMat4("uViewProj", viewProj);
+		//s_Data.TestShader->Bind();
+		//s_Data.TestShader->SetMat4("uViewProj", viewProj);
+		s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DStorage::CameraData));
 
 		s_Data.QuadIndexCnt = 0;
 		s_Data.QuadVBPtr = s_Data.QuadVBBase;
@@ -138,10 +147,11 @@ namespace Celes {
 
 	void Renderer2D::BeginScene(const EditorCamera& camera)
 	{
-		glm::mat4 viewProj = camera.GetVP();
+		s_Data.CameraBuffer.ViewProjection = camera.GetVP();
 
-		s_Data.TestShader->Bind();
-		s_Data.TestShader->SetMat4("uViewProj", viewProj);
+		//s_Data.TestShader->Bind();
+		//s_Data.TestShader->SetMat4("uViewProj", viewProj);
+		s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DStorage::CameraData));
 
 		s_Data.QuadIndexCnt = 0;
 		s_Data.QuadVBPtr = s_Data.QuadVBBase;
@@ -154,8 +164,10 @@ namespace Celes {
 		//s_Data.FlatColorShader->Bind();
 		//s_Data.FlatColorShader->SetMat4("uViewProj", camera.GetVP());
 
-		s_Data.TestShader->Bind();
-		s_Data.TestShader->SetMat4("uViewProj", camera.GetVP());
+		//s_Data.TestShader->Bind();
+		//s_Data.TestShader->SetMat4("uViewProj", camera.GetVP());
+		s_Data.CameraBuffer.ViewProjection = camera.GetVP();
+		s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DStorage::CameraData));
 
 		s_Data.QuadIndexCnt = 0;
 		s_Data.QuadVBPtr = s_Data.QuadVBBase;
@@ -176,6 +188,7 @@ namespace Celes {
 		for (uint32_t i = 0; i < s_Data.TexIndex; ++i)
 			s_Data.TexSlots[i]->Bind(i);
 
+		s_Data.TestShader->Bind();
 		s_Cmd->DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCnt);
 
 		s_Data.Stats.DrawCallsCnt++;

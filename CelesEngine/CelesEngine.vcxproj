@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Celes\Utils\Timer.h" />
     <ClInclude Include="src\Celes\Math\Math.h" />
     <ClInclude Include="src\Celes\Renderer\CameraController.h" />
     <ClInclude Include="src\Celes\Core\Timestep.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="src\Celes\Scene\Scene.cpp" />
     <ClCompile Include="src\Celes\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\Celes\Scene\SceneSerializer.cpp" />
+    <ClCompile Include="src\Celes\Utils\Timer.cpp" />
     <ClCompile Include="src\ImGuizmo\GraphEditor.cpp" />
     <ClCompile Include="src\ImGuizmo\ImCurveEdit.cpp" />
     <ClCompile Include="src\ImGuizmo\ImGradient.cpp" />

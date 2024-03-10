@@ -3,7 +3,6 @@
 #include <ImGuizmo/ImGuizmo.h>
 //#include <Platform/OpenGL/OpenGLShader.h>
 #include <gtc/matrix_transform.hpp>
-#include <chrono>
 
 static const uint32_t s_MapWidth = 24;
 static const uint32_t s_MapHeight = 12;
@@ -20,43 +19,9 @@ static const char* s_MapTiles = "wwwwwwwwwwwwwwwwwwwwwwww"
 								"wwwwwwwwddddwwwwwwwwwwww"
 								"wwwwwwwwwwwwwwwwwwwwwwww";
 
-template<typename Fn>
-class Timer
-{
-public:
-	Timer(const char* name, Fn&& func): m_Name(name), m_Stopped(false), m_Func(func)
-	{
-		m_StartTimepoint = std::chrono::high_resolution_clock::now();
-	}
-
-	~Timer()
-	{
-		if (!m_Stopped) Stop();
-	}
-
-	void Stop()
-	{
-		auto endTimepoint = std::chrono::high_resolution_clock::now();
-
-		long long start = std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch().count();
-		long long end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch().count();
-
-		m_Stopped = true;
-
-		float duration = (end - start) * 0.001f;
-		//std::cout << m_Name << ": " << duration << "ms" << std::endl;
-		m_Func({ m_Name, duration });
-	}
-private:
-	const char* m_Name;
-	std::chrono::time_point<std::chrono::steady_clock> m_StartTimepoint;
-	bool m_Stopped;
-	Fn m_Func;
-};
-
-#define PROFILE_SCOPE(name) Timer timer##__LINE__(name, [&](ProfileResult profileRes) { m_ProfileResults.push_back(profileRes); })
-
 namespace Celes {
+
+#define PROFILE_SCOPE(name) Timer timer##__LINE__(name, [&](float dTime) { m_ProfileResults.push_back({ name, dTime }); })
 
 	EditorLayer::EditorLayer() : Layer("EditorLayer"), m_CameraController(16.0f / 9.0f, true)//, m_ObjPos(0.0f)
 	{
@@ -81,6 +46,13 @@ namespace Celes {
 		m_FrameBuffer = FrameBuffer::Create(fbDesc);
 
 		m_ActiveScene = CreateRef<Scene>();
+		auto commandLineArgs = Application::Get().GetCommandLineArgs();
+		if (commandLineArgs.Count > 1)
+		{
+			auto sceneFilePath = commandLineArgs[1];
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Deserialize(sceneFilePath);
+		}
 
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 #if 0

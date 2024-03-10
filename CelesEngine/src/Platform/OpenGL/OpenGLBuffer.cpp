@@ -224,4 +224,21 @@ namespace Celes {
 		glClearTexImage(GetAttachmentBufferID(attachmentIdx), 0, std::dynamic_pointer_cast<OpenGLTexture2D>(m_Textures[attachmentIdx])->GetDataFormat(), GL_INT, &value);
 	}
 
+	OpenGLUniformBuffer::OpenGLUniformBuffer(uint32_t size, uint32_t slot)
+	{
+		glCreateBuffers(1, &m_BufferID);
+		glNamedBufferData(m_BufferID, size, nullptr, GL_DYNAMIC_DRAW); // TODO: investigate usage hint
+		glBindBufferBase(GL_UNIFORM_BUFFER, slot, m_BufferID);
+	}
+
+	OpenGLUniformBuffer::~OpenGLUniformBuffer()
+	{
+		glDeleteBuffers(1, &m_BufferID);
+	}
+
+	void OpenGLUniformBuffer::SetData(const void* data, uint32_t size, uint32_t offset)
+	{
+		glNamedBufferSubData(m_BufferID, offset, size, data);
+	}
+
 }

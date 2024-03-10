@@ -10,10 +10,22 @@
 
 namespace Celes {
 
+	struct CE_API AppCommandLineArgs
+	{
+		int Count = 0;
+		char** Args = nullptr;
+
+		const char* operator[](int idx) const
+		{
+			CE_CORE_ASSERT(idx < Count, "Argument index overflowed!")
+			return Args[idx];
+		}
+	};
+
 	class CE_API Application
 	{
 	public:
-		Application(const std::string& name = "Celes App");
+		Application(const std::string& name = "Celes App", AppCommandLineArgs args = AppCommandLineArgs());
 		virtual ~Application();
 
 		void Run();
@@ -22,6 +34,7 @@ namespace Celes {
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
 
+		inline AppCommandLineArgs GetCommandLineArgs() const { return m_CommandLineArgs; }
 		inline Window& GetWindow() { return *m_Window; }
 		inline static Application& Get() { return *s_Instance; }
 		inline GUILayer* GetGUILayer() { return m_GUILayer; }
@@ -31,6 +44,7 @@ namespace Celes {
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 
+		AppCommandLineArgs m_CommandLineArgs;
 		Scope<Window> m_Window;
 		GUILayer* m_GUILayer;
 		bool m_IsRunning = true;
@@ -42,6 +56,6 @@ namespace Celes {
 	};
 
 	// Defined in client
-	Application* CreateApp();
+	Application* CreateApp(AppCommandLineArgs args);
 }
 

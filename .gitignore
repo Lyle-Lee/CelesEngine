@@ -351,4 +351,8 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-/Elucidator/imgui.ini
+
+# CelesEngine ignores
+/CelesEngine/imgui.ini
+/Glamoth/assets/cache
+scripts/__pycache__

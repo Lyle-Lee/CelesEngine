@@ -1,10 +1,12 @@
 #include "PCH.h"
 #include "OpenGLShader.h"
 #include "Celes/Core/Core.h"
+#include "Celes/Utils/Timer.h"
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <gtc/type_ptr.hpp>
 #include <fstream>
+#include <filesystem>
 
 namespace Celes {
 
@@ -28,16 +30,46 @@ namespace Celes {
 		return result;
 	}
 
+	static const char* GetCacheDirectory()
+	{
+		// TODO: make sure the assets directory is valid
+		return "assets/cache/shader/opengl";
+	}
+
+	// Create cache directory if needed.
+	static void CreateCacheDirectory()
+	{
+		std::filesystem::path cacheDirectory = GetCacheDirectory();
+		if (!std::filesystem::exists(cacheDirectory))
+			std::filesystem::create_directories(cacheDirectory);
+	}
+
+	static const char* GetCachedOpenGLFileExtension(uint32_t stage)
+	{
+		switch (stage)
+		{
+		case GL_VERTEX_SHADER: return ".cached_opengl.vs";
+		case GL_FRAGMENT_SHADER: return ".cached_opengl.fs";
+		case GL_COMPUTE_SHADER: return ".cached_opengl.cs";
+		default:
+			CE_CORE_ASSERT(false, "Unknown shader stage!")
+			break;
+		}
+
+		return "";
+	}
+
 	OpenGLShader::OpenGLShader(const std::string& vs, const std::string& fs, bool fromFile)
 	{
+		CreateCacheDirectory();
+
 		std::unordered_map<GLenum, std::string> srcs;
 		srcs[GL_VERTEX_SHADER] = fromFile ? ReadFileAsString(vs) : vs;
 		srcs[GL_FRAGMENT_SHADER] = fromFile ? ReadFileAsString(fs) : fs;
-		
-		Compile(srcs);
 
 		if (fromFile)
 		{
+			// Extract name from filepath
 			auto start = vs.find_last_of("/\\");
 			start = start == std::string::npos ? 0 : start + 1;
 			auto end = vs.rfind("VertexShader");
@@ -48,17 +80,23 @@ namespace Celes {
 		{
 			m_Name = "Shader" + ('0' + ShaderLibrary::GetAnonymityCnt());
 		}
+
+		{
+			Timer timer("Shader creation", [&](float dTime) { CE_CORE_TRACE("Created shader '{0}' in {1} ms.", m_Name, dTime); });
+			Compile(srcs);
+		}
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& cs, bool fromFile)
 	{
+		CreateCacheDirectory();
+
 		std::unordered_map<GLenum, std::string> srcs;
 		srcs[GL_COMPUTE_SHADER] = fromFile ? ReadFileAsString(cs) : cs;
 
-		Compile(srcs);
-
 		if (fromFile)
 		{
+			// Extract name from filepath
 			auto start = cs.find_last_of("/\\");
 			start = start == std::string::npos ? 0 : start + 1;
 			auto end = cs.rfind("ComputeShader");
@@ -68,6 +106,11 @@ namespace Celes {
 		else
 		{
 			m_Name = "Shader" + ('0' + ShaderLibrary::GetAnonymityCnt());  
+		}
+
+		{
+			Timer timer("Shader creation", [&](float dTime) { CE_CORE_TRACE("Created shader '{0}' in {1} ms.", m_Name, dTime); });
+			Compile(srcs);
 		}
 	}
 

@@ -13,7 +13,7 @@ namespace Celes {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application(const std::string& name)
+	Application::Application(const std::string& name, AppCommandLineArgs args) : m_CommandLineArgs(args)
 	{
 		CE_CORE_ASSERT(!s_Instance, "Application aleady exists!")
 		s_Instance = this;

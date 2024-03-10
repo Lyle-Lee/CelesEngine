@@ -73,4 +73,21 @@ namespace Celes {
 		return nullptr;
 	}
 
+	Ref<UniformBuffer> UniformBuffer::Create(uint32_t size, uint32_t slot)
+	{
+		switch (Renderer::GetAPI())
+		{
+			case GraphicsAPI::None:
+				CE_CORE_ASSERT(false, "No Graphics API!")
+				break;
+			case GraphicsAPI::OpenGL:
+				return CreateRef<OpenGLUniformBuffer>(size, slot);
+			default:
+				CE_CORE_ASSERT(false, "The target Graphics API is currently not supported!")
+				break;
+		}
+
+		return nullptr;
+	}
+
 }

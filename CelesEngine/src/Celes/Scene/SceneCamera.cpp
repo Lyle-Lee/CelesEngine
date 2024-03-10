@@ -29,6 +29,7 @@ namespace Celes {
 
 	void SceneCamera::SetViewportSize(uint32_t width, uint32_t height)
 	{
+		CE_CORE_ASSERT(width > 0 && height > 0, "Invalid viewport size!")
 		m_ViewportAspectRatio = (float)width / (float)height;
 		CalcProjection();
 	}
