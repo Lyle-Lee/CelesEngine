@@ -260,15 +260,15 @@
       <PreprocessorDefinitions>NOMINMAX;CE_BUILD_DLL;GLEW_STATIC;CE_DEBUG;_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image;$(SolutionDir)CelesEngine\Dependencies\EnTT\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image;$(SolutionDir)CelesEngine\Dependencies\EnTT\include;$(VULKAN_SDK)\Include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)CelesEngine\Dependencies\GLFW\lib-vc2022;$(SolutionDir)CelesEngine\Dependencies\GLEW\lib\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)CelesEngine\Dependencies\GLFW\lib-vc2022;$(SolutionDir)CelesEngine\Dependencies\GLEW\lib\x64;$(VULKAN_SDK)\Lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;vulkan-1.lib;shaderc_sharedd.lib;spirv-cross-cored.lib;spirv-cross-glsld.lib;SPIRV-Toolsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -280,7 +280,7 @@
       <PreprocessorDefinitions>NOMINMAX;CE_BUILD_DLL;GLEW_STATIC;CE_RELEASE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image;$(SolutionDir)CelesEngine\Dependencies\EnTT\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image;$(SolutionDir)CelesEngine\Dependencies\EnTT\include;$(VULKAN_SDK)\Include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -289,8 +289,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)CelesEngine\Dependencies\GLFW\lib-vc2022;$(SolutionDir)CelesEngine\Dependencies\GLEW\lib\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)CelesEngine\Dependencies\GLFW\lib-vc2022;$(SolutionDir)CelesEngine\Dependencies\GLEW\lib\x64;$(VULKAN_SDK)\Lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;vulkan-1.lib;shaderc_shared.lib;spirv-cross-core.lib;spirv-cross-glsl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
