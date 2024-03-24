@@ -356,3 +356,6 @@ MigrationBackup/
 /CelesEngine/imgui.ini
 /Glamoth/assets/cache
 scripts/__pycache__
+/CelesEngine/Dependencies/VulkanSDK/*
+/CelesEngine/Dependencies/GLEW/*
+/CelesEngine/Dependencies/GLFW/*
