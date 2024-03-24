@@ -6,7 +6,7 @@ Currently not much is implemented but more related algorithms will be available 
 
 # Getting Started
 
-Visual Stduio 2022 is recomended.
+Visual Studio 2022 is recomended.
 
 <ins>**1. Downloading the repository:**</ins>
 
