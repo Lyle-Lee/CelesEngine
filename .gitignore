@@ -353,9 +353,14 @@ MigrationBackup/
 .ionide/
 
 # CelesEngine ignores
-/CelesEngine/imgui.ini
-/Glamoth/assets/cache
+CelesEngine/imgui.ini
+Glamoth/assets/cache
 scripts/__pycache__
 /CelesEngine/Dependencies/VulkanSDK/*
 /CelesEngine/Dependencies/GLEW/*
 /CelesEngine/Dependencies/GLFW/*
+
+# Exceptions
+!/CelesEngine/Dependencies/VulkanSDK/.gitkeep
+!/CelesEngine/Dependencies/GLEW/.gitkeep
+!/CelesEngine/Dependencies/GLFW/.gitkeep

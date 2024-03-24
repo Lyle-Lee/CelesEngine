@@ -6,7 +6,7 @@ Currently not much is implemented but more related algorithms will be available 
 
 # Getting Started
 
-Visual Stduio 2019 or 2022 is recomended.
+Visual Stduio 2022 is recomended.
 
 <ins>**1. Downloading the repository:**</ins>
 
@@ -14,8 +14,7 @@ Start by cloning the repository with `git clone git@github.com:Lyle-Lee/CelesEng
 
 <ins>**2. Setup the project:**</ins>
 
-Download GLEW and put `glew32.lib` and `glew32s.lib` under `CelesEngine/Dependencies/GLEW/lib/x64/`.
-Then build the project.
+Go to `scripts` folder and run `Setup_VS2022.bat`, then build the project.
 
 # Main features to come:
 
@@ -29,4 +28,3 @@ Then build the project.
 * Procedural terrain and world generation.
 * Artificial Inteligence.
 * Audio system.
-
