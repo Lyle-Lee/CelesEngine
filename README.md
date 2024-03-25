@@ -10,10 +10,11 @@ Visual Studio 2022 is recomended.
 
 <ins>**1. Downloading the repository:**</ins>
 
-Start by cloning the repository with `git clone git@github.com:Lyle-Lee/CelesEngine.git`.
+Start by cloning the repository with `git clone https://github.com/Lyle-Lee/CelesEngine.git`.
 
 <ins>**2. Setup the project:**</ins>
 
+Make sure that you have a Python environment first.
 Go to `scripts` folder and run `Setup_VS2022.bat`, then build the project.
 
 # Main features to come:

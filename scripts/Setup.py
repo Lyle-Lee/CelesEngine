@@ -19,6 +19,5 @@ if not CheckGLFW.CheckGLFWLib():
 
 if not CheckVulkan.checkVulkanSDK():
     print('Vulkan SDK is not installed.')
-
-if not CheckVulkan.checkVulkanSDKDebugLibs():
+elif not CheckVulkan.checkVulkanSDKDebugLibs():
     print('Vulkan SDK debug libs not found.')

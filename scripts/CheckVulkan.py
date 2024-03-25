@@ -30,7 +30,7 @@ def checkVulkanSDK():
         installVulkanPrompt()
         return False
     
-    print(f"Located Vulkan SDK at '{VULKAN_SDK}'.")
+    print(f"Vulkan SDK located at '{VULKAN_SDK}'.")
     if CE_VULKAN_VERSION not in VULKAN_SDK:
         print(f"You don't have the correct Vulkan SDK version (Celes requires {CE_VULKAN_VERSION})!")
         installVulkanPrompt()
