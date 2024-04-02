@@ -21,7 +21,7 @@ Go to `scripts` folder and run `Setup_VS2022.bat`, then build the project.
 
 * Fast 2D rendering (UI, particles, etc.).
 * High quality real-time physically-based 3D rendering.
-* Support for MacOS, iOS, Android and Linux.
+* Support for macOS, iOS, Android and Linux.
 	* Native graphics API support (DirectX, Vulkan, Metal).
 * Fully featured viewer and editor applications.
 * Fully scripted interaction and behavior.
