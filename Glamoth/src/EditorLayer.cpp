@@ -23,6 +23,8 @@ namespace Celes {
 
 #define PROFILE_SCOPE(name) Timer timer##__LINE__(name, [&](float dTime) { m_ProfileResults.push_back({ name, dTime }); })
 
+	extern const std::filesystem::path s_AssetsDirectory;
+
 	EditorLayer::EditorLayer() : Layer("EditorLayer"), m_CameraController(16.0f / 9.0f, true)//, m_ObjPos(0.0f)
 	{
 	}
@@ -237,6 +239,7 @@ namespace Celes {
 		}
 
 		m_SHPanel.OnGUIRender();
+		m_CBPanel.OnGUIRender();
 
 		ImGui::Begin("Stats");
 
@@ -281,6 +284,17 @@ namespace Celes {
 		minBound.x += viewportOffset.x;
 		minBound.y += viewportOffset.y;
 		m_ViewportMinBound = { minBound.x, minBound.y };
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			{
+				const wchar_t* path = (const wchar_t*)payload->Data;
+				OpenScene(s_AssetsDirectory / path);
+			}
+
+			ImGui::EndDragDropTarget();
+		}
 
 		// Guizmos
 		Entity selectedEntity = m_SHPanel.GetSelectedEntity();
@@ -402,14 +416,20 @@ namespace Celes {
 	{
 		std::string filepath = FileDialogs::OpenFile("Celes Scene (*.celes)\0*.celes\0");
 		if (!filepath.empty())
-		{
-			m_ActiveScene = CreateRef<Scene>();
-			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			m_SHPanel.SetContext(m_ActiveScene);
+			OpenScene(filepath);
+	}
 
-			SceneSerializer serializer(m_ActiveScene);
-			serializer.Deserialize(filepath);
-		}
+	void EditorLayer::OpenScene(const std::filesystem::path& path)
+	{
+		if (path.extension() != ".celes")
+			return;
+
+		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SHPanel.SetContext(m_ActiveScene);
+
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.Deserialize(path.string());
 	}
 
 }

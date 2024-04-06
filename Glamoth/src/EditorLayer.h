@@ -2,6 +2,7 @@
 
 #include <Celes.h>
 #include "Panels/SceneHierarchyPanel.h"
+#include "Panels/ContentBrowserPanel.h"
 
 namespace Celes {
 
@@ -51,7 +52,9 @@ namespace Celes {
 		bool m_MainCamera = true;
 		Ref<Scene> m_ActiveScene;
 
+		// Panels
 		SceneHierarchyPanel m_SHPanel;
+		ContentBrowserPanel m_CBPanel;
 
 		int m_GuizmoType = -1;
 
@@ -61,6 +64,7 @@ namespace Celes {
 		void NewScene();
 		void SaveSceneAs();
 		void OpenScene();
+		void OpenScene(const std::filesystem::path& path);
 	};
 
 }
