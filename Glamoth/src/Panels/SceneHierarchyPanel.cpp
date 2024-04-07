@@ -1,8 +1,11 @@
 #include "SceneHierarchyPanel.h"
 #include <ImGui/imgui.h>
 #include <ImGui/imgui_internal.h>
+#include <filesystem>
 
 namespace Celes {
+
+	extern const std::filesystem::path s_AssetsDirectory;
 
 	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& context)
 	{
@@ -281,6 +284,19 @@ namespace Celes {
 		DrawComponent<SpriteRenderComponent>("Sprite Renderer", entity, [](auto& component)
 		{
 			ImGui::ColorEdit4("Color", &component.Color.r);
+			ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+				{
+					const wchar_t* path = (const wchar_t*)payload->Data;
+					component.Texture = Texture2D::Create((s_AssetsDirectory / path).string());
+				}
+
+				ImGui::EndDragDropTarget();
+			}
+
+			ImGui::DragFloat("Tiling factor", &component.TilingFactor, 0.1f, 1.0f, 100.0f);
 		});
 	}
 

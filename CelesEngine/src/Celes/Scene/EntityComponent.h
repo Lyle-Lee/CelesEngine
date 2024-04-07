@@ -4,6 +4,7 @@
 #include <gtc/matrix_transform.hpp>
 #include "Entity.h"
 #include "SceneCamera.h"
+#include "Celes/Renderer/Texture.h"
 
 namespace Celes {
 
@@ -39,6 +40,8 @@ namespace Celes {
 	struct SpriteRenderComponent
 	{
 		glm::vec4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		Ref<Texture2D> Texture;
+		float TilingFactor = 1.0f;
 
 		SpriteRenderComponent() = default;
 		SpriteRenderComponent(const SpriteRenderComponent&) = default;

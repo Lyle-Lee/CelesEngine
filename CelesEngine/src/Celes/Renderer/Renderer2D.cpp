@@ -332,7 +332,10 @@ namespace Celes {
 
 	void Renderer2D::DrawSprite(const glm::mat4& transform, SpriteRenderComponent& src, int entityID)
 	{
-		DrawQuad(transform, src.Color, entityID);
+		if (src.Texture)
+			DrawQuad(transform, src.Texture, src.TilingFactor, entityID);
+		else
+			DrawQuad(transform, src.Color, entityID);
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size, float rotation, const glm::vec4& color)
