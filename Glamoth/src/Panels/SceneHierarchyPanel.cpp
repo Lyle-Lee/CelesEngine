@@ -290,7 +290,7 @@ namespace Celes {
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 				{
 					const wchar_t* path = (const wchar_t*)payload->Data;
-					component.Texture = Texture2D::Create((s_AssetsDirectory / path).string());
+					component.Texture = Texture2D::Create(s_AssetsDirectory / path);
 				}
 
 				ImGui::EndDragDropTarget();

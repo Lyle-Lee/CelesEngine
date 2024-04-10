@@ -12,7 +12,7 @@ namespace Celes {
 		glm::vec3 Position;
 		glm::vec4 Color;
 		glm::vec2 TexCoord;
-		float TexID;
+		int TexID;
 		float TilingFactor;
 
 		// Editor only
@@ -80,7 +80,7 @@ namespace Celes {
 			{"aPosition", ShaderDataType::Float3},
 			{"aColor", ShaderDataType::Float4},
 			{"aTexCoord", ShaderDataType::Float2},
-			{"aTexID", ShaderDataType::Float},
+			{"aTexID", ShaderDataType::Int},
 			{"aTilingFactor", ShaderDataType::Float},
 			{"aEntityID", ShaderDataType::Int}
 			});
@@ -228,22 +228,22 @@ namespace Celes {
 		if (s_Data.QuadIndexCnt >= Renderer2DStorage::MaxIndicesCnt)
 			StartNewBatch();
 
-		float texID = 0.0f;
+		uint32_t texID = 0;
 		for (uint32_t i = 1; i < s_Data.TexIndex; ++i)
 		{
 			if (s_Data.TexSlots[i]->GetBufferID() == subTexture->GetTexture()->GetBufferID())
 			{
-				texID = (float)i;
+				texID = i;
 				break;
 			}
 		}
 
-		if (texID == 0.0f)
+		if (texID == 0)
 		{
 			if (s_Data.TexIndex >= Renderer2DStorage::MaxTextureSlots)
 				StartNewBatch();
 
-			texID = (float)s_Data.TexIndex;
+			texID = s_Data.TexIndex;
 			s_Data.TexSlots[s_Data.TexIndex++] = subTexture->GetTexture();
 		}
 
@@ -277,7 +277,7 @@ namespace Celes {
 			s_Data.QuadVBPtr->Position = transform * s_Data.QuadVertexPositions[i];
 			s_Data.QuadVBPtr->Color = color;
 			s_Data.QuadVBPtr->TexCoord = texCoords[i];
-			s_Data.QuadVBPtr->TexID = 0.0f;
+			s_Data.QuadVBPtr->TexID = 0;
 			s_Data.QuadVBPtr->TilingFactor = 1.0f;
 			s_Data.QuadVBPtr->EntityID = entityID;
 			s_Data.QuadVBPtr++;
@@ -293,22 +293,22 @@ namespace Celes {
 		if (s_Data.QuadIndexCnt >= Renderer2DStorage::MaxIndicesCnt)
 			StartNewBatch();
 
-		float texID = 0.0f;
+		uint32_t texID = 0;
 		for (uint32_t i = 1; i < s_Data.TexIndex; ++i)
 		{
 			if (s_Data.TexSlots[i]->GetBufferID() == texture->GetBufferID())
 			{
-				texID = (float)i;
+				texID = i;
 				break;
 			}
 		}
 
-		if (texID == 0.0f)
+		if (texID == 0)
 		{
 			if (s_Data.TexIndex >= Renderer2DStorage::MaxTextureSlots)
 				StartNewBatch();
 
-			texID = (float)s_Data.TexIndex;
+			texID = s_Data.TexIndex;
 			s_Data.TexSlots[s_Data.TexIndex++] = texture;
 		}
 
@@ -353,28 +353,28 @@ namespace Celes {
 		s_Data.QuadVBPtr->Position = transform * s_Data.QuadVertexPositions[0];
 		s_Data.QuadVBPtr->Color = color;
 		s_Data.QuadVBPtr->TexCoord = { 0.0f, 0.0f };
-		s_Data.QuadVBPtr->TexID = 0.0f;
+		s_Data.QuadVBPtr->TexID = 0;
 		s_Data.QuadVBPtr->TilingFactor = 1.0f;
 		s_Data.QuadVBPtr++;
 
 		s_Data.QuadVBPtr->Position = transform * s_Data.QuadVertexPositions[1];
 		s_Data.QuadVBPtr->Color = color;
 		s_Data.QuadVBPtr->TexCoord = { 1.0f, 0.0f };
-		s_Data.QuadVBPtr->TexID = 0.0f;
+		s_Data.QuadVBPtr->TexID = 0;
 		s_Data.QuadVBPtr->TilingFactor = 1.0f;
 		s_Data.QuadVBPtr++;
 
 		s_Data.QuadVBPtr->Position = transform * s_Data.QuadVertexPositions[2];
 		s_Data.QuadVBPtr->Color = color;
 		s_Data.QuadVBPtr->TexCoord = { 1.0f, 1.0f };
-		s_Data.QuadVBPtr->TexID = 0.0f;
+		s_Data.QuadVBPtr->TexID = 0;
 		s_Data.QuadVBPtr->TilingFactor = 1.0f;
 		s_Data.QuadVBPtr++;
 
 		s_Data.QuadVBPtr->Position = transform * s_Data.QuadVertexPositions[3];
 		s_Data.QuadVBPtr->Color = color;
 		s_Data.QuadVBPtr->TexCoord = { 0.0f, 1.0f };
-		s_Data.QuadVBPtr->TexID = 0.0f;
+		s_Data.QuadVBPtr->TexID = 0;
 		s_Data.QuadVBPtr->TilingFactor = 1.0f;
 		s_Data.QuadVBPtr++;
 
@@ -393,22 +393,22 @@ namespace Celes {
 		if (s_Data.QuadIndexCnt >= Renderer2DStorage::MaxIndicesCnt)
 			StartNewBatch();
 
-		float texID = 0.0f;
+		uint32_t texID = 0;
 		for (uint32_t i = 1; i < s_Data.TexIndex; ++i)
 		{
 			if (s_Data.TexSlots[i]->GetBufferID() == texture->GetBufferID())
 			{
-				texID = (float)i;
+				texID = i;
 				break;
 			}
 		}
 
-		if (texID == 0.0f)
+		if (texID == 0)
 		{
 			if (s_Data.TexIndex >= Renderer2DStorage::MaxTextureSlots)
 				StartNewBatch();
 
-			texID = (float)s_Data.TexIndex;
+			texID = s_Data.TexIndex;
 			s_Data.TexSlots[s_Data.TexIndex++] = texture;
 		}
 
@@ -457,22 +457,22 @@ namespace Celes {
 		if (s_Data.QuadIndexCnt >= Renderer2DStorage::MaxIndicesCnt)
 			StartNewBatch();
 
-		float texID = 0.0f;
+		uint32_t texID = 0;
 		for (uint32_t i = 1; i < s_Data.TexIndex; ++i)
 		{
 			if (s_Data.TexSlots[i]->GetBufferID() == subTexture->GetTexture()->GetBufferID())
 			{
-				texID = (float)i;
+				texID = i;
 				break;
 			}
 		}
 
-		if (texID == 0.0f)
+		if (texID == 0)
 		{
 			if (s_Data.TexIndex >= Renderer2DStorage::MaxTextureSlots)
 				StartNewBatch();
 
-			texID = (float)s_Data.TexIndex;
+			texID = s_Data.TexIndex;
 			s_Data.TexSlots[s_Data.TexIndex++] = subTexture->GetTexture();
 		}
 

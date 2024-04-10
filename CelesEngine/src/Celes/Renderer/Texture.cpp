@@ -5,7 +5,7 @@
 
 namespace Celes {
 
-	Ref<Texture2D> Texture2D::Create(const std::string& path)
+	Ref<Texture2D> Texture2D::Create(const std::filesystem::path& path)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -13,7 +13,7 @@ namespace Celes {
 				CE_CORE_ASSERT(false, "No Graphics API!")
 				break;
 			case GraphicsAPI::OpenGL:
-				return CreateRef<OpenGLTexture2D>(path);
+				return CreateRef<OpenGLTexture2D>(path.string());
 			default:
 				CE_CORE_ASSERT(false, "The target Graphics API is currently not supported!")
 				break;

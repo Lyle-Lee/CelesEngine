@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <filesystem>
 #include <glm.hpp>
 #include "Celes/Core/Core.h"
 
@@ -42,7 +42,7 @@ namespace Celes {
 	{
 		friend class OpenGLFrameBuffer;
 	public:
-		static Ref<Texture2D> Create(const std::string& path);
+		static Ref<Texture2D> Create(const std::filesystem::path& path);
 		static Ref<Texture2D> Create(uint32_t width, uint32_t height, TextureFormat format = TextureFormat::RGBA8, uint32_t sampleCnt = 1);
 		bool IsDepthBuffer() const;
 		inline bool IsMultiSampled() const { return m_SampleCnt > 1; }
