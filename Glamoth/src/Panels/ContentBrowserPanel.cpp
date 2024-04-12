@@ -8,8 +8,9 @@ namespace Celes {
 
 	ContentBrowserPanel::ContentBrowserPanel() : m_CurrentDirectory(s_AssetsDirectory)
 	{
-		m_DirectoryIcon = Texture2D::Create("assets/icons/ContentBrowser/icon-directory.png");
-		m_FileIcon = Texture2D::Create("assets/icons/ContentBrowser/icon-file.png");
+		m_DirectoryIcon = Texture2D::Create("icons/ContentBrowser/icon-directory.png");
+		m_FileIcon = Texture2D::Create("icons/ContentBrowser/icon-file.png");
+		m_BackIcon = Texture2D::Create("icons/ContentBrowser/icon-back.png");
 	}
 
 	void ContentBrowserPanel::OnGUIRender()
@@ -18,8 +19,11 @@ namespace Celes {
 
 		if (m_CurrentDirectory != std::filesystem::path(s_AssetsDirectory))
 		{
-			if (ImGui::Button("<-"))
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(.0f, .0f, .0f, .0f));
+			if (ImGui::ImageButton((ImTextureID)m_BackIcon->GetBufferID(), { 25, 25 }, { 0, 1 }, { 1, 0 }))
 				m_CurrentDirectory = m_CurrentDirectory.parent_path();
+
+			ImGui::PopStyleColor();
 		}
 
 		static float padding = 16.0f, thumbnailSize = 50.0f;
