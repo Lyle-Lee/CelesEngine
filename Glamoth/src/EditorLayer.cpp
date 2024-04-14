@@ -31,6 +31,7 @@ namespace Celes {
 
 	void EditorLayer::OnAttach()
 	{
+#if 0
 		m_Texture = Texture2D::Create("assets/textures/checkerbox.png");
 		m_SpriteSheet = Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
 		m_TextureStairs = SubTexture2D::CreateFromCoord(m_SpriteSheet, { 7, 6 }, { 128, 128 });
@@ -38,6 +39,10 @@ namespace Celes {
 
 		m_TextureMap['d'] = SubTexture2D::CreateFromCoord(m_SpriteSheet, { 6, 11 }, { 128, 128 });
 		m_TextureMap['w'] = SubTexture2D::CreateFromCoord(m_SpriteSheet, { 11, 11 }, { 128, 128 });
+#endif
+
+		m_PlayIcon = Texture2D::Create("icons/ContentBrowser/icon-play.png");
+		m_StopIcon = Texture2D::Create("icons/ContentBrowser/icon-stop.png");
 
 		m_CameraController.SetZoomLevel(5.0f);
 
@@ -112,12 +117,6 @@ namespace Celes {
 			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
 
-		if (m_ViewportFocused)
-		{
-			m_CameraController.OnUpdate(dTime);
-			m_EditorCamera.OnUpdate(dTime);
-		}
-
 		// Render
 		Renderer2D::ResetStats();
 
@@ -152,7 +151,22 @@ namespace Celes {
 		}
 #endif
 		// Update scene
-		m_ActiveScene->OnUpdateEditor(dTime, m_EditorCamera);
+		switch (m_SceneState)
+		{
+			case SceneState::Edit:
+				if (m_ViewportFocused)
+					m_CameraController.OnUpdate(dTime);
+
+				m_EditorCamera.OnUpdate(dTime);
+				m_ActiveScene->OnUpdateEditor(dTime, m_EditorCamera);
+				break;
+			case SceneState::Play:
+				m_ActiveScene->OnUpdate(dTime);
+				break;
+			default:
+				CE_CORE_ERROR("Unknown scene state!");
+				break;
+		}
 
 		//Celes::Renderer2D::EndScene();
 
@@ -298,7 +312,7 @@ namespace Celes {
 
 		// Guizmos
 		Entity selectedEntity = m_SHPanel.GetSelectedEntity();
-		if (selectedEntity && m_GuizmoType != -1)
+		if (m_SceneState == SceneState::Edit && selectedEntity && m_GuizmoType != -1)
 		{
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
@@ -346,7 +360,43 @@ namespace Celes {
 		ImGui::End();
 		ImGui::PopStyleVar();
 
+		UIToolbar();
+
 		ImGui::End();
+	}
+
+	void EditorLayer::UIToolbar()
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 2.0f));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0.0f, 0.0f));
+		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+		float iconSize = ImGui::GetWindowHeight() - 4.0f;
+		Ref<Texture2D> icon = m_SceneState == SceneState::Play ? m_StopIcon : m_PlayIcon;
+		ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x * 0.5f - iconSize * 0.5f);
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+		if (ImGui::ImageButton((ImTextureID)icon->GetBufferID(), ImVec2(iconSize, iconSize), ImVec2(0.0f, 0.0f), ImVec2(1.0f, 1.0f), 0))
+		{
+			if (m_SceneState == SceneState::Edit)
+				OnScenePlay();
+			else if (m_SceneState == SceneState::Play)
+				OnSceneStop();
+		}
+
+		ImGui::PopStyleColor();
+		ImGui::End();
+
+		ImGui::PopStyleVar(2);
+	}
+
+	void EditorLayer::OnScenePlay()
+	{
+		m_SceneState = SceneState::Play;
+	}
+
+	void EditorLayer::OnSceneStop()
+	{
+		m_SceneState = SceneState::Edit;
 	}
 
 	bool EditorLayer::OnKeyPress(KeyPressEvent& e)

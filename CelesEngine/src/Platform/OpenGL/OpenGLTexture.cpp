@@ -33,7 +33,7 @@ namespace Celes {
 		glTextureStorage2D(m_BufferID, 1, m_InternalFormat, width, height);
 
 		glTextureParameteri(m_BufferID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameteri(m_BufferID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTextureParameteri(m_BufferID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTextureParameteri(m_BufferID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(m_BufferID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 

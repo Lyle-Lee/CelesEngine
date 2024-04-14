@@ -18,12 +18,28 @@ namespace Celes {
 		void OnEvent(Event& e) override;
 		void OnGUIRender() override;
 	private:
+		// UI panels
+		void UIToolbar();
+
+		void OnScenePlay();
+		void OnSceneStop();
+		bool OnKeyPress(KeyPressEvent& e);
+		bool OnMouseButtonPress(MouseButtonPressEvent& e);
+
+		void NewScene();
+		void SaveSceneAs();
+		void OpenScene();
+		void OpenScene(const std::filesystem::path& path);
+
 		//Celes::ShaderLibrary m_ShaderLib;
 
 		//Celes::Ref<Celes::VertexArray> m_VertexArray;
+#if 0
 		Ref<Texture2D> m_Texture;
 		Ref<Texture2D> m_SpriteSheet;
 		Ref<SubTexture2D> m_TextureStairs, m_TextureTree;
+		std::unordered_map<char, Ref<SubTexture2D>> m_TextureMap;
+#endif
 
 		OrthoCameraController m_CameraController;
 		EditorCamera m_EditorCamera;
@@ -32,14 +48,14 @@ namespace Celes {
 		//float m_ObjMoveSpeed = 1.0f;
 		glm::vec3 m_ObjColor = { 0.2f, 0.5f, 0.9f };
 
+		int m_GuizmoType = -1;
+
 		struct ProfileResult
 		{
 			const char* Name;
 			float Time;
 		};
 		std::vector<ProfileResult> m_ProfileResults;
-
-		std::unordered_map<char, Ref<SubTexture2D>> m_TextureMap;
 
 		Ref<FrameBuffer> m_FrameBuffer;
 		glm::vec2 m_ViewportSize = { 1280.0f, 720.0f };
@@ -52,19 +68,18 @@ namespace Celes {
 		bool m_MainCamera = true;
 		Ref<Scene> m_ActiveScene;
 
+		enum class SceneState
+		{
+			Edit = 0, Play = 1
+		};
+		SceneState m_SceneState = SceneState::Edit;
+
 		// Panels
 		SceneHierarchyPanel m_SHPanel;
 		ContentBrowserPanel m_CBPanel;
 
-		int m_GuizmoType = -1;
-
-		bool OnKeyPress(KeyPressEvent& e);
-		bool OnMouseButtonPress(MouseButtonPressEvent& e);
-
-		void NewScene();
-		void SaveSceneAs();
-		void OpenScene();
-		void OpenScene(const std::filesystem::path& path);
+		// Editor resources
+		Ref<Texture2D> m_PlayIcon, m_StopIcon;
 	};
 
 }
