@@ -4,6 +4,8 @@
 #include "Celes/Renderer/EditorCamera.h"
 #include <entt.hpp>
 
+class b2World;
+
 namespace Celes {
 
 	class Entity;
@@ -12,6 +14,8 @@ namespace Celes {
 	struct CameraComponent;
 	struct SpriteRenderComponent;
 	struct NativeScriptComponent;
+	struct Rigidbody2DComponent;
+	struct BoxCollider2DComponent;
 
 	class CE_API Scene
 	{
@@ -25,7 +29,11 @@ namespace Celes {
 		Entity CreateEntity(const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
 
-		void OnUpdate(Timestep dTime); // Update run time
+		// Update runtime
+		void OnUpdate(Timestep dTime);
+		void OnRuntimeStart();
+		void OnRuntimeStop();
+
 		void OnUpdateEditor(Timestep dTime, EditorCamera& camera);
 		void OnViewportResize(uint32_t width, uint32_t height);
 
@@ -43,8 +51,15 @@ namespace Celes {
 		template<>
 		void OnComponentAdd<NativeScriptComponent>(Entity entity, NativeScriptComponent& component);
 
+		template<>
+		void OnComponentAdd<Rigidbody2DComponent>(Entity entity, Rigidbody2DComponent& component);
+
+		template<>
+		void OnComponentAdd<BoxCollider2DComponent>(Entity entity, BoxCollider2DComponent& component);
+
 		entt::registry m_Registry;
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
+		b2World* m_2DPhysicsWorld = nullptr;
 	};
 
 }

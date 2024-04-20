@@ -11,6 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Box2D\src\dynamics\b2_chain_circle_contact.h" />
+    <ClInclude Include="src\Box2D\src\dynamics\b2_chain_polygon_contact.h" />
+    <ClInclude Include="src\Box2D\src\dynamics\b2_circle_contact.h" />
+    <ClInclude Include="src\Box2D\src\dynamics\b2_contact_solver.h" />
+    <ClInclude Include="src\Box2D\src\dynamics\b2_edge_circle_contact.h" />
+    <ClInclude Include="src\Box2D\src\dynamics\b2_edge_polygon_contact.h" />
+    <ClInclude Include="src\Box2D\src\dynamics\b2_island.h" />
+    <ClInclude Include="src\Box2D\src\dynamics\b2_polygon_circle_contact.h" />
+    <ClInclude Include="src\Box2D\src\dynamics\b2_polygon_contact.h" />
     <ClInclude Include="src\Celes\Utils\Timer.h" />
     <ClInclude Include="src\Celes\Math\Math.h" />
     <ClInclude Include="src\Celes\Renderer\CameraController.h" />
@@ -131,6 +140,51 @@
     <ClInclude Include="src\yaml-cpp\src\token.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Box2D\src\collision\b2_broad_phase.cpp" />
+    <ClCompile Include="src\Box2D\src\collision\b2_chain_shape.cpp" />
+    <ClCompile Include="src\Box2D\src\collision\b2_circle_shape.cpp" />
+    <ClCompile Include="src\Box2D\src\collision\b2_collide_circle.cpp" />
+    <ClCompile Include="src\Box2D\src\collision\b2_collide_edge.cpp" />
+    <ClCompile Include="src\Box2D\src\collision\b2_collide_polygon.cpp" />
+    <ClCompile Include="src\Box2D\src\collision\b2_collision.cpp" />
+    <ClCompile Include="src\Box2D\src\collision\b2_distance.cpp" />
+    <ClCompile Include="src\Box2D\src\collision\b2_dynamic_tree.cpp" />
+    <ClCompile Include="src\Box2D\src\collision\b2_edge_shape.cpp" />
+    <ClCompile Include="src\Box2D\src\collision\b2_polygon_shape.cpp" />
+    <ClCompile Include="src\Box2D\src\collision\b2_time_of_impact.cpp" />
+    <ClCompile Include="src\Box2D\src\common\b2_block_allocator.cpp" />
+    <ClCompile Include="src\Box2D\src\common\b2_draw.cpp" />
+    <ClCompile Include="src\Box2D\src\common\b2_math.cpp" />
+    <ClCompile Include="src\Box2D\src\common\b2_settings.cpp" />
+    <ClCompile Include="src\Box2D\src\common\b2_stack_allocator.cpp" />
+    <ClCompile Include="src\Box2D\src\common\b2_timer.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_body.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_chain_circle_contact.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_chain_polygon_contact.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_circle_contact.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_contact.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_contact_manager.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_contact_solver.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_distance_joint.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_edge_circle_contact.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_edge_polygon_contact.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_fixture.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_friction_joint.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_gear_joint.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_island.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_joint.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_motor_joint.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_mouse_joint.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_polygon_circle_contact.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_polygon_contact.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_prismatic_joint.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_pulley_joint.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_revolute_joint.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_weld_joint.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_wheel_joint.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_world.cpp" />
+    <ClCompile Include="src\Box2D\src\dynamics\b2_world_callbacks.cpp" />
+    <ClCompile Include="src\Box2D\src\rope\b2_rope.cpp" />
     <ClCompile Include="src\Celes\Core\Window.cpp" />
     <ClCompile Include="src\Celes\Math\Math.cpp" />
     <ClCompile Include="src\Celes\Renderer\CameraController.cpp" />
@@ -260,7 +314,7 @@
       <PreprocessorDefinitions>NOMINMAX;CE_BUILD_DLL;GLEW_STATIC;CE_DEBUG;_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image;$(SolutionDir)CelesEngine\Dependencies\EnTT\include;$(VULKAN_SDK)\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image;$(SolutionDir)CelesEngine\Dependencies\EnTT\include;$(VULKAN_SDK)\Include;$(SolutionDir)CelesEngine\src\Box2D\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -280,7 +334,7 @@
       <PreprocessorDefinitions>NOMINMAX;CE_BUILD_DLL;GLEW_STATIC;CE_RELEASE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image;$(SolutionDir)CelesEngine\Dependencies\EnTT\include;$(VULKAN_SDK)\Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)CelesEngine\Dependencies\spdlog\include;$(SolutionDir)CelesEngine\src;$(SolutionDir)CelesEngine\Dependencies\GLFW\include;$(SolutionDir)CelesEngine\Dependencies\GLEW\include;$(SolutionDir)CelesEngine\Dependencies\glm;$(SolutionDir)CelesEngine\Dependencies\stb_image;$(SolutionDir)CelesEngine\Dependencies\EnTT\include;$(VULKAN_SDK)\Include;$(SolutionDir)CelesEngine\src\Box2D\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
     </ClCompile>
