@@ -20,6 +20,7 @@
     <ClInclude Include="src\Box2D\src\dynamics\b2_island.h" />
     <ClInclude Include="src\Box2D\src\dynamics\b2_polygon_circle_contact.h" />
     <ClInclude Include="src\Box2D\src\dynamics\b2_polygon_contact.h" />
+    <ClInclude Include="src\Celes\Core\UUID.h" />
     <ClInclude Include="src\Celes\Utils\Timer.h" />
     <ClInclude Include="src\Celes\Math\Math.h" />
     <ClInclude Include="src\Celes\Renderer\CameraController.h" />
@@ -185,6 +186,7 @@
     <ClCompile Include="src\Box2D\src\dynamics\b2_world.cpp" />
     <ClCompile Include="src\Box2D\src\dynamics\b2_world_callbacks.cpp" />
     <ClCompile Include="src\Box2D\src\rope\b2_rope.cpp" />
+    <ClCompile Include="src\Celes\Core\UUID.cpp" />
     <ClCompile Include="src\Celes\Core\Window.cpp" />
     <ClCompile Include="src\Celes\Math\Math.cpp" />
     <ClCompile Include="src\Celes\Renderer\CameraController.cpp" />

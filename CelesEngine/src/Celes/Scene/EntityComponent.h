@@ -1,12 +1,20 @@
 #pragma once
 
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
-#include "Entity.h"
 #include "SceneCamera.h"
 #include "Celes/Renderer/Texture.h"
+#include "Celes/Core/UUID.h"
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
 
 namespace Celes {
+
+	struct IDComponent
+	{
+		UUID ID;
+
+		IDComponent() = default;
+		IDComponent(const IDComponent&) = default;
+	};
 
 	struct TagComponent
 	{
@@ -58,6 +66,8 @@ namespace Celes {
 		CameraComponent(const CameraComponent&) = default;
 	};
 
+	// Forward declaration
+	class ScriptableEntity;
 	struct NativeScriptComponent
 	{
 		ScriptableEntity* Instance = nullptr;

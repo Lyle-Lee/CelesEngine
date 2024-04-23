@@ -40,7 +40,13 @@ namespace Celes {
 
 	Entity Scene::CreateEntity(const std::string& name)
 	{
+		return CreateEntityWithUUID(UUID(), name);
+	}
+
+	Entity Scene::CreateEntityWithUUID(UUID uuid, const std::string& name)
+	{
 		Entity entity = { m_Registry.create(), this };
+		entity.AddComponent<IDComponent>(uuid);
 		entity.AddComponent<TransformComponent>();
 		auto& tagCompo = entity.AddComponent<TagComponent>();
 		tagCompo.Tag = name.empty() ? "Entity" : name;
@@ -209,10 +215,6 @@ namespace Celes {
 	}
 
 	template<>
-	void Scene::OnComponentAdd<TransformComponent>(Entity entity, TransformComponent& component)
-	{}
-
-	template<>
 	void Scene::OnComponentAdd<CameraComponent>(Entity entity, CameraComponent& component)
 	{
 		if (m_ViewportWidth > 0 && m_ViewportHeight > 0)
@@ -220,15 +222,7 @@ namespace Celes {
 	}
 
 	template<>
-	void Scene::OnComponentAdd<TagComponent>(Entity entity, TagComponent& component)
-	{}
-
-	template<>
 	void Scene::OnComponentAdd<SpriteRenderComponent>(Entity entity, SpriteRenderComponent& component)
-	{}
-
-	template<>
-	void Scene::OnComponentAdd<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
 	{}
 
 	template<>

@@ -396,6 +396,9 @@
     <ClInclude Include="src\Box2D\src\dynamics\b2_polygon_contact.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Celes\Core\UUID.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Celes\Core\Application.cpp">
@@ -756,6 +759,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Box2D\src\rope\b2_rope.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Celes\Core\UUID.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

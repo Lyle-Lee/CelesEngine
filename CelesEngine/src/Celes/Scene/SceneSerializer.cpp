@@ -147,8 +147,9 @@ namespace Celes {
 
 	static void SerializeEntity(YAML::Emitter& out, Entity entity)
 	{
+		CE_CORE_ASSERT(entity.HasComponent<IDComponent>(), "Invalid entity!")
 		out << YAML::BeginMap;
-		out << YAML::Key << "Entity" << YAML::Value << "12837192831273";
+		out << YAML::Key << "Entity" << YAML::Value << entity.GetUUID();
 
 		if (entity.HasComponent<TagComponent>())
 		{
@@ -291,7 +292,7 @@ namespace Celes {
 
 				CE_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", uuid, name);
 
-				Entity targetEntity = m_Scene->CreateEntity(name);
+				Entity targetEntity = m_Scene->CreateEntityWithUUID(uuid, name);
 
 				auto transformCompo = entity["TransformComponent"];
 				if (transformCompo)

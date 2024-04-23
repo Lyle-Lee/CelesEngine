@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scene.h"
+#include "EntityComponent.h"
 #include <entt.hpp>
 
 namespace Celes {
@@ -40,6 +41,8 @@ namespace Celes {
 
 			m_Scene->m_Registry.remove<T>(m_EntityObject);
 		}
+
+		UUID GetUUID() { return GetComponent<IDComponent>().ID; }
 
 		operator bool() const { return m_EntityObject != entt::null; }
 		operator entt::entity() const { return m_EntityObject; }

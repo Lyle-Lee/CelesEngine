@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Celes/Core/Timestep.h"
+#include "Celes/Core/UUID.h"
 #include "Celes/Renderer/EditorCamera.h"
 #include <entt.hpp>
 
@@ -27,6 +28,7 @@ namespace Celes {
 		~Scene();
 
 		Entity CreateEntity(const std::string& name = std::string());
+		Entity CreateEntityWithUUID(UUID uuid, const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
 
 		// Update runtime
@@ -47,9 +49,6 @@ namespace Celes {
 
 		template<>
 		void OnComponentAdd<SpriteRenderComponent>(Entity entity, SpriteRenderComponent& component);
-
-		template<>
-		void OnComponentAdd<NativeScriptComponent>(Entity entity, NativeScriptComponent& component);
 
 		template<>
 		void OnComponentAdd<Rigidbody2DComponent>(Entity entity, Rigidbody2DComponent& component);
