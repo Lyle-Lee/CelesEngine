@@ -391,14 +391,20 @@ namespace Celes {
 
 	void EditorLayer::OnScenePlay()
 	{
-		m_ActiveScene->OnRuntimeStart();
 		m_SceneState = SceneState::Play;
+
+		// Copy the current editor scene
+		m_ActiveScene = Scene::Copy(m_EditorScene);
+		m_ActiveScene->OnRuntimeStart();
 	}
 
 	void EditorLayer::OnSceneStop()
 	{
-		m_ActiveScene->OnRuntimeStop();
 		m_SceneState = SceneState::Edit;
+		m_ActiveScene->OnRuntimeStop();
+
+		// Release memory and reset to editor scene
+		m_ActiveScene = m_EditorScene;
 	}
 
 	bool EditorLayer::OnKeyPress(KeyPressEvent& e)
@@ -473,15 +479,25 @@ namespace Celes {
 
 	void EditorLayer::OpenScene(const std::filesystem::path& path)
 	{
+		if (m_SceneState == SceneState::Play)
+			OnSceneStop();
+
 		if (path.extension() != ".celes")
+		{
+			CE_WARN("Could not load '{0}' - not a scene file.", path.string());
 			return;
+		}
 
-		m_ActiveScene = CreateRef<Scene>();
-		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		m_SHPanel.SetContext(m_ActiveScene);
+		Ref<Scene> newScene = CreateRef<Scene>();
+		SceneSerializer serializer(newScene);
+		if (serializer.Deserialize(path.string()))
+		{
+			m_EditorScene = newScene;
+			m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 
-		SceneSerializer serializer(m_ActiveScene);
-		serializer.Deserialize(path.string());
+			m_ActiveScene = m_EditorScene;
+			m_SHPanel.SetContext(m_ActiveScene);
+		}
 	}
 
 }

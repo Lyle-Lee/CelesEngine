@@ -65,8 +65,9 @@ namespace Celes {
 		Entity m_SquareEntity;
 		Entity m_CameraEntity1, m_CameraEntity2;
 		Entity m_HoveredEntity;
-		bool m_MainCamera = true;
-		Ref<Scene> m_ActiveScene;
+		//bool m_MainCamera = true;
+
+		Ref<Scene> m_ActiveScene, m_EditorScene;
 
 		enum class SceneState
 		{

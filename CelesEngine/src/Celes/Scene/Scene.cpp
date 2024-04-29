@@ -38,6 +38,25 @@ namespace Celes {
 	{
 	}
 
+	Ref<Scene> Scene::Copy(Ref<Scene> src)
+	{
+		Ref<Scene> dst = CreateRef<Scene>();
+		dst->m_ViewportWidth = src->m_ViewportWidth;
+		dst->m_ViewportHeight = src->m_ViewportHeight;
+		
+		auto idView = src->m_Registry.view<IDComponent>();
+		for (auto& entity : idView)
+		{
+			UUID uuid = src->m_Registry.get<IDComponent>(entity).ID;
+			const auto& name = src->m_Registry.get<TagComponent>(entity).Tag;
+			dst->CreateEntityWithUUID(uuid, name);
+		}
+
+		// TODO: Copy components (except IDComponent and TagComponent)
+
+		return dst;
+	}
+
 	Entity Scene::CreateEntity(const std::string& name)
 	{
 		return CreateEntityWithUUID(UUID(), name);
