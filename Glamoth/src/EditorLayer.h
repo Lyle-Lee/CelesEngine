@@ -27,9 +27,12 @@ namespace Celes {
 		bool OnMouseButtonPress(MouseButtonPressEvent& e);
 
 		void NewScene();
+		void SaveScene();
 		void SaveSceneAs();
 		void OpenScene();
 		void OpenScene(const std::filesystem::path& path);
+
+		void DuplicateEntity();
 
 		//Celes::ShaderLibrary m_ShaderLib;
 
@@ -68,6 +71,7 @@ namespace Celes {
 		//bool m_MainCamera = true;
 
 		Ref<Scene> m_ActiveScene, m_EditorScene;
+		std::filesystem::path m_CurrentScenePath;
 
 		enum class SceneState
 		{

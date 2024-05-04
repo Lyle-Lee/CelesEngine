@@ -45,6 +45,7 @@ namespace Celes {
 		m_StopIcon = Texture2D::Create("icons/ContentBrowser/icon-stop.png");
 
 		m_CameraController.SetZoomLevel(5.0f);
+		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
 		FrameBufferDesc fbDesc;
 		fbDesc.Width = m_ViewportSize.x;
@@ -52,16 +53,17 @@ namespace Celes {
 		fbDesc.AttachmentDesc = { TextureFormat::RGBA8, TextureFormat::R32INT, TextureFormat::DEPTH16 };
 		m_FrameBuffer = FrameBuffer::Create(fbDesc);
 
-		m_ActiveScene = CreateRef<Scene>();
 		auto commandLineArgs = Application::Get().GetCommandLineArgs();
 		if (commandLineArgs.Count > 1)
 		{
 			auto sceneFilePath = commandLineArgs[1];
-			SceneSerializer serializer(m_ActiveScene);
-			serializer.Deserialize(sceneFilePath);
+			OpenScene(sceneFilePath);
+		}
+		else
+		{
+			NewScene();
 		}
 
-		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 #if 0
 		m_SquareEntity = m_ActiveScene->CreateEntity("Square1");
 		m_SquareEntity.AddComponent<SpriteRenderComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
@@ -95,7 +97,6 @@ namespace Celes {
 
 		m_CameraEntity1.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 #endif
-		m_SHPanel.SetContext(m_ActiveScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -107,14 +108,13 @@ namespace Celes {
 		//Timer timer("EditorLayer::OnUpdate", [&](auto profileRes) { m_ProfileResults.push_back(profileRes); });
 		PROFILE_SCOPE("EditorLayer::OnUpdate");
 
+		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
 			(m_ViewportSize.x != m_FrameBuffer->GetWidth() || m_ViewportSize.y != m_FrameBuffer->GetHeight()))
 		{
 			m_FrameBuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 			m_CameraController.ResizeBounds(m_ViewportSize.x, m_ViewportSize.y);
 			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
-
-			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
 
 		// Render
@@ -127,7 +127,7 @@ namespace Celes {
 		Celes::Renderer::ChangeViewport(m_FrameBuffer->GetWidth(), m_FrameBuffer->GetHeight(), glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
 		// Clear our entity ID attachment to -1
-		m_FrameBuffer->ClearAttachment(1, -1);
+		m_FrameBuffer->ClearAttachment(1, Entity::s_NullID);
 
 #if 0
 		Celes::Renderer2D::BeginScene(m_CameraController.GetCamera());
@@ -153,19 +153,19 @@ namespace Celes {
 		// Update scene
 		switch (m_SceneState)
 		{
-			case SceneState::Edit:
-				if (m_ViewportFocused)
-					m_CameraController.OnUpdate(dTime);
+		case SceneState::Edit:
+			if (m_ViewportFocused)
+				m_CameraController.OnUpdate(dTime);
 
-				m_EditorCamera.OnUpdate(dTime);
-				m_ActiveScene->OnUpdateEditor(dTime, m_EditorCamera);
-				break;
-			case SceneState::Play:
-				m_ActiveScene->OnUpdate(dTime);
-				break;
-			default:
-				CE_CORE_ERROR("Unknown scene state!");
-				break;
+			m_EditorCamera.OnUpdate(dTime);
+			m_ActiveScene->OnUpdateEditor(dTime, m_EditorCamera);
+			break;
+		case SceneState::Play:
+			m_ActiveScene->OnUpdate(dTime);
+			break;
+		default:
+			CE_CORE_ERROR("Unknown scene state!");
+			break;
 		}
 
 		//Celes::Renderer2D::EndScene();
@@ -177,7 +177,7 @@ namespace Celes {
 		{
 			int pixelData = m_FrameBuffer->ReadPixel(1, (int)mx, (int)my);
 			//CE_CORE_WARN("Pixel data = {0}", pixelData);
-			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
+			m_HoveredEntity = pixelData == Entity::s_NullID ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
 		}
 
 		m_FrameBuffer->Unbind();
@@ -186,7 +186,8 @@ namespace Celes {
 	void EditorLayer::OnEvent(Celes::Event& e)
 	{
 		m_CameraController.OnEvent(e);
-		m_EditorCamera.OnEvent(e);
+		if (m_SceneState == SceneState::Edit)
+			m_EditorCamera.OnEvent(e);
 
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<KeyPressEvent>(std::bind(&EditorLayer::OnKeyPress, this, std::placeholders::_1));
@@ -396,6 +397,7 @@ namespace Celes {
 		// Copy the current editor scene
 		m_ActiveScene = Scene::Copy(m_EditorScene);
 		m_ActiveScene->OnRuntimeStart();
+		m_SHPanel.SetContext(m_ActiveScene);
 	}
 
 	void EditorLayer::OnSceneStop()
@@ -405,6 +407,7 @@ namespace Celes {
 
 		// Release memory and reset to editor scene
 		m_ActiveScene = m_EditorScene;
+		m_SHPanel.SetContext(m_ActiveScene);
 	}
 
 	bool EditorLayer::OnKeyPress(KeyPressEvent& e)
@@ -421,10 +424,20 @@ namespace Celes {
 				if (ctrl) NewScene();
 				break;
 			case CE_KEY_S:
-				if (ctrl && shift) SaveSceneAs();
+				if (ctrl)
+				{
+					if (shift)
+						SaveSceneAs();
+					else
+						SaveScene();
+				}
 				break;
 			case CE_KEY_O:
 				if (ctrl) OpenScene();
+				break;
+			// Scene commands
+			case CE_KEY_D:
+				if (ctrl) DuplicateEntity();
 				break;
 			// Guizmos
 			case CE_KEY_Q:
@@ -455,9 +468,27 @@ namespace Celes {
 
 	void EditorLayer::NewScene()
 	{
-		m_ActiveScene = CreateRef<Scene>();
-		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		if (m_SceneState != SceneState::Edit)
+			OnSceneStop();
+
+		m_EditorScene = CreateRef<Scene>();
+		m_ActiveScene = m_EditorScene;
+
 		m_SHPanel.SetContext(m_ActiveScene);
+		m_CurrentScenePath = std::filesystem::path();
+	}
+
+	void EditorLayer::SaveScene()
+	{
+		if (!m_CurrentScenePath.empty())
+		{
+			SceneSerializer serializer(m_EditorScene);
+			serializer.Serialize(m_CurrentScenePath.string());
+		}
+		else
+		{
+			SaveSceneAs();
+		}
 	}
 
 	void EditorLayer::SaveSceneAs()
@@ -465,8 +496,9 @@ namespace Celes {
 		std::string filepath = FileDialogs::SaveFile("Celes Scene (*.celes)\0*.celes\0");
 		if (!filepath.empty())
 		{
-			SceneSerializer serializer(m_ActiveScene);
+			SceneSerializer serializer(m_EditorScene);
 			serializer.Serialize(filepath);
+			m_CurrentScenePath = filepath;
 		}
 	}
 
@@ -479,7 +511,7 @@ namespace Celes {
 
 	void EditorLayer::OpenScene(const std::filesystem::path& path)
 	{
-		if (m_SceneState == SceneState::Play)
+		if (m_SceneState != SceneState::Edit)
 			OnSceneStop();
 
 		if (path.extension() != ".celes")
@@ -493,11 +525,20 @@ namespace Celes {
 		if (serializer.Deserialize(path.string()))
 		{
 			m_EditorScene = newScene;
-			m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-
 			m_ActiveScene = m_EditorScene;
+
 			m_SHPanel.SetContext(m_ActiveScene);
+			m_CurrentScenePath = path;
 		}
+	}
+
+	void EditorLayer::DuplicateEntity()
+	{
+		if (m_SceneState != SceneState::Edit)
+			return;
+
+		if (Entity selectedEntity = m_SHPanel.GetSelectedEntity())
+			m_ActiveScene->DuplicateEntity(selectedEntity);
 	}
 
 }

@@ -38,6 +38,33 @@ namespace Celes {
 	{
 	}
 
+	template<typename T>
+	static void CopyComponent(entt::registry& dstRegistry, entt::registry& srcRegistry, const std::unordered_map<UUID, entt::entity>& enttMap)
+	{
+		auto idView = srcRegistry.view<IDComponent>();
+
+		// Copy the component to the target entity which has the same UUID.
+		for (auto& entity : idView)
+		{
+			if (!srcRegistry.any_of<T>(entity))
+				continue;
+
+			UUID uuid = srcRegistry.get<IDComponent>(entity).ID;
+			CE_CORE_ASSERT(enttMap.find(uuid) != enttMap.end(), "Could not find the target entity during copy.")
+			entt::entity dstEntity = enttMap.at(uuid);
+
+			auto& component = srcRegistry.get<T>(entity);
+			dstRegistry.emplace_or_replace<T>(dstEntity, component);
+		}
+	}
+
+	template<typename T>
+	static void CopyComponentIfExists(Entity dstEntity, Entity srcEntity)
+	{
+		if (srcEntity.HasComponent<T>())
+			dstEntity.AddOrReplaceComponent<T>(srcEntity.GetComponent<T>());
+	}
+
 	Ref<Scene> Scene::Copy(Ref<Scene> src)
 	{
 		Ref<Scene> dst = CreateRef<Scene>();
@@ -45,14 +72,23 @@ namespace Celes {
 		dst->m_ViewportHeight = src->m_ViewportHeight;
 		
 		auto idView = src->m_Registry.view<IDComponent>();
+		std::unordered_map<UUID, entt::entity> enttMap;
+
+		// Create entities for new scene.
 		for (auto& entity : idView)
 		{
 			UUID uuid = src->m_Registry.get<IDComponent>(entity).ID;
 			const auto& name = src->m_Registry.get<TagComponent>(entity).Tag;
-			dst->CreateEntityWithUUID(uuid, name);
+			auto dstEntity = dst->CreateEntityWithUUID(uuid, name);
+			enttMap[uuid] = (entt::entity)dstEntity;
 		}
 
-		// TODO: Copy components (except IDComponent and TagComponent)
+		CopyComponent<TransformComponent>(dst->m_Registry, src->m_Registry, enttMap);
+		CopyComponent<SpriteRenderComponent>(dst->m_Registry, src->m_Registry, enttMap);
+		CopyComponent<CameraComponent>(dst->m_Registry, src->m_Registry, enttMap);
+		CopyComponent<NativeScriptComponent>(dst->m_Registry, src->m_Registry, enttMap);
+		CopyComponent<Rigidbody2DComponent>(dst->m_Registry, src->m_Registry, enttMap);
+		CopyComponent<BoxCollider2DComponent>(dst->m_Registry, src->m_Registry, enttMap);
 
 		return dst;
 	}
@@ -76,6 +112,18 @@ namespace Celes {
 	void Scene::DestroyEntity(Entity entity)
 	{
 		m_Registry.destroy(entity);
+	}
+
+	void Scene::DuplicateEntity(Entity entity)
+	{
+		Entity newEntity = CreateEntity(entity.GetName());
+
+		CopyComponentIfExists<TransformComponent>(newEntity, entity);
+		CopyComponentIfExists<SpriteRenderComponent>(newEntity, entity);
+		CopyComponentIfExists<CameraComponent>(newEntity, entity);
+		CopyComponentIfExists<NativeScriptComponent>(newEntity, entity);
+		CopyComponentIfExists<Rigidbody2DComponent>(newEntity, entity);
+		CopyComponentIfExists<BoxCollider2DComponent>(newEntity, entity);
 	}
 
 	void Scene::OnUpdate(Timestep dTime)
@@ -202,6 +250,9 @@ namespace Celes {
 
 	void Scene::OnViewportResize(uint32_t width, uint32_t height)
 	{
+		if (m_ViewportWidth == width && m_ViewportHeight == height)
+			return;
+
 		m_ViewportWidth = width;
 		m_ViewportHeight = height;
 

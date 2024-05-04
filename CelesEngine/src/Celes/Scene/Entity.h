@@ -9,6 +9,8 @@ namespace Celes {
 	class CE_API Entity
 	{
 	public:
+		static constexpr int s_NullID = -1;
+
 		Entity() = default;
 		Entity(entt::entity object, Scene* scene);
 		Entity(const Entity& other) = default;
@@ -21,9 +23,17 @@ namespace Celes {
 		{
 			CE_CORE_ASSERT(!HasComponent<T>(), "Entity already has the component!")
 
-			T& compo = m_Scene->m_Registry.emplace<T>(m_EntityObject, std::forward<Args>(args)...);
-			m_Scene->OnComponentAdd<T>(*this, compo);
-			return compo;
+			T& component = m_Scene->m_Registry.emplace<T>(m_EntityObject, std::forward<Args>(args)...);
+			m_Scene->OnComponentAdd<T>(*this, component);
+			return component;
+		}
+
+		template<typename T, typename... Args>
+		T& AddOrReplaceComponent(Args&&... args)
+		{
+			T& component = m_Scene->m_Registry.emplace_or_replace<T>(m_EntityObject, std::forward<Args>(args)...);
+			m_Scene->OnComponentAdd<T>(*this, component);
+			return component;
 		}
 
 		template<typename T>
@@ -43,6 +53,7 @@ namespace Celes {
 		}
 
 		UUID GetUUID() { return GetComponent<IDComponent>().ID; }
+		const std::string& GetName() { return GetComponent<TagComponent>().Tag; }
 
 		operator bool() const { return m_EntityObject != entt::null; }
 		operator entt::entity() const { return m_EntityObject; }

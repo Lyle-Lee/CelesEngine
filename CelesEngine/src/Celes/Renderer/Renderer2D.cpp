@@ -185,6 +185,9 @@ namespace Celes {
 
 	void Renderer2D::Flush()
 	{
+		if (s_Data.QuadIndexCnt == 0)
+			return;
+
 		for (uint32_t i = 0; i < s_Data.TexIndex; ++i)
 			s_Data.TexSlots[i]->Bind(i);
 
