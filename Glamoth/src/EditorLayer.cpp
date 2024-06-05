@@ -242,6 +242,8 @@ namespace Celes {
 			{
 				if (ImGui::MenuItem("New", "Ctrl+N")) NewScene();
 
+				if (ImGui::MenuItem("Save", "Ctrl+S")) SaveScene();
+
 				if (ImGui::MenuItem("Save As", "Ctrl+Shift+S")) SaveSceneAs();
 
 				if (ImGui::MenuItem("Open...", "Ctrl+O")) OpenScene();

@@ -211,6 +211,19 @@ namespace Celes {
 			out << YAML::EndMap;
 		}
 
+		if (entity.HasComponent<CircleRenderComponent>())
+		{
+			out << YAML::Key << "CircleRenderComponent";
+			out << YAML::BeginMap;
+
+			auto& compo = entity.GetComponent<CircleRenderComponent>();
+			out << YAML::Key << "Color" << YAML::Value << compo.Color;
+			out << YAML::Key << "Thickness" << YAML::Value << compo.Thickness;
+			out << YAML::Key << "Fade" << YAML::Value << compo.Fade;
+
+			out << YAML::EndMap;
+		}
+
 		if (entity.HasComponent<Rigidbody2DComponent>())
 		{
 			out << YAML::Key << "Rigidbody2DComponent";
@@ -329,6 +342,15 @@ namespace Celes {
 				{
 					auto& compo = targetEntity.AddComponent<SpriteRenderComponent>();
 					compo.Color = spriteRenderCompo["Color"].as<glm::vec4>();
+				}
+
+				auto circleRenderCompo = entity["CircleRenderComponent"];
+				if (circleRenderCompo)
+				{
+					auto& compo = targetEntity.AddComponent<CircleRenderComponent>();
+					compo.Color = circleRenderCompo["Color"].as<glm::vec4>();
+					compo.Thickness = circleRenderCompo["Thickness"].as<float>();
+					compo.Fade = circleRenderCompo["Fade"].as<float>();
 				}
 
 				auto rb2dCompo = entity["Rigidbody2DComponent"];

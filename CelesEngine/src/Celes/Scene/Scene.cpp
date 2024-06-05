@@ -85,6 +85,7 @@ namespace Celes {
 
 		CopyComponent<TransformComponent>(dst->m_Registry, src->m_Registry, enttMap);
 		CopyComponent<SpriteRenderComponent>(dst->m_Registry, src->m_Registry, enttMap);
+		CopyComponent<CircleRenderComponent>(dst->m_Registry, src->m_Registry, enttMap);
 		CopyComponent<CameraComponent>(dst->m_Registry, src->m_Registry, enttMap);
 		CopyComponent<NativeScriptComponent>(dst->m_Registry, src->m_Registry, enttMap);
 		CopyComponent<Rigidbody2DComponent>(dst->m_Registry, src->m_Registry, enttMap);
@@ -120,6 +121,7 @@ namespace Celes {
 
 		CopyComponentIfExists<TransformComponent>(newEntity, entity);
 		CopyComponentIfExists<SpriteRenderComponent>(newEntity, entity);
+		CopyComponentIfExists<CircleRenderComponent>(newEntity, entity);
 		CopyComponentIfExists<CameraComponent>(newEntity, entity);
 		CopyComponentIfExists<NativeScriptComponent>(newEntity, entity);
 		CopyComponentIfExists<Rigidbody2DComponent>(newEntity, entity);
@@ -176,13 +178,27 @@ namespace Celes {
 		{
 			Renderer2D::BeginScene(*mainCamera, cameraTransform);
 
-			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRenderComponent>);
-			for (auto& entity : group)
+			// Draw sprites
 			{
-				auto [transformCompo, spriteCompo] = group.get<TransformComponent, SpriteRenderComponent>(entity);
+				auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRenderComponent>);
+				for (auto& entity : group)
+				{
+					auto [transformCompo, spriteCompo] = group.get<TransformComponent, SpriteRenderComponent>(entity);
 
-				//Renderer2D::DrawQuad(transformCompo.GetTransform(), spriteCompo.Color);
-				Renderer2D::DrawSprite(transformCompo.GetTransform(), spriteCompo, (int)entity);
+					//Renderer2D::DrawQuad(transformCompo.GetTransform(), spriteCompo.Color);
+					Renderer2D::DrawSprite(transformCompo.GetTransform(), spriteCompo, (int)entity);
+				}
+			}
+
+			// Draw circles
+			{
+				auto view = m_Registry.view<TransformComponent, CircleRenderComponent>();
+				for (auto& entity : view)
+				{
+					auto [transformCompo, circleCompo] = view.get<TransformComponent, CircleRenderComponent>(entity);
+
+					Renderer2D::DrawCircle(transformCompo.GetTransform(), circleCompo, (int)entity);
+				}
 			}
 
 			Renderer2D::EndScene();
@@ -236,13 +252,27 @@ namespace Celes {
 	{
 		Renderer2D::BeginScene(camera);
 
-		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRenderComponent>);
-		for (auto& entity : group)
+		// Draw sprites
 		{
-			auto [transformCompo, spriteCompo] = group.get<TransformComponent, SpriteRenderComponent>(entity);
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRenderComponent>);
+			for (auto& entity : group)
+			{
+				auto [transformCompo, spriteCompo] = group.get<TransformComponent, SpriteRenderComponent>(entity);
 
-			//Renderer2D::DrawQuad(transformCompo.GetTransform(), spriteCompo.Color);
-			Renderer2D::DrawSprite(transformCompo.GetTransform(), spriteCompo, (int)entity);
+				//Renderer2D::DrawQuad(transformCompo.GetTransform(), spriteCompo.Color);
+				Renderer2D::DrawSprite(transformCompo.GetTransform(), spriteCompo, (int)entity);
+			}
+		}
+
+		// Draw circles
+		{
+			auto view = m_Registry.view<TransformComponent, CircleRenderComponent>();
+			for (auto& entity : view)
+			{
+				auto [transformCompo, circleCompo] = view.get<TransformComponent, CircleRenderComponent>(entity);
+
+				Renderer2D::DrawCircle(transformCompo.GetTransform(), circleCompo, (int)entity);
+			}
 		}
 
 		Renderer2D::EndScene();
@@ -293,6 +323,10 @@ namespace Celes {
 
 	template<>
 	void Scene::OnComponentAdd<SpriteRenderComponent>(Entity entity, SpriteRenderComponent& component)
+	{}
+
+	template<>
+	void Scene::OnComponentAdd<CircleRenderComponent>(Entity entity, CircleRenderComponent& component)
 	{}
 
 	template<>

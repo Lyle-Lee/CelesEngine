@@ -120,7 +120,7 @@ namespace Celes {
 			// Extract name from filepath
 			auto start = vs.find_last_of("/\\");
 			start = start == std::string::npos ? 0 : start + 1;
-			auto end = vs.rfind("VertexShader");
+			auto end = vs.rfind(".vert");
 			auto count = end == std::string::npos ? vs.size() - start : end - start;
 			m_Name = vs.substr(start, count);
 		}
@@ -149,7 +149,7 @@ namespace Celes {
 			// Extract name from filepath
 			auto start = cs.find_last_of("/\\");
 			start = start == std::string::npos ? 0 : start + 1;
-			auto end = cs.rfind("ComputeShader");
+			auto end = cs.rfind(".comp");
 			auto count = end == std::string::npos ? cs.size() - start : end - start;
 			m_Name = cs.substr(start, count);
 		}
@@ -303,7 +303,7 @@ namespace Celes {
 
 		shaderc::Compiler compiler;
 		shaderc::CompileOptions options;
-		options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_3);
+		options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2);
 		options.SetOptimizationLevel(shaderc_optimization_level_performance);
 
 		std::filesystem::path cacheDir = GetCacheDirectory();

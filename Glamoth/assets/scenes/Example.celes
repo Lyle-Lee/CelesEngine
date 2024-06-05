@@ -1,23 +1,34 @@
 Scene: Untitled
 Entities:
-  - Entity: 15347256974935823767
+  - Entity: 4074730309569095388
     TagComponent:
-      Tag: Camera B
+      Tag: Circle
+    TransformComponent:
+      Translation: [-2, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CircleRenderComponent:
+      Color: [0.224236369, 0.720113456, 0.841698825, 1]
+      Thickness: 0.25
+      Fade: 0.100000001
+  - Entity: 5258853590246972903
+    TagComponent:
+      Tag: Square1
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-    CameraComponent:
-      Camera:
-        ProjectionType: 1
-        PerspectiveFOV: 0.785398185
-        PerspectiveNear: 0.00999999978
-        PerspectiveFar: 1000
-        OrthographicSize: 10
-        OrthographicNear: -1
-        OrthographicFar: 1
-      Primary: false
-      FixedAspectRatio: false
+    SpriteRenderComponent:
+      Color: [0, 1, 0, 1]
+  - Entity: 3618156830718822838
+    TagComponent:
+      Tag: Square2
+    TransformComponent:
+      Translation: [2, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteRenderComponent:
+      Color: [1, 0, 0, 1]
   - Entity: 8112635433412502937
     TagComponent:
       Tag: Camera A
@@ -36,21 +47,21 @@ Entities:
         OrthographicFar: 1
       Primary: true
       FixedAspectRatio: false
-  - Entity: 3618156830718822838
+  - Entity: 15347256974935823767
     TagComponent:
-      Tag: Square2
-    TransformComponent:
-      Translation: [2, 0, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    SpriteRenderComponent:
-      Color: [1, 0, 0, 1]
-  - Entity: 5258853590246972903
-    TagComponent:
-      Tag: Square1
+      Tag: Camera B
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-    SpriteRenderComponent:
-      Color: [0, 1, 0, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 1
+        PerspectiveFOV: 0.785398185
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: false
+      FixedAspectRatio: false

@@ -17,7 +17,6 @@ namespace Celes {
 		static void BeginScene(const EditorCamera& camera);
 		static void BeginScene(const OrthoCamera& camera); // TODO: remove
 		static void EndScene();
-		static void Flush();
 
 		// Primitives
 		static void DrawQuad(const glm::vec2& pos, const glm::vec2& size, const glm::vec4& color);
@@ -44,6 +43,10 @@ namespace Celes {
 		static void DrawRotatedQuad(const glm::vec2& pos, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subTexture, float tilingFactor = 1.0f);
 		static void DrawRotatedQuad(const glm::vec3& pos, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subTexture, float tilingFactor = 1.0f);
 
+		// Circles
+		static void DrawCircle(const glm::mat4& transform, const glm::vec4& color, float thickness = 1.0f, float fade = 0.005f, int entityID = -1);
+		static void DrawCircle(const glm::mat4& transform, CircleRenderComponent& src, int entityID);
+
 		struct Statistics
 		{
 			uint32_t DrawCallsCnt = 0;
@@ -56,6 +59,7 @@ namespace Celes {
 		static void ResetStats();
 	private:
 		static void StartNewBatch();
+		static void Flush();
 
 		static Scope<RenderCommand> s_Cmd;
 	};

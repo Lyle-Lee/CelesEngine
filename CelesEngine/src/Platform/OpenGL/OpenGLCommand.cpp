@@ -28,6 +28,7 @@ namespace Celes {
 
 	void OpenGLCommand::DrawIndexed(const Ref<VertexArray>& va, uint32_t indexCnt)
 	{
+		va->Bind();
 		uint32_t count = indexCnt ? indexCnt : va->GetIndexBuffer()->GetCount();
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 	}

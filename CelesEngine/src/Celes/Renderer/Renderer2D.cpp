@@ -19,6 +19,18 @@ namespace Celes {
 		int EntityID;
 	};
 
+	struct CircleVertex
+	{
+		glm::vec3 Position;
+		float Thickness;
+		glm::vec3 LocalPosition;
+		float Fade;
+		glm::vec4 Color;
+
+		// Editor only
+		int EntityID;
+	};
+
 	struct Renderer2DStorage
 	{
 		static const uint32_t MaxQuadsCnt = 10000;
@@ -26,21 +38,32 @@ namespace Celes {
 		static const uint32_t MaxIndicesCnt = MaxQuadsCnt * 6;
 		static const uint32_t MaxTextureSlots = 32;
 
-		uint32_t QuadIndexCnt = 0;
-
 		Ref<VertexArray> QuadVertexArray;
 		Ref<VertexBuffer> QuadVertexBuffer;
 		//Ref<Shader> FlatColorShader;
-		Ref<Shader> TestShader;
+		Ref<Shader> QuadShader;
 		Ref<Texture> BlankTexture;
 
+		Ref<VertexArray> CircleVertexArray;
+		Ref<VertexBuffer> CircleVertexBuffer;
+		Ref<Shader> CircleShader;
+
+		uint32_t QuadIndexCnt = 0;
 		QuadVertex* QuadVBBase = nullptr;
 		QuadVertex* QuadVBPtr = nullptr;
+
+		uint32_t CircleIndexCnt = 0;
+		CircleVertex* CircleVBBase = nullptr;
+		CircleVertex* CircleVBPtr = nullptr;
 
 		std::array<Ref<Texture>, MaxTextureSlots> TexSlots;
 		uint32_t TexIndex = 1; // 0 = blank texture
 
-		glm::vec4 QuadVertexPositions[4];
+		glm::vec4 QuadVertexPositions[4] = {
+			{ -0.5f, -0.5f, 0.0f, 1.0f }, // x, y, z, w
+			{  0.5f, -0.5f, 0.0f, 1.0f },
+			{  0.5f,  0.5f, 0.0f, 1.0f },
+			{ -0.5f,  0.5f, 0.0f, 1.0f } };
 
 		struct CameraData
 		{
@@ -59,37 +82,22 @@ namespace Celes {
 	{
 		//s_Data = new Renderer2DStorage();
 
+		// Quads
 		s_Data.QuadVertexArray = VertexArray::Create();
 
-		// Square
-		/*float vertices[5 * 4] = {
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
-			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
-		};*/
-		s_Data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f }; // x, y, z, w
-		s_Data.QuadVertexPositions[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
-		s_Data.QuadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
-		s_Data.QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
-
-		//Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(vertices, sizeof(vertices));
 		s_Data.QuadVertexBuffer = VertexBuffer::Create(s_Data.MaxVerticesCnt * sizeof(QuadVertex));
-
 		s_Data.QuadVertexBuffer->SetLayout({
-			{"aPosition", ShaderDataType::Float3},
-			{"aColor", ShaderDataType::Float4},
-			{"aTexCoord", ShaderDataType::Float2},
-			{"aTexID", ShaderDataType::Int},
-			{"aTilingFactor", ShaderDataType::Float},
-			{"aEntityID", ShaderDataType::Int}
+			{ "aPosition",     ShaderDataType::Float3 },
+			{ "aColor",	       ShaderDataType::Float4 },
+			{ "aTexCoord",     ShaderDataType::Float2 },
+			{ "aTexID",	       ShaderDataType::Int },
+			{ "aTilingFactor", ShaderDataType::Float },
+			{ "aEntityID",     ShaderDataType::Int }
 			});
 		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
 
 		s_Data.QuadVBBase = new QuadVertex[s_Data.MaxVerticesCnt];
 
-		// Square
-		//uint32_t indices[6] = { 0, 1, 2, 2, 3, 0 };
 		uint32_t* quadIndices = new uint32_t[s_Data.MaxIndicesCnt];
 		uint32_t offset = 0;
 		for (uint32_t i = 0; i < s_Data.MaxIndicesCnt; i += 6)
@@ -110,17 +118,36 @@ namespace Celes {
 
 		delete[] quadIndices;
 
+		// Circles
+		s_Data.CircleVertexArray = VertexArray::Create();
+
+		s_Data.CircleVertexBuffer = VertexBuffer::Create(s_Data.MaxVerticesCnt * sizeof(CircleVertex));
+		s_Data.CircleVertexBuffer->SetLayout({
+			{ "aPosition",      ShaderDataType::Float3 },
+			{ "aThickness",     ShaderDataType::Float },
+			{ "aLocalPosition", ShaderDataType::Float3 },
+			{ "aFade",          ShaderDataType::Float },
+			{ "aColor",         ShaderDataType::Float4 },
+			{ "aEntityID",      ShaderDataType::Int }
+			});
+		s_Data.CircleVertexArray->AddVertexBuffer(s_Data.CircleVertexBuffer);
+
+		s_Data.CircleVBBase = new CircleVertex[s_Data.MaxVerticesCnt];
+
+		s_Data.CircleVertexArray->SetIndexBuffer(indexBuffer); // Use the same index buffer since geometry is identical.
+
 		s_Data.BlankTexture = Texture2D::Create(1, 1);
 		uint32_t blankData = 0xffffffff;
 		s_Data.BlankTexture->SetData(&blankData, sizeof(uint32_t));
 
-		int samplers[s_Data.MaxTextureSlots];
-		for (int i = 0; i < s_Data.MaxTextureSlots; ++i) samplers[i] = i;
+		//int samplers[s_Data.MaxTextureSlots];
+		//for (int i = 0; i < s_Data.MaxTextureSlots; ++i) samplers[i] = i;
 
-		//s_Data->FlatColorShader = Shader::Create("assets/shaders/FlatColorVertexShader.glsl", "assets/shaders/FlatColorFragmentShader.glsl", true);
-		s_Data.TestShader = Shader::Create("assets/shaders/TestVertexShader.glsl", "assets/shaders/TestFragmentShader.glsl", true);
-		//s_Data.TestShader->Bind();
-		//s_Data.TestShader->SetIntArray("uTextures", samplers, s_Data.MaxTextureSlots);
+		//s_Data->FlatColorShader = Shader::Create("assets/shaders/FlatColor.vert.glsl", "assets/shaders/FlatColor.frag.glsl", true);
+		s_Data.QuadShader = Shader::Create("assets/shaders/Renderer2D_Quad.vert.glsl", "assets/shaders/Renderer2D_Quad.frag.glsl", true);
+		s_Data.CircleShader = Shader::Create("assets/shaders/Renderer2D_Circle.vert.glsl", "assets/shaders/Renderer2D_Circle.frag.glsl", true);
+		//s_Data.QuadShader->Bind();
+		//s_Data.QuadShader->SetIntArray("uTextures", samplers, s_Data.MaxTextureSlots);
 
 		s_Data.TexSlots[0] = s_Data.BlankTexture;
 		s_Data.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer2DStorage::CameraData), 0);
@@ -134,13 +161,12 @@ namespace Celes {
 	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
 	{
 		s_Data.CameraBuffer.ViewProjection = camera.GetProjection() * glm::inverse(transform);
-
-		//s_Data.TestShader->Bind();
-		//s_Data.TestShader->SetMat4("uViewProj", viewProj);
 		s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DStorage::CameraData));
 
 		s_Data.QuadIndexCnt = 0;
 		s_Data.QuadVBPtr = s_Data.QuadVBBase;
+		s_Data.CircleIndexCnt = 0;
+		s_Data.CircleVBPtr = s_Data.CircleVBBase;
 
 		s_Data.TexIndex = 1;
 	}
@@ -148,13 +174,12 @@ namespace Celes {
 	void Renderer2D::BeginScene(const EditorCamera& camera)
 	{
 		s_Data.CameraBuffer.ViewProjection = camera.GetVP();
-
-		//s_Data.TestShader->Bind();
-		//s_Data.TestShader->SetMat4("uViewProj", viewProj);
 		s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DStorage::CameraData));
 
 		s_Data.QuadIndexCnt = 0;
 		s_Data.QuadVBPtr = s_Data.QuadVBBase;
+		s_Data.CircleIndexCnt = 0;
+		s_Data.CircleVBPtr = s_Data.CircleVBBase;
 
 		s_Data.TexIndex = 1;
 	}
@@ -164,37 +189,48 @@ namespace Celes {
 		//s_Data.FlatColorShader->Bind();
 		//s_Data.FlatColorShader->SetMat4("uViewProj", camera.GetVP());
 
-		//s_Data.TestShader->Bind();
-		//s_Data.TestShader->SetMat4("uViewProj", camera.GetVP());
 		s_Data.CameraBuffer.ViewProjection = camera.GetVP();
 		s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DStorage::CameraData));
 
 		s_Data.QuadIndexCnt = 0;
 		s_Data.QuadVBPtr = s_Data.QuadVBBase;
+		s_Data.CircleIndexCnt = 0;
+		s_Data.CircleVBPtr = s_Data.CircleVBBase;
 
 		s_Data.TexIndex = 1;
 	}
 
 	void Renderer2D::EndScene()
 	{
-		uint32_t dataSize = (uint8_t*)s_Data.QuadVBPtr - (uint8_t*)s_Data.QuadVBBase;
-		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVBBase, dataSize);
-
 		Flush();
 	}
 
 	void Renderer2D::Flush()
 	{
-		if (s_Data.QuadIndexCnt == 0)
-			return;
+		if (s_Data.QuadIndexCnt)
+		{
+			uint32_t dataSize = (uint8_t*)s_Data.QuadVBPtr - (uint8_t*)s_Data.QuadVBBase;
+			s_Data.QuadVertexBuffer->SetData(s_Data.QuadVBBase, dataSize);
 
-		for (uint32_t i = 0; i < s_Data.TexIndex; ++i)
-			s_Data.TexSlots[i]->Bind(i);
+			for (uint32_t i = 0; i < s_Data.TexIndex; ++i)
+				s_Data.TexSlots[i]->Bind(i);
 
-		s_Data.TestShader->Bind();
-		s_Cmd->DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCnt);
+			s_Data.QuadShader->Bind();
+			s_Cmd->DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCnt);
 
-		s_Data.Stats.DrawCallsCnt++;
+			s_Data.Stats.DrawCallsCnt++;
+		}
+
+		if (s_Data.CircleIndexCnt)
+		{
+			uint32_t dataSize = (uint8_t*)s_Data.CircleVBPtr - (uint8_t*)s_Data.CircleVBBase;
+			s_Data.CircleVertexBuffer->SetData(s_Data.CircleVBBase, dataSize);
+
+			s_Data.CircleShader->Bind();
+			s_Cmd->DrawIndexed(s_Data.CircleVertexArray, s_Data.CircleIndexCnt);
+
+			s_Data.Stats.DrawCallsCnt++;
+		}
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& pos, const glm::vec2& size, const glm::vec4& color)
@@ -497,6 +533,33 @@ namespace Celes {
 		s_Data.Stats.QuadCnt++;
 	}
 
+	void Renderer2D::DrawCircle(const glm::mat4& transform, const glm::vec4& color, float thickness, float fade, int entityID)
+	{
+		// TODO: implement for circles
+		//if (s_Data.CircleIndexCnt >= Renderer2DStorage::MaxIndicesCnt)
+		//	StartNewBatch();
+
+		for (int i = 0; i < 4; ++i)
+		{
+			s_Data.CircleVBPtr->Position = transform * s_Data.QuadVertexPositions[i];
+			s_Data.CircleVBPtr->Thickness = thickness;
+			s_Data.CircleVBPtr->LocalPosition = s_Data.QuadVertexPositions[i] * 2.0f;
+			s_Data.CircleVBPtr->Fade = fade;
+			s_Data.CircleVBPtr->Color = color;
+			s_Data.CircleVBPtr->EntityID = entityID;
+			s_Data.CircleVBPtr++;
+		}
+
+		s_Data.CircleIndexCnt += 6;
+
+		s_Data.Stats.QuadCnt++;
+	}
+
+	void Renderer2D::DrawCircle(const glm::mat4& transform, CircleRenderComponent& src, int entityID)
+	{
+		DrawCircle(transform, src.Color, src.Thickness, src.Fade, entityID);
+	}
+
 	Renderer2D::Statistics Renderer2D::GetStats()
 	{
 		return s_Data.Stats;
@@ -513,6 +576,9 @@ namespace Celes {
 
 		s_Data.QuadIndexCnt = 0;
 		s_Data.QuadVBPtr = s_Data.QuadVBBase;
+
+		s_Data.CircleIndexCnt = 0;
+		s_Data.CircleVBPtr = s_Data.CircleVBBase;
 
 		s_Data.TexIndex = 1;
 	}

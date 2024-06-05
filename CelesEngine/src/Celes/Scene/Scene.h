@@ -14,6 +14,7 @@ namespace Celes {
 	class SceneSerializer;
 	struct CameraComponent;
 	struct SpriteRenderComponent;
+	struct CircleRenderComponent;
 	struct NativeScriptComponent;
 	struct Rigidbody2DComponent;
 	struct BoxCollider2DComponent;
@@ -52,6 +53,9 @@ namespace Celes {
 
 		template<>
 		void OnComponentAdd<SpriteRenderComponent>(Entity entity, SpriteRenderComponent& component);
+
+		template<>
+		void OnComponentAdd<CircleRenderComponent>(Entity entity, CircleRenderComponent& component);
 
 		template<>
 		void OnComponentAdd<Rigidbody2DComponent>(Entity entity, Rigidbody2DComponent& component);
