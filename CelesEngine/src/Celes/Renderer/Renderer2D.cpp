@@ -31,6 +31,15 @@ namespace Celes {
 		int EntityID;
 	};
 
+	struct LineVertex
+	{
+		glm::vec3 Position;
+		glm::vec4 Color;
+
+		// Editor only
+		int EntityID;
+	};
+
 	struct Renderer2DStorage
 	{
 		static const uint32_t MaxQuadsCnt = 10000;
@@ -48,6 +57,10 @@ namespace Celes {
 		Ref<VertexBuffer> CircleVertexBuffer;
 		Ref<Shader> CircleShader;
 
+		Ref<VertexArray> LineVertexArray;
+		Ref<VertexBuffer> LineVertexBuffer;
+		Ref<Shader> LineShader;
+
 		uint32_t QuadIndexCnt = 0;
 		QuadVertex* QuadVBBase = nullptr;
 		QuadVertex* QuadVBPtr = nullptr;
@@ -55,6 +68,11 @@ namespace Celes {
 		uint32_t CircleIndexCnt = 0;
 		CircleVertex* CircleVBBase = nullptr;
 		CircleVertex* CircleVBPtr = nullptr;
+
+		uint32_t LineVertexCnt = 0;
+		LineVertex* LineVBBase = nullptr;
+		LineVertex* LineVBPtr = nullptr;
+		float LineWidth = 2.0f;
 
 		std::array<Ref<Texture>, MaxTextureSlots> TexSlots;
 		uint32_t TexIndex = 1; // 0 = blank texture
@@ -136,6 +154,19 @@ namespace Celes {
 
 		s_Data.CircleVertexArray->SetIndexBuffer(indexBuffer); // Use the same index buffer since geometry is identical.
 
+		// Lines
+		s_Data.LineVertexArray = VertexArray::Create();
+
+		s_Data.LineVertexBuffer = VertexBuffer::Create(s_Data.MaxVerticesCnt * sizeof(LineVertex));
+		s_Data.LineVertexBuffer->SetLayout({
+			{ "aPosition", ShaderDataType::Float3 },
+			{ "aColor",    ShaderDataType::Float4 },
+			{ "aEntityID", ShaderDataType::Int }
+			});
+		s_Data.LineVertexArray->AddVertexBuffer(s_Data.LineVertexBuffer);
+
+		s_Data.LineVBBase = new LineVertex[s_Data.MaxVerticesCnt];
+
 		s_Data.BlankTexture = Texture2D::Create(1, 1);
 		uint32_t blankData = 0xffffffff;
 		s_Data.BlankTexture->SetData(&blankData, sizeof(uint32_t));
@@ -146,6 +177,7 @@ namespace Celes {
 		//s_Data->FlatColorShader = Shader::Create("assets/shaders/FlatColor.vert.glsl", "assets/shaders/FlatColor.frag.glsl", true);
 		s_Data.QuadShader = Shader::Create("assets/shaders/Renderer2D_Quad.vert.glsl", "assets/shaders/Renderer2D_Quad.frag.glsl", true);
 		s_Data.CircleShader = Shader::Create("assets/shaders/Renderer2D_Circle.vert.glsl", "assets/shaders/Renderer2D_Circle.frag.glsl", true);
+		s_Data.LineShader = Shader::Create("assets/shaders/Renderer2D_Line.vert.glsl", "assets/shaders/Renderer2D_Line.frag.glsl", true);
 		//s_Data.QuadShader->Bind();
 		//s_Data.QuadShader->SetIntArray("uTextures", samplers, s_Data.MaxTextureSlots);
 
@@ -167,6 +199,8 @@ namespace Celes {
 		s_Data.QuadVBPtr = s_Data.QuadVBBase;
 		s_Data.CircleIndexCnt = 0;
 		s_Data.CircleVBPtr = s_Data.CircleVBBase;
+		s_Data.LineVertexCnt = 0;
+		s_Data.LineVBPtr = s_Data.LineVBBase;
 
 		s_Data.TexIndex = 1;
 	}
@@ -180,6 +214,8 @@ namespace Celes {
 		s_Data.QuadVBPtr = s_Data.QuadVBBase;
 		s_Data.CircleIndexCnt = 0;
 		s_Data.CircleVBPtr = s_Data.CircleVBBase;
+		s_Data.LineVertexCnt = 0;
+		s_Data.LineVBPtr = s_Data.LineVBBase;
 
 		s_Data.TexIndex = 1;
 	}
@@ -196,6 +232,8 @@ namespace Celes {
 		s_Data.QuadVBPtr = s_Data.QuadVBBase;
 		s_Data.CircleIndexCnt = 0;
 		s_Data.CircleVBPtr = s_Data.CircleVBBase;
+		s_Data.LineVertexCnt = 0;
+		s_Data.LineVBPtr = s_Data.LineVBBase;
 
 		s_Data.TexIndex = 1;
 	}
@@ -228,6 +266,18 @@ namespace Celes {
 
 			s_Data.CircleShader->Bind();
 			s_Cmd->DrawIndexed(s_Data.CircleVertexArray, s_Data.CircleIndexCnt);
+
+			s_Data.Stats.DrawCallsCnt++;
+		}
+
+		if (s_Data.LineVertexCnt)
+		{
+			uint32_t dataSize = (uint8_t*)s_Data.LineVBPtr - (uint8_t*)s_Data.LineVBBase;
+			s_Data.LineVertexBuffer->SetData(s_Data.LineVBBase, dataSize);
+
+			s_Data.LineShader->Bind();
+			s_Cmd->SetLineWidth(s_Data.LineWidth);
+			s_Cmd->DrawLines(s_Data.LineVertexArray, s_Data.LineVertexCnt);
 
 			s_Data.Stats.DrawCallsCnt++;
 		}
@@ -558,6 +608,49 @@ namespace Celes {
 	void Renderer2D::DrawCircle(const glm::mat4& transform, CircleRenderComponent& src, int entityID)
 	{
 		DrawCircle(transform, src.Color, src.Thickness, src.Fade, entityID);
+	}
+
+	void Renderer2D::DrawLine(const glm::vec3& p0, const glm::vec3& p1, const glm::vec4& color, int entityID)
+	{
+		s_Data.LineVBPtr->Position = p0;
+		s_Data.LineVBPtr->Color = color;
+		s_Data.LineVBPtr->EntityID = entityID;
+		s_Data.LineVBPtr++;
+
+		s_Data.LineVBPtr->Position = p1;
+		s_Data.LineVBPtr->Color = color;
+		s_Data.LineVBPtr->EntityID = entityID;
+		s_Data.LineVBPtr++;
+
+		s_Data.LineVertexCnt += 2;
+	}
+
+	void Renderer2D::DrawRect(const glm::vec3& pos, const glm::vec2& size, const glm::vec4& color, int entityID)
+	{
+		glm::vec3 p0 = glm::vec3(pos.x - size.x * 0.5f, pos.y - size.y * 0.5f, pos.z);
+		glm::vec3 p1 = glm::vec3(pos.x + size.x * 0.5f, pos.y - size.y * 0.5f, pos.z);
+		glm::vec3 p2 = glm::vec3(pos.x + size.x * 0.5f, pos.y + size.y * 0.5f, pos.z);
+		glm::vec3 p3 = glm::vec3(pos.x - size.x * 0.5f, pos.y + size.y * 0.5f, pos.z);
+	
+		DrawLine(p0, p1, color, entityID);
+		DrawLine(p1, p2, color, entityID);
+		DrawLine(p2, p3, color, entityID);
+		DrawLine(p3, p0, color, entityID);
+	}
+
+	void Renderer2D::DrawRect(const glm::mat4& transform, const glm::vec4& color, int entityID)
+	{
+		glm::vec3 lineVertices[4];
+		for (int i = 0; i < 4; ++i)
+			lineVertices[i] = transform * s_Data.QuadVertexPositions[i];
+
+		for (int i = 0; i < 4; ++i)
+			DrawLine(lineVertices[i], lineVertices[(i + 1) % 4], color, entityID);
+	}
+
+	void Renderer2D::SetLineWidth(float width)
+	{
+		s_Data.LineWidth = width;
 	}
 
 	Renderer2D::Statistics Renderer2D::GetStats()

@@ -1,7 +1,7 @@
 #version 450 core
 
-layout(location = 0) out vec4 color;
-layout(location = 1) out int color1;
+layout(location = 0) out vec4 oColor;
+layout(location = 1) out int oEntityID;
 
 struct VertexOutput
 {
@@ -21,6 +21,6 @@ void main()
 {
 	//color = vec4(vInput.position * 0.5 + 0.5, 1.0);
 	//color = vInput.color;
-	color = texture(uTextures[vTexID], vInput.texCoord * vInput.tilingFactor) * vInput.color;
-	color1 = vEntityID;
+	oColor = texture(uTextures[vTexID], vInput.texCoord * vInput.tilingFactor) * vInput.color;
+	oEntityID = vEntityID;
 }
