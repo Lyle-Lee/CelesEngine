@@ -2,7 +2,7 @@ Scene: Untitled
 Entities:
   - Entity: 5358135008521778423
     TagComponent:
-      Tag: Square2
+      Tag: Square3
     TransformComponent:
       Translation: [3.2139163, -2.14320636, 0]
       Rotation: [0, 0, 0.582582116]
@@ -78,7 +78,7 @@ Entities:
     TagComponent:
       Tag: Square1
     TransformComponent:
-      Translation: [0.175845504, 0.64608866, 0]
+      Translation: [0.175845519, 0.64608866, 0]
       Rotation: [0, 0, 2.18976903]
       Scale: [1, 1, 1]
     SpriteRenderComponent:
@@ -93,3 +93,24 @@ Entities:
       Friction: 0.5
       Restitution: 0.600000024
       RestitutionThreshold: 0.5
+  - Entity: 7188629948985579589
+    TagComponent:
+      Tag: Circle1
+    TransformComponent:
+      Translation: [-1.4346658, -3.07175899, 0.640075803]
+      Rotation: [0, 0, 0]
+      Scale: [1.49870515, 1.5, 1]
+    CircleRenderComponent:
+      Color: [0.300532222, 0.766814768, 0.864864886, 1]
+      Thickness: 0.150000006
+      Fade: 0.00499999989
+    Rigidbody2DComponent:
+      BodyType: Static
+      FixedRotation: false
+    CircleCollider2DComponent:
+      Offset: [0, 0]
+      Radius: 0.75
+      Density: 1
+      Friction: 0.5
+      Restitution: 0.5
+      RestitutionThreshold: 0.519999981

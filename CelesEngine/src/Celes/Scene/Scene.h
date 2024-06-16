@@ -18,6 +18,7 @@ namespace Celes {
 	struct NativeScriptComponent;
 	struct Rigidbody2DComponent;
 	struct BoxCollider2DComponent;
+	struct CircleCollider2DComponent;
 
 	class CE_API Scene
 	{
@@ -62,6 +63,9 @@ namespace Celes {
 
 		template<>
 		void OnComponentAdd<BoxCollider2DComponent>(Entity entity, BoxCollider2DComponent& component);
+
+		template<>
+		void OnComponentAdd<CircleCollider2DComponent>(Entity entity, CircleCollider2DComponent& component);
 
 		entt::registry m_Registry;
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;

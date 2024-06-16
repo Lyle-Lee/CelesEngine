@@ -7,6 +7,7 @@
 #include <box2d/b2_world.h>
 #include <box2d/b2_body.h>
 #include <box2d/b2_polygon_shape.h>
+#include <box2d/b2_circle_shape.h>
 #include <box2d/b2_fixture.h>
 
 namespace Celes {
@@ -90,6 +91,7 @@ namespace Celes {
 		CopyComponent<NativeScriptComponent>(dst->m_Registry, src->m_Registry, enttMap);
 		CopyComponent<Rigidbody2DComponent>(dst->m_Registry, src->m_Registry, enttMap);
 		CopyComponent<BoxCollider2DComponent>(dst->m_Registry, src->m_Registry, enttMap);
+		CopyComponent<CircleCollider2DComponent>(dst->m_Registry, src->m_Registry, enttMap);
 
 		return dst;
 	}
@@ -126,6 +128,7 @@ namespace Celes {
 		CopyComponentIfExists<NativeScriptComponent>(newEntity, entity);
 		CopyComponentIfExists<Rigidbody2DComponent>(newEntity, entity);
 		CopyComponentIfExists<BoxCollider2DComponent>(newEntity, entity);
+		CopyComponentIfExists<CircleCollider2DComponent>(newEntity, entity);
 	}
 
 	void Scene::OnUpdate(Timestep dTime)
@@ -239,6 +242,23 @@ namespace Celes {
 
 				body->CreateFixture(&fixtureDef);
 			}
+
+			if (entity.HasComponent<CircleCollider2DComponent>())
+			{
+				auto& cc2dCompo = entity.GetComponent<CircleCollider2DComponent>();
+				b2CircleShape circleShape;
+				circleShape.m_p.Set(cc2dCompo.Offset.x, cc2dCompo.Offset.y);
+				circleShape.m_radius = cc2dCompo.Radius;
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &circleShape;
+				fixtureDef.density = cc2dCompo.Density;
+				fixtureDef.friction = cc2dCompo.Friction;
+				fixtureDef.restitution = cc2dCompo.Restitution;
+				fixtureDef.restitutionThreshold = cc2dCompo.RestitutionThreshold;
+
+				body->CreateFixture(&fixtureDef);
+			}
 		}
 	}
 
@@ -335,5 +355,9 @@ namespace Celes {
 
 	template<>
 	void Scene::OnComponentAdd<BoxCollider2DComponent>(Entity entity, BoxCollider2DComponent& component)
+	{}
+
+	template<>
+	void Scene::OnComponentAdd<CircleCollider2DComponent>(Entity entity, CircleCollider2DComponent& component)
 	{}
 }

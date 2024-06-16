@@ -252,6 +252,22 @@ namespace Celes {
 			out << YAML::EndMap;
 		}
 
+		if (entity.HasComponent<CircleCollider2DComponent>())
+		{
+			out << YAML::Key << "CircleCollider2DComponent";
+			out << YAML::BeginMap;
+
+			auto& compo = entity.GetComponent<CircleCollider2DComponent>();
+			out << YAML::Key << "Offset" << YAML::Value << compo.Offset;
+			out << YAML::Key << "Radius" << YAML::Value << compo.Radius;
+			out << YAML::Key << "Density" << YAML::Value << compo.Density;
+			out << YAML::Key << "Friction" << YAML::Value << compo.Friction;
+			out << YAML::Key << "Restitution" << YAML::Value << compo.Restitution;
+			out << YAML::Key << "RestitutionThreshold" << YAML::Value << compo.RestitutionThreshold;
+
+			out << YAML::EndMap;
+		}
+
 		out << YAML::EndMap;
 	}
 
@@ -371,6 +387,18 @@ namespace Celes {
 					compo.Friction = bc2dCompo["Friction"].as<float>();
 					compo.Restitution = bc2dCompo["Restitution"].as<float>();
 					compo.RestitutionThreshold = bc2dCompo["RestitutionThreshold"].as<float>();
+				}
+
+				auto cc2dCompo = entity["CircleCollider2DComponent"];
+				if (cc2dCompo)
+				{
+					auto& compo = targetEntity.AddComponent<CircleCollider2DComponent>();
+					compo.Offset = cc2dCompo["Offset"].as<glm::vec2>();
+					compo.Radius = cc2dCompo["Radius"].as<float>();
+					compo.Density = cc2dCompo["Density"].as<float>();
+					compo.Friction = cc2dCompo["Friction"].as<float>();
+					compo.Restitution = cc2dCompo["Restitution"].as<float>();
+					compo.RestitutionThreshold = cc2dCompo["RestitutionThreshold"].as<float>();
 				}
 			}
 		}
