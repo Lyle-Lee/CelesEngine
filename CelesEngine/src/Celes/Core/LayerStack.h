@@ -6,7 +6,7 @@
 
 namespace Celes {
 
-	class CE_API LayerStack
+	class LayerStack
 	{
 	public:
 		LayerStack();

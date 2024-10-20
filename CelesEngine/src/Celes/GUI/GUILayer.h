@@ -7,23 +7,23 @@
 
 namespace Celes {
 
-	class CE_API GUILayer : public Layer
+	class GUILayer : public Layer
 	{
 	public:
-		GUILayer();
-		~GUILayer();
+		CE_API GUILayer();
+		CE_API ~GUILayer();
 
-		void OnAttach() override;
-		void OnDetach() override;
+		CE_API void OnAttach() override;
+		CE_API void OnDetach() override;
 		//void OnGUIRender() override;
-		void OnEvent(Event& e) override;
+		CE_API void OnEvent(Event& e) override;
 
-		void Begin();
-		void End();
+		CE_API void Begin();
+		CE_API void End();
 
-		void BlockEvents(bool isEnabled) { m_BlockEvents = isEnabled; }
+		CE_API void BlockEvents(bool isEnabled) { m_BlockEvents = isEnabled; }
 
-		void SetDarkThemeColors();
+		CE_API void SetDarkThemeColors();
 	private:
 		/*bool OnMouseButtonPressEvent(MouseButtonPressEvent& e);
 		bool OnMouseButtonReleaseEvent(MouseButtonReleaseEvent& e);

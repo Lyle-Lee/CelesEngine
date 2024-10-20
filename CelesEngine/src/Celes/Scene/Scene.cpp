@@ -210,6 +210,84 @@ namespace Celes {
 
 	void Scene::OnRuntimeStart()
 	{
+		OnPhysics2DStart();
+	}
+
+	void Scene::OnRuntimeStop()
+	{
+		OnPhysics2DStop();
+	}
+
+	void Scene::OnUpdateSimulation(Timestep dTime, EditorCamera& camera)
+	{
+		// Physics
+		const int32_t velocityIterations = 6;
+		const int32_t positionIterations = 2;
+		m_2DPhysicsWorld->Step(dTime, velocityIterations, positionIterations);
+		auto viewPhysic = m_Registry.view<TransformComponent, Rigidbody2DComponent>();
+		for (auto& entity : viewPhysic)
+		{
+			auto [transformCompo, rb2dCompo] = viewPhysic.get<TransformComponent, Rigidbody2DComponent>(entity);
+
+			b2Body* body = (b2Body*)rb2dCompo.RuntimeBody;
+			const auto& pos = body->GetPosition();
+			transformCompo.Translation.x = pos.x;
+			transformCompo.Translation.y = pos.y;
+			transformCompo.Rotation.z = body->GetAngle();
+		}
+
+		// Render
+		RenderInEditor(camera);
+	}
+
+	void Scene::OnSimulationStart()
+	{
+		OnPhysics2DStart();
+	}
+
+	void Scene::OnSimulationStop()
+	{
+		OnPhysics2DStop();
+	}
+
+	void Scene::OnUpdateEditor(Timestep dTime, EditorCamera& camera)
+	{
+		// Render
+		RenderInEditor(camera);
+	}
+
+	void Scene::OnViewportResize(uint32_t width, uint32_t height)
+	{
+		if (m_ViewportWidth == width && m_ViewportHeight == height)
+			return;
+
+		m_ViewportWidth = width;
+		m_ViewportHeight = height;
+
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto& entity : view)
+		{
+			auto& cameraCompo = view.get<CameraComponent>(entity);
+			if (!cameraCompo.FixedAspectRatio)
+				cameraCompo.Camera.SetViewportSize(width, height);
+		}
+	}
+
+	Entity Scene::GetPrimaryCameraEntity()
+	{
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			auto& cameraCompo = view.get<CameraComponent>(entity);
+			if (cameraCompo.Primary)
+				return Entity(entity, this);
+		}
+
+		return {};
+	}
+
+	void Scene::OnPhysics2DStart()
+	{
 		m_2DPhysicsWorld = new b2World({ 0.0f, -9.8f });
 		auto view = m_Registry.view<Rigidbody2DComponent>();
 		for (auto& e : view)
@@ -248,7 +326,7 @@ namespace Celes {
 				auto& cc2dCompo = entity.GetComponent<CircleCollider2DComponent>();
 				b2CircleShape circleShape;
 				circleShape.m_p.Set(cc2dCompo.Offset.x, cc2dCompo.Offset.y);
-				circleShape.m_radius = cc2dCompo.Radius;
+				circleShape.m_radius = cc2dCompo.Radius * transformCompo.Scale.x;
 
 				b2FixtureDef fixtureDef;
 				fixtureDef.shape = &circleShape;
@@ -262,13 +340,13 @@ namespace Celes {
 		}
 	}
 
-	void Scene::OnRuntimeStop()
+	void Scene::OnPhysics2DStop()
 	{
 		delete m_2DPhysicsWorld;
 		m_2DPhysicsWorld = nullptr;
 	}
 
-	void Scene::OnUpdateEditor(Timestep dTime, EditorCamera& camera)
+	void Scene::RenderInEditor(EditorCamera& camera)
 	{
 		Renderer2D::BeginScene(camera);
 
@@ -296,36 +374,6 @@ namespace Celes {
 		}
 
 		Renderer2D::EndScene();
-	}
-
-	void Scene::OnViewportResize(uint32_t width, uint32_t height)
-	{
-		if (m_ViewportWidth == width && m_ViewportHeight == height)
-			return;
-
-		m_ViewportWidth = width;
-		m_ViewportHeight = height;
-
-		auto view = m_Registry.view<CameraComponent>();
-		for (auto& entity : view)
-		{
-			auto& cameraCompo = view.get<CameraComponent>(entity);
-			if (!cameraCompo.FixedAspectRatio)
-				cameraCompo.Camera.SetViewportSize(width, height);
-		}
-	}
-
-	Entity Scene::GetPrimaryCameraEntity()
-	{
-		auto view = m_Registry.view<CameraComponent>();
-		for (auto entity : view)
-		{
-			auto& cameraCompo = view.get<CameraComponent>(entity);
-			if (cameraCompo.Primary)
-				return Entity(entity, this);
-		}
-
-		return {};
 	}
 
 	template<typename T>

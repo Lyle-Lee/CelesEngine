@@ -55,15 +55,15 @@ namespace Celes {
 		uint32_t m_SampleCnt = 1; // For super sampling.
 	};
 
-	class CE_API SubTexture2D
+	class SubTexture2D
 	{
 	public:
-		SubTexture2D(const Ref<Texture2D>& texture, const glm::vec2& minBound, const glm::vec2& maxBound);
+		CE_API SubTexture2D(const Ref<Texture2D>& texture, const glm::vec2& minBound, const glm::vec2& maxBound);
 
-		inline const Ref<Texture2D> GetTexture() const { return m_Texture; }
-		inline const glm::vec2* GetTexCoords() const { return m_TexCoords; }
+		CE_API inline const Ref<Texture2D> GetTexture() const { return m_Texture; }
+		CE_API inline const glm::vec2* GetTexCoords() const { return m_TexCoords; }
 
-		static Ref<SubTexture2D> CreateFromCoord(const Ref<Texture2D>& texture, const glm::vec2& coord, const glm::vec2& spriteSize, const glm::vec2& cellUnitCnt = { 1.0f, 1.0f });
+		CE_API static Ref<SubTexture2D> CreateFromCoord(const Ref<Texture2D>& texture, const glm::vec2& coord, const glm::vec2& spriteSize, const glm::vec2& cellUnitCnt = { 1.0f, 1.0f });
 	private:
 		Ref<Texture2D> m_Texture;
 		glm::vec2 m_TexCoords[4];

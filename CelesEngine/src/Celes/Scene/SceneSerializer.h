@@ -4,16 +4,16 @@
 
 namespace Celes {
 
-	class CE_API SceneSerializer
+	class SceneSerializer
 	{
 	public:
-		SceneSerializer(const Ref<Scene>& scene);
+		CE_API SceneSerializer(const Ref<Scene>& scene);
 
-		void Serialize(const std::string& filepath);
-		void SerializeRuntime(const std::string& filepath);
+		CE_API void Serialize(const std::string& filepath);
+		CE_API void SerializeRuntime(const std::string& filepath);
 
-		bool Deserialize(const std::string& filepath);
-		bool DeserializeRuntime(const std::string& filepath);
+		CE_API bool Deserialize(const std::string& filepath);
+		CE_API bool DeserializeRuntime(const std::string& filepath);
 	private:
 		Ref<Scene> m_Scene;
 	};

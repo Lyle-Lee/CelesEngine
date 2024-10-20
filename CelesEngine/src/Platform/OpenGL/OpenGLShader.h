@@ -9,35 +9,35 @@ typedef int GLint;
 
 namespace Celes {
 
-	class CE_API OpenGLShader : public Shader
+	class OpenGLShader : public Shader
 	{
 	public:
-		OpenGLShader(const std::string& vs, const std::string& fs, bool fromFile = false);
-		OpenGLShader(const std::string& cs, bool fromFile = false);
-		virtual ~OpenGLShader();
+		CE_API OpenGLShader(const std::string& vs, const std::string& fs, bool fromFile = false);
+		CE_API OpenGLShader(const std::string& cs, bool fromFile = false);
+		CE_API virtual ~OpenGLShader();
 
-		void Bind() const override;
-		void Unbind() const override;
+		CE_API void Bind() const override;
+		CE_API void Unbind() const override;
 
-		void SetInt(const std::string& name, int val) override;
-		void SetIntArray(const std::string& name, int* vals, uint32_t count) override;
-		void SetFloat(const std::string& name, float val) override;
-		void SetFloat3(const std::string& name, const glm::vec3& vec) override;
-		void SetFloat4(const std::string& name, const glm::vec4& vec) override;
-		void SetMat4(const std::string& name, const glm::mat4& matrix) override;
+		CE_API void SetInt(const std::string& name, int val) override;
+		CE_API void SetIntArray(const std::string& name, int* vals, uint32_t count) override;
+		CE_API void SetFloat(const std::string& name, float val) override;
+		CE_API void SetFloat3(const std::string& name, const glm::vec3& vec) override;
+		CE_API void SetFloat4(const std::string& name, const glm::vec4& vec) override;
+		CE_API void SetMat4(const std::string& name, const glm::mat4& matrix) override;
 
-		inline const std::string& GetName() const override { return m_Name; }
+		CE_API inline const std::string& GetName() const override { return m_Name; }
 
-		void SetUniformInt(const std::string& name, int val);
-		void SetUniformIntArray(const std::string& name, int* vals, uint32_t count);
+		CE_API void SetUniformInt(const std::string& name, int val);
+		CE_API void SetUniformIntArray(const std::string& name, int* vals, uint32_t count);
 
-		void SetUniformFloat(const std::string& name, float val);
-		void SetUniformFloat2(const std::string& name, const glm::vec2& vec);
-		void SetUniformFloat3(const std::string& name, const glm::vec3& vec);
-		void SetUniformFloat4(const std::string& name, const glm::vec4& vec);
+		CE_API void SetUniformFloat(const std::string& name, float val);
+		CE_API void SetUniformFloat2(const std::string& name, const glm::vec2& vec);
+		CE_API void SetUniformFloat3(const std::string& name, const glm::vec3& vec);
+		CE_API void SetUniformFloat4(const std::string& name, const glm::vec4& vec);
 
-		void SetUniformMat3(const std::string& name, const glm::mat3& matrix);
-		void SetUniformMat4(const std::string& name, const glm::mat4& matrix);
+		CE_API void SetUniformMat3(const std::string& name, const glm::mat3& matrix);
+		CE_API void SetUniformMat4(const std::string& name, const glm::mat4& matrix);
 	private:
 		void CompileOpenGL();
 		void CompileVulkan(const std::unordered_map<GLenum, std::string>& shaderSrcs);

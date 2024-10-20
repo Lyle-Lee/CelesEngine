@@ -5,36 +5,36 @@
 
 namespace Celes {
 
-	class CE_API SceneCamera : public Camera
+	class SceneCamera : public Camera
 	{
 	public:
-		enum class ProjectionType { Perspective = 0, Orthographic = 1 };
+		enum class CE_API ProjectionType { Perspective = 0, Orthographic = 1 };
 
-		SceneCamera();
-		virtual ~SceneCamera() = default;
+		CE_API SceneCamera();
+		CE_API virtual ~SceneCamera() = default;
 
-		void SetProjectionType(ProjectionType type) { m_ProjType = type; CalcProjection(); }
-		void SetViewportSize(uint32_t width, uint32_t height);
+		CE_API void SetProjectionType(ProjectionType type) { m_ProjType = type; CalcProjection(); }
+		CE_API void SetViewportSize(uint32_t width, uint32_t height);
 
-		void SetOrthoInfo(float size, float nearClip, float farClip);
-		void SetOrthoSize(float size) { m_OrthoSize = size; CalcProjection(); }
-		void SetOrthoNearClip(float nearClip) { m_OrthoNear = nearClip; CalcProjection(); }
-		void SetOrthoFarClip(float farClip) { m_OrthoFar = farClip; CalcProjection(); }
+		CE_API void SetOrthoInfo(float size, float nearClip, float farClip);
+		CE_API void SetOrthoSize(float size) { m_OrthoSize = size; CalcProjection(); }
+		CE_API void SetOrthoNearClip(float nearClip) { m_OrthoNear = nearClip; CalcProjection(); }
+		CE_API void SetOrthoFarClip(float farClip) { m_OrthoFar = farClip; CalcProjection(); }
 
-		void SetPerspectiveInfo(float fov, float nearClip, float farClip);
-		void SetPerspectiveFOV(float fov) { m_PerspectiveFOV = fov; CalcProjection(); }
-		void SetPerspectiveNearClip(float nearClip) { m_PerspectiveNear = nearClip; CalcProjection(); }
-		void SetPerspectiveFarClip(float farClip) { m_PerspectiveFar = farClip; CalcProjection(); }
+		CE_API void SetPerspectiveInfo(float fov, float nearClip, float farClip);
+		CE_API void SetPerspectiveFOV(float fov) { m_PerspectiveFOV = fov; CalcProjection(); }
+		CE_API void SetPerspectiveNearClip(float nearClip) { m_PerspectiveNear = nearClip; CalcProjection(); }
+		CE_API void SetPerspectiveFarClip(float farClip) { m_PerspectiveFar = farClip; CalcProjection(); }
 
-		inline ProjectionType GetProjectionType() const { return m_ProjType; }
+		CE_API inline ProjectionType GetProjectionType() const { return m_ProjType; }
 
-		inline float GetOrthoSize() const { return m_OrthoSize; }
-		inline float GetOrthoNearClip() const { return m_OrthoNear; }
-		inline float GetOrthoFarClip() const { return m_OrthoFar; }
+		CE_API inline float GetOrthoSize() const { return m_OrthoSize; }
+		CE_API inline float GetOrthoNearClip() const { return m_OrthoNear; }
+		CE_API inline float GetOrthoFarClip() const { return m_OrthoFar; }
 
-		inline float GetPerspectiveFOV() const { return m_PerspectiveFOV; }
-		inline float GetPerspectiveNearClip() const { return m_PerspectiveNear; }
-		inline float GetPerspectiveFarClip() const { return m_PerspectiveFar; }
+		CE_API inline float GetPerspectiveFOV() const { return m_PerspectiveFOV; }
+		CE_API inline float GetPerspectiveNearClip() const { return m_PerspectiveNear; }
+		CE_API inline float GetPerspectiveFarClip() const { return m_PerspectiveFar; }
 	private:
 		void CalcProjection();
 

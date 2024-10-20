@@ -6,20 +6,20 @@
 
 namespace Celes {
 
-	class CE_API Timer
+	class Timer
 	{
 	public:
-		Timer(const char* name, std::function<void(float)> func = nullptr) : m_Name(name), m_Stopped(false), m_Func(func)
+		CE_API Timer(const char* name, std::function<void(float)> func = nullptr) : m_Name(name), m_Stopped(false), m_Func(func)
 		{
 			m_StartTimepoint = std::chrono::high_resolution_clock::now();
 		}
 
-		~Timer()
+		CE_API ~Timer()
 		{
 			if (!m_Stopped) Stop();
 		}
 
-		void Stop();
+		CE_API void Stop();
 	private:
 		const char* m_Name;
 		std::chrono::time_point<std::chrono::steady_clock> m_StartTimepoint;

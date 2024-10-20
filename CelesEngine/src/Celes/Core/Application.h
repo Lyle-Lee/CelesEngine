@@ -22,24 +22,24 @@ namespace Celes {
 		}
 	};
 
-	class CE_API Application
+	class Application
 	{
 	public:
-		Application(const std::string& name = "Celes App", AppCommandLineArgs args = AppCommandLineArgs());
-		virtual ~Application();
+		CE_API Application(const std::string& name = "Celes App", AppCommandLineArgs args = AppCommandLineArgs());
+		CE_API virtual ~Application();
 
-		void Run();
+		CE_API void Run();
 
-		void OnEvent(Event& e);
-		void PushLayer(Layer* layer);
-		void PushOverlay(Layer* layer);
+		CE_API void OnEvent(Event& e);
+		CE_API void PushLayer(Layer* layer);
+		CE_API void PushOverlay(Layer* layer);
 
-		inline AppCommandLineArgs GetCommandLineArgs() const { return m_CommandLineArgs; }
-		inline Window& GetWindow() { return *m_Window; }
-		inline static Application& Get() { return *s_Instance; }
-		inline GUILayer* GetGUILayer() { return m_GUILayer; }
+		CE_API inline AppCommandLineArgs GetCommandLineArgs() const { return m_CommandLineArgs; }
+		CE_API inline Window& GetWindow() { return *m_Window; }
+		CE_API inline static Application& Get() { return *s_Instance; }
+		CE_API inline GUILayer* GetGUILayer() { return m_GUILayer; }
 
-		void Close() { m_IsRunning = false; }
+		CE_API void Close() { m_IsRunning = false; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);

@@ -42,14 +42,15 @@ namespace Celes {
 #endif
 
 		m_PlayIcon = Texture2D::Create("icons/ContentBrowser/icon-play.png");
+		m_SimulateIcon = Texture2D::Create("icons/ContentBrowser/icon-simulate.png");
 		m_StopIcon = Texture2D::Create("icons/ContentBrowser/icon-stop.png");
 
 		m_CameraController.SetZoomLevel(5.0f);
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
 		FrameBufferDesc fbDesc;
-		fbDesc.Width = m_ViewportSize.x;
-		fbDesc.Height = m_ViewportSize.y;
+		fbDesc.Width = (uint32_t)m_ViewportSize.x;
+		fbDesc.Height = (uint32_t)m_ViewportSize.y;
 		fbDesc.AttachmentDesc = { TextureFormat::RGBA8, TextureFormat::R32INT, TextureFormat::DEPTH16 };
 		m_FrameBuffer = FrameBuffer::Create(fbDesc);
 
@@ -154,14 +155,21 @@ namespace Celes {
 		switch (m_SceneState)
 		{
 		case SceneState::Edit:
-			if (m_ViewportFocused)
-				m_CameraController.OnUpdate(dTime);
+			//if (m_ViewportFocused)
+			//	m_CameraController.OnUpdate(dTime);
 
 			m_EditorCamera.OnUpdate(dTime);
 			m_ActiveScene->OnUpdateEditor(dTime, m_EditorCamera);
 			break;
 		case SceneState::Play:
 			m_ActiveScene->OnUpdate(dTime);
+			break;
+		case SceneState::Simulate:
+			//if (m_ViewportFocused)
+			//	m_CameraController.OnUpdate(dTime);
+
+			m_EditorCamera.OnUpdate(dTime);
+			m_ActiveScene->OnUpdateSimulation(dTime, m_EditorCamera);
 			break;
 		default:
 			CE_CORE_ERROR("Unknown scene state!");
@@ -180,13 +188,15 @@ namespace Celes {
 			m_HoveredEntity = pixelData == Entity::s_NullID ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
 		}
 
+		OnOverlayRender();
+
 		m_FrameBuffer->Unbind();
 	}
 
 	void EditorLayer::OnEvent(Celes::Event& e)
 	{
 		m_CameraController.OnEvent(e);
-		if (m_SceneState == SceneState::Edit)
+		if (m_SceneState == SceneState::Edit || m_SceneState == SceneState::Simulate)
 			m_EditorCamera.OnEvent(e);
 
 		EventDispatcher dispatcher(e);
@@ -249,6 +259,12 @@ namespace Celes {
 				if (ImGui::MenuItem("Open...", "Ctrl+O")) OpenScene();
 
 				if (ImGui::MenuItem("Exit")) Application::Get().Close();
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Settings"))
+			{
+				ImGui::Checkbox("Show Physics Colliders", &m_ShowPhysicsColliders);
 				ImGui::EndMenu();
 			}
 
@@ -375,15 +391,29 @@ namespace Celes {
 		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 		float iconSize = ImGui::GetWindowHeight() - 4.0f;
-		Ref<Texture2D> icon = m_SceneState == SceneState::Play ? m_StopIcon : m_PlayIcon;
-		ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x * 0.5f - iconSize * 0.5f);
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-		if (ImGui::ImageButton((ImTextureID)icon->GetBufferID(), ImVec2(iconSize, iconSize), ImVec2(0.0f, 0.0f), ImVec2(1.0f, 1.0f), 0))
 		{
-			if (m_SceneState == SceneState::Edit)
-				OnScenePlay();
-			else if (m_SceneState == SceneState::Play)
-				OnSceneStop();
+			Ref<Texture2D> icon = m_SceneState == SceneState::Play ? m_StopIcon : m_PlayIcon;
+			ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x * 0.5f - iconSize * 1.5f);
+			if (ImGui::ImageButton((ImTextureID)icon->GetBufferID(), ImVec2(iconSize, iconSize), ImVec2(0.0f, 0.0f), ImVec2(1.0f, 1.0f), 0))
+			{
+				if (m_SceneState != SceneState::Play)
+					OnScenePlay();
+				else
+					OnSceneStop();
+			}
+		}
+		ImGui::SameLine();
+		{
+			Ref<Texture2D> icon = m_SceneState == SceneState::Simulate ? m_StopIcon : m_SimulateIcon;
+			ImGui::SetCursorPosX(ImGui::GetWindowContentRegionMax().x * 0.5f + iconSize * 0.5f);
+			if (ImGui::ImageButton((ImTextureID)icon->GetBufferID(), ImVec2(iconSize, iconSize), ImVec2(0.0f, 0.0f), ImVec2(1.0f, 1.0f), 0))
+			{
+				if (m_SceneState != SceneState::Simulate)
+					OnSceneSimulate();
+				else
+					OnSceneStop();
+			}
 		}
 
 		ImGui::PopStyleColor();
@@ -394,6 +424,9 @@ namespace Celes {
 
 	void EditorLayer::OnScenePlay()
 	{
+		if (m_SceneState == SceneState::Simulate)
+			OnSceneStop();
+
 		m_SceneState = SceneState::Play;
 
 		// Copy the current editor scene
@@ -402,10 +435,35 @@ namespace Celes {
 		m_SHPanel.SetContext(m_ActiveScene);
 	}
 
+	void EditorLayer::OnSceneSimulate()
+	{
+		if (m_SceneState == SceneState::Play)
+			OnSceneStop();
+
+		m_SceneState = SceneState::Simulate;
+
+		// Copy the current editor scene
+		m_ActiveScene = Scene::Copy(m_EditorScene);
+		m_ActiveScene->OnSimulationStart();
+		m_SHPanel.SetContext(m_ActiveScene);
+	}
+
 	void EditorLayer::OnSceneStop()
 	{
+		switch (m_SceneState)
+		{
+		case SceneState::Play:
+			m_ActiveScene->OnRuntimeStop();
+			break;
+		case SceneState::Simulate:
+			m_ActiveScene->OnSimulationStop();
+			break;
+		default:
+			CE_CORE_ASSERT(false, "Invalid scene state.")
+			break;
+		}
+
 		m_SceneState = SceneState::Edit;
-		m_ActiveScene->OnRuntimeStop();
 
 		// Release memory and reset to editor scene
 		m_ActiveScene = m_EditorScene;
@@ -466,6 +524,61 @@ namespace Celes {
 			m_SHPanel.SetSelectedEntity(m_HoveredEntity);
 
 		return false;
+	}
+
+	void EditorLayer::OnOverlayRender()
+	{
+		glm::vec3 viewDir = glm::vec3(0.0f, 0.0f, 1.0f);
+		if (m_SceneState == SceneState::Play)
+		{
+			Entity cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+			if (!cameraEntity)
+				return;
+			
+			glm::mat4 viewMat = cameraEntity.GetComponent<TransformComponent>().GetTransform();
+			viewDir = viewMat * glm::vec4(viewDir, 0.0f);
+			Renderer2D::BeginScene(cameraEntity.GetComponent<CameraComponent>().Camera, viewMat);
+		}
+		else
+		{
+			viewDir = m_EditorCamera.GetViewMat() * glm::vec4(viewDir, 0.0f);
+			Renderer2D::BeginScene(m_EditorCamera);
+		}
+
+		if (m_ShowPhysicsColliders)
+		{
+			// Box colliders
+			{
+				auto view = m_ActiveScene->GetAllEntitiesWith<TransformComponent, BoxCollider2DComponent>();
+				for (auto entity : view)
+				{
+					auto [transformCompo, bc2dCompo] = view.get<TransformComponent, BoxCollider2DComponent>(entity);
+					glm::vec3 translation = transformCompo.Translation + glm::vec3(bc2dCompo.Offset, 0.0f) + viewDir * 0.001f;
+					glm::vec3 scale = transformCompo.Scale * glm::vec3(bc2dCompo.Size * 2.0f, 1.0f);
+					glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+						* glm::rotate(glm::mat4(1.0f), transformCompo.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f))
+						* glm::scale(glm::mat4(1.0f), scale);
+
+					Renderer2D::DrawRect(transform, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+				}
+			}
+
+			// Circle colliders
+			{
+				auto view = m_ActiveScene->GetAllEntitiesWith<TransformComponent, CircleCollider2DComponent>();
+				for (auto entity : view)
+				{
+					auto [transformCompo, cc2dCompo] = view.get<TransformComponent, CircleCollider2DComponent>(entity);
+					glm::vec3 translation = transformCompo.Translation + glm::vec3(cc2dCompo.Offset, 0.0f) + viewDir * 0.005f;
+					glm::vec3 scale = transformCompo.Scale * cc2dCompo.Radius * 2.0f;
+					glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation) * glm::scale(glm::mat4(1.0f), scale);
+
+					Renderer2D::DrawCircle(transform, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), 0.01f);
+				}
+			}
+		}
+
+		Renderer2D::EndScene();
 	}
 
 	void EditorLayer::NewScene()

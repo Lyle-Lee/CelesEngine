@@ -8,32 +8,32 @@
 
 namespace Celes {
 
-	class CE_API EditorCamera : public Camera
+	class EditorCamera : public Camera
 	{
 	public:
-		EditorCamera() = default;
-		EditorCamera(float fov, float aspectRatio, float nearClip, float farClip);
+		CE_API EditorCamera() = default;
+		CE_API EditorCamera(float fov, float aspectRatio, float nearClip, float farClip);
 
-		void OnUpdate(Timestep dTime);
-		void OnEvent(Event& e);
+		CE_API void OnUpdate(Timestep dTime);
+		CE_API void OnEvent(Event& e);
 
-		inline float GetDistance() const { return m_Distance; }
-		inline void SetDistance(float distance) { m_Distance = distance; }
+		CE_API inline float GetDistance() const { return m_Distance; }
+		CE_API inline void SetDistance(float distance) { m_Distance = distance; }
 
-		inline void SetViewportSize(float width, float height) { m_ViewportWidth = width; m_ViewportHeight = height; UpdateProjection(); }
+		CE_API inline void SetViewportSize(float width, float height) { m_ViewportWidth = width; m_ViewportHeight = height; UpdateProjection(); }
 
-		const glm::mat4& GetViewMat() const { return m_ViewMat; }
+		CE_API const glm::mat4& GetViewMat() const { return m_ViewMat; }
 		// Get the result of projection matrix dot view matrix
-		glm::mat4 GetVP() const { return m_Projection * m_ViewMat; }
+		CE_API glm::mat4 GetVP() const { return m_Projection * m_ViewMat; }
 
-		glm::vec3 GetUpDir() const;
-		glm::vec3 GetRightDir() const;
-		glm::vec3 GetForwardDir() const;
-		const glm::vec3& GetPosition() const { return m_Position; }
-		glm::quat GetOrientation() const;
+		CE_API glm::vec3 GetUpDir() const;
+		CE_API glm::vec3 GetRightDir() const;
+		CE_API glm::vec3 GetForwardDir() const;
+		CE_API const glm::vec3& GetPosition() const { return m_Position; }
+		CE_API glm::quat GetOrientation() const;
 
-		inline float GetPitch() const { return m_Pitch; }
-		inline float GetYaw() const { return m_Yaw; }
+		CE_API inline float GetPitch() const { return m_Pitch; }
+		CE_API inline float GetYaw() const { return m_Yaw; }
 	private:
 		void UpdateProjection();
 		void UpdateView();

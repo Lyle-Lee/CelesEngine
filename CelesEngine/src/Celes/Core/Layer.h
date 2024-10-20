@@ -6,19 +6,19 @@
 
 namespace Celes {
 
-	class CE_API Layer
+	class Layer
 	{
 	public:
-		Layer(const std::string& name = "Layer");
-		virtual ~Layer();
+		CE_API Layer(const std::string& name = "Layer");
+		CE_API virtual ~Layer();
 
-		virtual void OnAttach() {}
-		virtual void OnDetach() {}
-		virtual void OnUpdate(Timestep dTime) {}
-		virtual void OnEvent(Event& e) {}
-		virtual void OnGUIRender() {}
+		CE_API virtual void OnAttach() {}
+		CE_API virtual void OnDetach() {}
+		CE_API virtual void OnUpdate(Timestep dTime) {}
+		CE_API virtual void OnEvent(Event& e) {}
+		CE_API virtual void OnGUIRender() {}
 
-		inline const std::string& GetName() const { return m_Name; }
+		CE_API inline const std::string& GetName() const { return m_Name; }
 	protected:
 		std::string m_Name;
 	};

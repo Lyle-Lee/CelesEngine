@@ -388,9 +388,9 @@ namespace Celes {
 		for (const auto& resource : resources.uniform_buffers)
 		{
 			const auto& bufferType = compiler.get_type(resource.base_type_id);
-			uint32_t bufferSize = compiler.get_declared_struct_size(bufferType);
+			uint32_t bufferSize = (uint32_t)compiler.get_declared_struct_size(bufferType);
 			uint32_t binding = compiler.get_decoration(resource.id, spv::DecorationBinding);
-			int memberCnt = bufferType.member_types.size();
+			int memberCnt = (int)bufferType.member_types.size();
 
 			CE_CORE_TRACE("{0}", resource.name);
 			CE_CORE_TRACE("    Size = {0}", bufferSize);

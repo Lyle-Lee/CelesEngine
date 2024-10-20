@@ -15,21 +15,21 @@ namespace Celes {
 		float GetHeight() { return Top - Bottom; }
 	};
 
-	class CE_API OrthoCameraController
+	class OrthoCameraController
 	{
 	public:
-		OrthoCameraController(float aspect, bool rotation = false);
+		CE_API OrthoCameraController(float aspect, bool rotation = false);
 
-		void OnUpdate(Timestep ts);
-		void OnEvent(Event& e);
+		CE_API void OnUpdate(Timestep ts);
+		CE_API void OnEvent(Event& e);
 
-		inline OrthoCamera& GetCamera() { return m_Camera; }
-		inline const OrthoCamera& GetCamera() const { return m_Camera; }
+		CE_API inline OrthoCamera& GetCamera() { return m_Camera; }
+		CE_API inline const OrthoCamera& GetCamera() const { return m_Camera; }
 
-		inline const OrthoCameraBounds& GetBounds() const { return m_Bounds; }
-		void ResizeBounds(float width, float height);
+		CE_API inline const OrthoCameraBounds& GetBounds() const { return m_Bounds; }
+		CE_API void ResizeBounds(float width, float height);
 
-		void SetZoomLevel(float level) { m_ZoomLevel = level; FitZoom(); }
+		CE_API void SetZoomLevel(float level) { m_ZoomLevel = level; FitZoom(); }
 	private:
 		bool OnMouseScroll(MouseScrollEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);

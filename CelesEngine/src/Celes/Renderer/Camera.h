@@ -5,33 +5,33 @@
 
 namespace Celes {
 
-	class CE_API Camera
+	class Camera
 	{
 	public:
-		Camera() = default;
-		Camera(const glm::mat4& projection): m_Projection(projection) {}
-		virtual ~Camera() = default;
+		CE_API Camera() = default;
+		CE_API Camera(const glm::mat4& projection) : m_Projection(projection) {}
+		CE_API virtual ~Camera() = default;
 
-		inline const glm::mat4& GetProjection() const { return m_Projection; }
+		CE_API inline const glm::mat4& GetProjection() const { return m_Projection; }
 	protected:
 		glm::mat4 m_Projection = glm::mat4(1.0f);
 	};
 
-	class CE_API OrthoCamera
+	class OrthoCamera
 	{
 	public:
-		OrthoCamera(float left, float right, float bottom, float top);
+		CE_API OrthoCamera(float left, float right, float bottom, float top);
 
-		void SetPosition(const glm::vec3& pos) { m_Position = pos; UpdateViewMat(); }
-		void SetRotation(float rotation) { m_Rotation = rotation; UpdateViewMat(); }
-		void SetProjection(float left, float right, float bottom, float top);
+		CE_API void SetPosition(const glm::vec3& pos) { m_Position = pos; UpdateViewMat(); }
+		CE_API void SetRotation(float rotation) { m_Rotation = rotation; UpdateViewMat(); }
+		CE_API void SetProjection(float left, float right, float bottom, float top);
 
-		inline const glm::vec3& GetPosition() const { return m_Position; }
-		inline const float GetRotation() const { return m_Rotation; }
+		CE_API inline const glm::vec3& GetPosition() const { return m_Position; }
+		CE_API inline const float GetRotation() const { return m_Rotation; }
 
-		inline const glm::mat4& GetProjectionMat() const { return m_ProjectionMat; }
-		inline const glm::mat4& GetViewMat() const { return m_ViewMat; }
-		const glm::mat4& GetVP() const { return m_VP; }
+		CE_API inline const glm::mat4& GetProjectionMat() const { return m_ProjectionMat; }
+		CE_API inline const glm::mat4& GetViewMat() const { return m_ViewMat; }
+		CE_API const glm::mat4& GetVP() const { return m_VP; }
 	private:
 		void UpdateViewMat();
 
@@ -41,20 +41,20 @@ namespace Celes {
 		float m_Rotation = 0.0f;
 	};
 
-	class CE_API PerspectiveCamera
+	class PerspectiveCamera
 	{
 	public:
-		PerspectiveCamera(float fov, float aspect, float zNear, float zFar);
+		CE_API PerspectiveCamera(float fov, float aspect, float zNear, float zFar);
 
-		void SetPosition(const glm::vec3& pos);
-		void SetFocus(const glm::vec3& focusPoint) { m_LookAt = focusPoint; UpdateViewMat(); }
-		void SetViewDistance(float dist);
+		CE_API void SetPosition(const glm::vec3& pos);
+		CE_API void SetFocus(const glm::vec3& focusPoint) { m_LookAt = focusPoint; UpdateViewMat(); }
+		CE_API void SetViewDistance(float dist);
 
-		inline const glm::vec3& GetPosition() const { return m_Position; }
+		CE_API inline const glm::vec3& GetPosition() const { return m_Position; }
 
-		inline const glm::mat4& GetProjectionMat() const { return m_ProjectionMat; }
-		inline const glm::mat4& GetViewMat() const { return m_ViewMat; }
-		const glm::mat4& GetVP() const { return m_VP; }
+		CE_API inline const glm::mat4& GetProjectionMat() const { return m_ProjectionMat; }
+		CE_API inline const glm::mat4& GetViewMat() const { return m_ViewMat; }
+		CE_API const glm::mat4& GetVP() const { return m_VP; }
 	private:
 		void UpdateViewMat();
 

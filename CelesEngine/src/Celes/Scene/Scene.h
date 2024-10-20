@@ -20,6 +20,8 @@ namespace Celes {
 	struct BoxCollider2DComponent;
 	struct CircleCollider2DComponent;
 
+	//template class CE_API entt::basic_registry<entt::entity, std::allocator<Entity>>;
+
 	class CE_API Scene
 	{
 		friend class Entity;
@@ -41,10 +43,21 @@ namespace Celes {
 		void OnRuntimeStart();
 		void OnRuntimeStop();
 
+		// Update simulation
+		void OnUpdateSimulation(Timestep dTime, EditorCamera& camera);
+		void OnSimulationStart();
+		void OnSimulationStop();
+
 		void OnUpdateEditor(Timestep dTime, EditorCamera& camera);
 		void OnViewportResize(uint32_t width, uint32_t height);
 
 		Entity GetPrimaryCameraEntity();
+
+		template<typename... Components>
+		auto GetAllEntitiesWith()
+		{
+			return m_Registry.view<Components...>();
+		}
 	private:
 		template<typename T>
 		void OnComponentAdd(Entity entity, T& component);
@@ -66,6 +79,11 @@ namespace Celes {
 
 		template<>
 		void OnComponentAdd<CircleCollider2DComponent>(Entity entity, CircleCollider2DComponent& component);
+
+		void OnPhysics2DStart();
+		void OnPhysics2DStop();
+
+		void RenderInEditor(EditorCamera& camera);
 
 		entt::registry m_Registry;
 		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;

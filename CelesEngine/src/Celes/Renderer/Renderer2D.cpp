@@ -85,7 +85,7 @@ namespace Celes {
 
 		struct CameraData
 		{
-			glm::mat4 ViewProjection;
+			glm::mat4 ViewProjection = glm::mat4(1.0f);
 		};
 		CameraData CameraBuffer;
 		Ref<UniformBuffer> CameraUniformBuffer;

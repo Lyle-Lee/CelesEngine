@@ -26,17 +26,17 @@ namespace Celes {
 		static Ref<Shader> Create(const std::string& computeSrc, bool fromFile = false);
 	};
 
-	class CE_API ShaderLibrary
+	class ShaderLibrary
 	{
 	public:
-		void Add(const Ref<Shader>& shader);
-		bool Exists(const std::string& name) const;
+		CE_API void Add(const Ref<Shader>& shader);
+		CE_API bool Exists(const std::string& name) const;
 
-		Ref<Shader> Load(const std::string& vsPath, const std::string& fsPath);
-		Ref<Shader> Load(const std::string& path);
-		Ref<Shader> Get(const std::string& name);
+		CE_API Ref<Shader> Load(const std::string& vsPath, const std::string& fsPath);
+		CE_API Ref<Shader> Load(const std::string& path);
+		CE_API Ref<Shader> Get(const std::string& name);
 
-		inline static uint32_t GetAnonymityCnt() { return s_AnonymityCnt++; }
+		CE_API inline static uint32_t GetAnonymityCnt() { return s_AnonymityCnt++; }
 	private:
 		std::unordered_map<std::string, Ref<Shader>> m_Shaders;
 		static uint32_t s_AnonymityCnt;

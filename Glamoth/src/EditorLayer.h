@@ -22,9 +22,11 @@ namespace Celes {
 		void UIToolbar();
 
 		void OnScenePlay();
+		void OnSceneSimulate();
 		void OnSceneStop();
 		bool OnKeyPress(KeyPressEvent& e);
 		bool OnMouseButtonPress(MouseButtonPressEvent& e);
+		void OnOverlayRender();
 
 		void NewScene();
 		void SaveScene();
@@ -49,9 +51,11 @@ namespace Celes {
 
 		//glm::vec3 m_ObjPos;
 		//float m_ObjMoveSpeed = 1.0f;
-		glm::vec3 m_ObjColor = { 0.2f, 0.5f, 0.9f };
+		//glm::vec3 m_ObjColor = { 0.2f, 0.5f, 0.9f };
 
 		int m_GuizmoType = -1;
+
+		bool m_ShowPhysicsColliders = false;
 
 		struct ProfileResult
 		{
@@ -75,7 +79,7 @@ namespace Celes {
 
 		enum class SceneState
 		{
-			Edit = 0, Play = 1
+			Edit = 0, Play = 1, Simulate = 2
 		};
 		SceneState m_SceneState = SceneState::Edit;
 
@@ -84,7 +88,9 @@ namespace Celes {
 		ContentBrowserPanel m_CBPanel;
 
 		// Editor resources
-		Ref<Texture2D> m_PlayIcon, m_StopIcon;
+		Ref<Texture2D> m_PlayIcon;
+		Ref<Texture2D> m_SimulateIcon;
+		Ref<Texture2D> m_StopIcon;
 	};
 
 }
