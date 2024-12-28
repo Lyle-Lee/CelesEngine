@@ -9,7 +9,7 @@ namespace Celes {
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		int status = glfwGetKey(window, keyCode);
-		return status == GLFW_PRESS || status == GLFW_REPEAT;
+		return status == GLFW_PRESS;
 	}
 
 	bool Input::IsMouseButtonPressed(int button)

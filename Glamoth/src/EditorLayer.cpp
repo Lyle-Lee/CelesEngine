@@ -473,7 +473,7 @@ namespace Celes {
 	bool EditorLayer::OnKeyPress(KeyPressEvent& e)
 	{
 		// Shortcuts
-		if (e.GetRepeatCount() > 0) return false;
+		if (e.IsRepeat()) return false;
 
 		bool ctrl = Input::IsKeyPressed(CE_KEY_LEFT_CONTROL) || Input::IsKeyPressed(CE_KEY_RIGHT_CONTROL);
 		bool shift = Input::IsKeyPressed(CE_KEY_LEFT_SHIFT) || Input::IsKeyPressed(CE_KEY_RIGHT_SHIFT);

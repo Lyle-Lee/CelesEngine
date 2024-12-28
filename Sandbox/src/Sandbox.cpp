@@ -174,7 +174,7 @@ public:
 	~Sandbox() {}
 };
 
-Celes::Application* Celes::CreateApp()
+Celes::Application* Celes::CreateApp(AppCommandLineArgs args)
 {
 	return new Sandbox();
 }

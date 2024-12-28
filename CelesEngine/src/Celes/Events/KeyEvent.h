@@ -18,21 +18,21 @@ namespace Celes {
 	class CE_API KeyPressEvent : public KeyEvent
 	{
 	public:
-		KeyPressEvent(int keyCode, int repeatCnt)
-			: KeyEvent(keyCode), m_RepeatCount(repeatCnt) {}
+		KeyPressEvent(int keyCode, bool isRepeat = false)
+			: KeyEvent(keyCode), m_IsRepeat(isRepeat) {}
 
-		inline int GetRepeatCount() const { return m_RepeatCount; }
+		inline bool IsRepeat() const { return m_IsRepeat; }
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "Key Pressed: " << m_KeyCode << " (" << m_RepeatCount << " repeats)";
+			ss << "Key Pressed: " << m_KeyCode << " (is repeat: " << m_IsRepeat << ")";
 			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(KeyPress)
 	private:
-		int m_RepeatCount;
+		bool m_IsRepeat;
 	};
 
 	class CE_API KeyReleaseEvent : public KeyEvent
