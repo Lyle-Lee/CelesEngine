@@ -3,9 +3,7 @@
 #include "Log.h"
 #include "Input.h"
 #include "Celes/Renderer/Renderer.h"
-
-// Temporary
-#include <GLFW/glfw3.h>
+#include "Celes/Utils/PlatformUtils.h"
 
 namespace Celes {
 
@@ -35,7 +33,7 @@ namespace Celes {
 	{
 		while (m_IsRunning)
 		{
-			float time = (float)glfwGetTime(); // Platform dependent
+			float time = Platform::GetTime();
 			Timestep deltaTime = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 

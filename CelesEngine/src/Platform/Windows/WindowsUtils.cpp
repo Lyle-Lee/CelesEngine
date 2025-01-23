@@ -43,4 +43,9 @@ namespace Celes {
 		return std::string();
 	}
 
+	float Platform::GetTime()
+	{
+		return (float)glfwGetTime();
+	}
+
 }

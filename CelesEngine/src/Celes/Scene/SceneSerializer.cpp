@@ -302,7 +302,17 @@ namespace Celes {
 		std::stringstream ss;
 		ss << stream.rdbuf();
 
-		YAML::Node data = YAML::Load(ss.str());
+		YAML::Node data;
+		try
+		{
+			data = YAML::Load(ss.str());
+		}
+		catch (YAML::ParserException e)
+		{
+			CE_CORE_ERROR("Failed to load '{0}':\n    {1}", filepath, e.what());
+			return false;
+		}
+
 		if (!data["Scene"]) return false;
 
 		std::string sceneName = data["Scene"].as<std::string>();

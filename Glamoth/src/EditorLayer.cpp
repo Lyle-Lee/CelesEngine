@@ -98,6 +98,8 @@ namespace Celes {
 
 		m_CameraEntity1.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 #endif
+
+		Renderer2D::SetLineWidth(4.0f);
 	}
 
 	void EditorLayer::OnDetach()
@@ -204,7 +206,7 @@ namespace Celes {
 		dispatcher.Dispatch<MouseButtonPressEvent>(std::bind(&EditorLayer::OnMouseButtonPress, this, std::placeholders::_1));
 	}
 
-	void EditorLayer::OnGUIRender()
+	void EditorLayer::OnGUIRender() // TODO: split to different funcs.
 	{
 		static bool dockspaceOpen = true;
 		static bool opt_fullscreen_persistant = true;
@@ -576,6 +578,13 @@ namespace Celes {
 					Renderer2D::DrawCircle(transform, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), 0.01f);
 				}
 			}
+		}
+
+		// Draw outline of the selected entity
+		if (auto selectedEntity = m_SHPanel.GetSelectedEntity())
+		{
+			const TransformComponent& transform = selectedEntity.GetComponent<TransformComponent>();
+			Renderer2D::DrawRect(transform.GetTransform(), glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
 		}
 
 		Renderer2D::EndScene();

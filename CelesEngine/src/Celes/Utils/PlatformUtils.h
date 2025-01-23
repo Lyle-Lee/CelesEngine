@@ -13,4 +13,10 @@ namespace Celes {
 		static std::string SaveFile(const char* filter);
 	};
 
+	class CE_API Platform
+	{
+	public:
+		static float GetTime();
+	};
+
 }

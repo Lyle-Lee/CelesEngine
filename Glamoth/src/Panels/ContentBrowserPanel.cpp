@@ -35,8 +35,7 @@ namespace Celes {
 		for (auto& dirEntry : std::filesystem::directory_iterator(m_CurrentDirectory))
 		{
 			const auto& path = dirEntry.path();
-			auto relativePath = std::filesystem::relative(path, s_AssetsDirectory);
-			std::string fileName = relativePath.filename().string();
+			std::string fileName = path.filename().string();
 
 			ImGui::PushID(fileName.c_str()); // To make drag and drop events (from image button) to be identical
 			Ref<Texture2D> icon = dirEntry.is_directory() ? m_DirectoryIcon : m_FileIcon;
@@ -44,6 +43,7 @@ namespace Celes {
 			ImGui::ImageButton((ImTextureID)icon->GetBufferID(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
 			if (ImGui::BeginDragDropSource())
 			{
+				auto relativePath = std::filesystem::relative(path, s_AssetsDirectory);
 				const wchar_t* itemPath = relativePath.c_str();
 				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
 				ImGui::EndDragDropSource();
