@@ -148,10 +148,10 @@ namespace Celes {
 		static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t size);
 	};
 
-	struct FrameBufferTextureDesc
+	struct FrameBufferTextureDescription
 	{
-		FrameBufferTextureDesc() = default;
-		FrameBufferTextureDesc(TextureFormat format, uint32_t samples = 1)
+		FrameBufferTextureDescription() = default;
+		FrameBufferTextureDescription(TextureFormat format, uint32_t samples = 1)
 			: TexFormat(format), Samples(samples) {}
 
 		TextureFormat TexFormat = TextureFormat::None;
@@ -159,19 +159,19 @@ namespace Celes {
 		// TODO: filtering/warp
 	};
 
-	struct FrameBufferAttachmentDesc
+	struct FrameBufferAttachmentDescription
 	{
-		FrameBufferAttachmentDesc() = default;
-		FrameBufferAttachmentDesc(std::initializer_list<FrameBufferTextureDesc> attachments)
+		FrameBufferAttachmentDescription() = default;
+		FrameBufferAttachmentDescription(std::initializer_list<FrameBufferTextureDescription> attachments)
 			: Attachments(attachments) {}
 
-		std::vector<FrameBufferTextureDesc> Attachments;
+		std::vector<FrameBufferTextureDescription> Attachments;
 	};
 
-	struct FrameBufferDesc
+	struct FrameBufferDescription
 	{
 		uint32_t Width = 0, Height = 0;
-		FrameBufferAttachmentDesc AttachmentDesc;
+		FrameBufferAttachmentDescription AttachmentDesc;
 		//uint32_t Samples = 1;
 
 		bool SwapChainTarget = false;
@@ -189,7 +189,7 @@ namespace Celes {
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 
-		virtual void AddAttachment(const FrameBufferTextureDesc& texDesc) = 0;
+		virtual void AddAttachment(const FrameBufferTextureDescription& texDesc) = 0;
 		virtual uint32_t GetAttachmentBufferID(size_t idx = 0) = 0;
 		virtual Ref<Texture2D>& GetAttachmentTexture(size_t idx = 0) = 0;
 
@@ -198,7 +198,7 @@ namespace Celes {
 		virtual int ReadPixel(uint32_t attachmentIdx, int x, int y) = 0;
 		virtual void ClearAttachment(uint32_t attachmentIdx, int value) = 0;
 
-		static Ref<FrameBuffer> Create(const FrameBufferDesc& fbDesc);
+		static Ref<FrameBuffer> Create(const FrameBufferDescription& fbDesc);
 	};
 
 	class CE_API UniformBuffer

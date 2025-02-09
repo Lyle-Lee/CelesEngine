@@ -10,7 +10,7 @@ namespace Celes {
 
 		if (hasShadowMap)
 		{
-			FrameBufferDesc fbDesc;
+			FrameBufferDescription fbDesc;
 			fbDesc.Width = 2048;
 			fbDesc.Height = 2048;
 			fbDesc.AttachmentDesc = { TextureFormat::DEPTH16 };

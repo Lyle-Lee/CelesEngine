@@ -22,10 +22,17 @@ namespace Celes {
 		}
 	};
 
+	struct CE_API AppSpecification
+	{
+		std::string Name = "Celes Application";
+		std::string WorkingDirectory;
+		AppCommandLineArgs CommandLineArgs;
+	};
+
 	class Application
 	{
 	public:
-		CE_API Application(const std::string& name = "Celes App", AppCommandLineArgs args = AppCommandLineArgs());
+		CE_API Application(const AppSpecification& specification);
 		CE_API virtual ~Application();
 
 		CE_API void Run();
@@ -34,7 +41,7 @@ namespace Celes {
 		CE_API void PushLayer(Layer* layer);
 		CE_API void PushOverlay(Layer* layer);
 
-		CE_API inline AppCommandLineArgs GetCommandLineArgs() const { return m_CommandLineArgs; }
+		CE_API inline const AppSpecification& GetSpecification() const { return m_Specification; }
 		CE_API inline Window& GetWindow() { return *m_Window; }
 		CE_API inline static Application& Get() { return *s_Instance; }
 		CE_API inline GUILayer* GetGUILayer() { return m_GUILayer; }
@@ -44,7 +51,7 @@ namespace Celes {
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 
-		AppCommandLineArgs m_CommandLineArgs;
+		AppSpecification m_Specification;
 		Scope<Window> m_Window;
 		GUILayer* m_GUILayer;
 		bool m_IsRunning = true;

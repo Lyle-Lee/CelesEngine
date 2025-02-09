@@ -68,7 +68,7 @@ namespace Celes {
 	}
 
 	// Frame Buffer
-	OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferDesc& fbDesc): m_Width(fbDesc.Width), m_Height(fbDesc.Height)
+	OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferDescription& fbDesc): m_Width(fbDesc.Width), m_Height(fbDesc.Height)
 	{
 		glGenFramebuffers(1, &m_BufferID);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_BufferID);
@@ -124,7 +124,7 @@ namespace Celes {
 		CE_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!")
 	}
 
-	void OpenGLFrameBuffer::AddAttachment(const FrameBufferTextureDesc& texDesc)
+	void OpenGLFrameBuffer::AddAttachment(const FrameBufferTextureDescription& texDesc)
 	{
 		auto texture = Texture2D::Create(m_Width, m_Height, texDesc.TexFormat, texDesc.Samples);
 		texture->Bind();

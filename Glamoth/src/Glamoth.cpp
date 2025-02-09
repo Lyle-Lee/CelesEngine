@@ -7,7 +7,7 @@ namespace Celes {
 	class Glamoth : public Application
 	{
 	public:
-		Glamoth(AppCommandLineArgs args) : Application("Glamoth", args)
+		Glamoth(const AppSpecification& specification) : Application(specification)
 		{
 			PushLayer(new EditorLayer());
 		}
@@ -17,7 +17,11 @@ namespace Celes {
 
 	Application* CreateApp(AppCommandLineArgs args)
 	{
-		return new Glamoth(args);
+		AppSpecification spec;
+		spec.Name = "Glamoth";
+		spec.CommandLineArgs = args;
+
+		return new Glamoth(spec);
 	}
 
 }

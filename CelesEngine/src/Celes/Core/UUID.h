@@ -1,7 +1,5 @@
 #pragma once
 
-#include <xhash>
-
 namespace Celes {
 
 	class UUID
@@ -20,12 +18,15 @@ namespace Celes {
 
 namespace std {
 
+	// The generated uint64_t is uniformly distributed, so it can simply be used as a hash key.
+	template<typename T> struct hash;
+
 	template<>
 	struct hash<Celes::UUID>
 	{
 		size_t operator()(const Celes::UUID& uuid) const
 		{
-			return hash<uint64_t>()((uint64_t)uuid);
+			return (uint64_t)uuid;
 		}
 	};
 

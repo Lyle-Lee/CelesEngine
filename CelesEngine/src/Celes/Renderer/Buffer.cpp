@@ -56,7 +56,7 @@ namespace Celes {
 		return nullptr;
 	}
 
-	Ref<FrameBuffer> FrameBuffer::Create(const FrameBufferDesc& fbDesc)
+	Ref<FrameBuffer> FrameBuffer::Create(const FrameBufferDescription& fbDesc)
 	{
 		switch (Renderer::GetAPI())
 		{

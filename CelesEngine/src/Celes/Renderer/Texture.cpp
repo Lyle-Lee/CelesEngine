@@ -44,9 +44,7 @@ namespace Celes {
 		switch (m_Format)
 		{
 		case TextureFormat::DEPTH16:
-			return true;
 		case TextureFormat::DEPTH32:
-			return true;
 		case TextureFormat::DEPTH24STENCIL8:
 			return true;
 		default:

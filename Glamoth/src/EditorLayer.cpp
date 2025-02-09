@@ -48,13 +48,13 @@ namespace Celes {
 		m_CameraController.SetZoomLevel(5.0f);
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
-		FrameBufferDesc fbDesc;
+		FrameBufferDescription fbDesc;
 		fbDesc.Width = (uint32_t)m_ViewportSize.x;
 		fbDesc.Height = (uint32_t)m_ViewportSize.y;
 		fbDesc.AttachmentDesc = { TextureFormat::RGBA8, TextureFormat::R32INT, TextureFormat::DEPTH16 };
 		m_FrameBuffer = FrameBuffer::Create(fbDesc);
 
-		auto commandLineArgs = Application::Get().GetCommandLineArgs();
+		auto commandLineArgs = Application::Get().GetSpecification().CommandLineArgs;
 		if (commandLineArgs.Count > 1)
 		{
 			auto sceneFilePath = commandLineArgs[1];

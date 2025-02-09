@@ -207,6 +207,11 @@ namespace Celes {
 
 			auto& compo = entity.GetComponent<SpriteRenderComponent>();
 			out << YAML::Key << "Color" << YAML::Value << compo.Color;
+			if (compo.Texture)
+			{
+				out << YAML::Key << "TexturePath" << YAML::Value << compo.Texture->GetPath();
+				out << YAML::Key << "TilingFactor" << YAML::Value << compo.TilingFactor;
+			}
 
 			out << YAML::EndMap;
 		}
@@ -368,6 +373,10 @@ namespace Celes {
 				{
 					auto& compo = targetEntity.AddComponent<SpriteRenderComponent>();
 					compo.Color = spriteRenderCompo["Color"].as<glm::vec4>();
+					if (spriteRenderCompo["TexturePath"])
+						compo.Texture = Texture2D::Create(spriteRenderCompo["TexturePath"].as<std::string>());
+					if (spriteRenderCompo["TilingFactor"])
+						compo.TilingFactor = spriteRenderCompo["TilingFactor"].as<float>();
 				}
 
 				auto circleRenderCompo = entity["CircleRenderComponent"];

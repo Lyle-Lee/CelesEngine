@@ -12,10 +12,11 @@ namespace Celes {
 		OpenGLTexture2D(uint32_t width, uint32_t height, TextureFormat internalFormat, uint32_t sampleCnt, GLenum dataType = GL_UNSIGNED_BYTE, uint32_t levels = 0);
 		virtual ~OpenGLTexture2D();
 
-		inline uint32_t GetWidth() const override { return m_Width; }
-		inline uint32_t GetHeight() const override { return m_Height; }
-		inline uint32_t GetBufferID() const override { return m_BufferID; }
-		inline GLenum GetDataFormat() const { return m_DataFormat; }
+		virtual uint32_t GetWidth() const override { return m_Width; }
+		virtual uint32_t GetHeight() const override { return m_Height; }
+		virtual uint32_t GetBufferID() const override { return m_BufferID; }
+		virtual GLenum GetDataFormat() const { return m_DataFormat; }
+		virtual const std::string& GetPath() const override { return m_Path; }
 
 		void SetData(void* data, uint32_t size) override;
 
@@ -24,6 +25,7 @@ namespace Celes {
 		void Resize(uint32_t width, uint32_t height) override;
 
 		bool operator==(const Texture& other) const override { return m_BufferID == other.GetBufferID(); }
+
 	private:
 		void SetResource();
 

@@ -11,12 +11,16 @@ namespace Celes {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application(const std::string& name, AppCommandLineArgs args) : m_CommandLineArgs(args)
+	Application::Application(const AppSpecification& specification) : m_Specification(specification)
 	{
 		CE_CORE_ASSERT(!s_Instance, "Application aleady exists!")
 		s_Instance = this;
 
-		m_Window = Window::Create(name);
+		// Set the working directory
+		if (!m_Specification.WorkingDirectory.empty())
+			std::filesystem::current_path(m_Specification.WorkingDirectory);
+
+		m_Window = Window::Create(WindowInfo(m_Specification.Name));
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
 
 		Renderer::Init();

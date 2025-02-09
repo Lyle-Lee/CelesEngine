@@ -144,6 +144,7 @@ public:
 		ImGui::ColorEdit3("Object Color", &m_ObjColor.x);
 		ImGui::End();
 	}
+
 private:
 	Celes::ShaderLibrary m_ShaderLib;
 
@@ -164,7 +165,7 @@ private:
 class Sandbox : public Celes::Application
 {
 public:
-	Sandbox(): Application("Celes Engine")
+	Sandbox(const Celes::AppSpecification& specification) : Celes::Application(specification)
 	{
 		//PushLayer(new ExampleLayer());
 		PushLayer(new Sandbox2D());
@@ -174,7 +175,12 @@ public:
 	~Sandbox() {}
 };
 
-Celes::Application* Celes::CreateApp(AppCommandLineArgs args)
+Celes::Application* Celes::CreateApp(Celes::AppCommandLineArgs args)
 {
-	return new Sandbox();
+	Celes::AppSpecification spec;
+	spec.Name = "Sandbox";
+	spec.WorkingDirectory = "../Glamoth";
+	spec.CommandLineArgs = args;
+
+	return new Sandbox(spec);
 }
