@@ -555,10 +555,10 @@ namespace Celes {
 				for (auto entity : view)
 				{
 					auto [transformCompo, bc2dCompo] = view.get<TransformComponent, BoxCollider2DComponent>(entity);
-					glm::vec3 translation = transformCompo.Translation + glm::vec3(bc2dCompo.Offset, 0.0f) + viewDir * 0.001f;
 					glm::vec3 scale = transformCompo.Scale * glm::vec3(bc2dCompo.Size * 2.0f, 1.0f);
-					glm::mat4 transform = glm::translate(glm::mat4(1.0f), translation)
+					glm::mat4 transform = glm::translate(glm::mat4(1.0f), transformCompo.Translation + viewDir * 0.001f)
 						* glm::rotate(glm::mat4(1.0f), transformCompo.Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f))
+						* glm::translate(glm::mat4(1.0f), glm::vec3(bc2dCompo.Offset, 0.0f))
 						* glm::scale(glm::mat4(1.0f), scale);
 
 					Renderer2D::DrawRect(transform, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));

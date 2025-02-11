@@ -309,7 +309,7 @@ namespace Celes {
 			{
 				auto& bc2dCompo = entity.GetComponent<BoxCollider2DComponent>();
 				b2PolygonShape boxShape;
-				boxShape.SetAsBox(bc2dCompo.Size.x * transformCompo.Scale.x, bc2dCompo.Size.y * transformCompo.Scale.y);
+				boxShape.SetAsBox(bc2dCompo.Size.x * transformCompo.Scale.x, bc2dCompo.Size.y * transformCompo.Scale.y, b2Vec2(bc2dCompo.Offset.x, bc2dCompo.Offset.y), 0.0f);
 
 				b2FixtureDef fixtureDef;
 				fixtureDef.shape = &boxShape;
