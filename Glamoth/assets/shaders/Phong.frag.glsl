@@ -1,20 +1,32 @@
-#version 330 core
+#version 450 core
 
 layout(location = 0) out vec4 color;
 
-//uniform sampler2D uTexture;
-uniform vec3 uKa;
-uniform vec3 uKd;
-uniform vec3 uKs;
-uniform vec3 uLightIntensity;
-uniform vec3 uLightPos;
-uniform vec3 uCameraPos;
-uniform sampler2D uShadowMap;
+layout(std140, binding = 1) uniform CameraData
+{
+    mat4 uViewProj;
+    vec3 uCameraW;
+};
+layout(std140, binding = 2) uniform LightData
+{
+    mat4 uLightVP;
+    vec3 uLightPos;
+    vec3 uLightIntensity;
+};
+layout(std140, binding = 3) uniform MaterialData
+{
+    vec3 uKa;
+    vec3 uKd;
+    vec3 uKs;
+};
 
-in highp vec3 vWorldPos;
-in highp vec3 vNormal;
-in highp vec2 vTexCoord;
-in vec4 vPositionFromLight;
+layout(binding = 0) uniform sampler2D uShadowMap;
+//uniform sampler2D uTexture;
+
+layout(location = 0) in highp vec3 vWorldPos;
+layout(location = 1) in highp vec3 vNormal;
+layout(location = 2) in highp vec2 vTexCoord;
+layout(location = 3) in vec4 vPositionFromLight;
 
 // Shadow map related variables
 #define NUM_SAMPLES 60
@@ -172,8 +184,7 @@ vec3 BlinnPhong()
     vec3 light_atten_coff = uLightIntensity / pow(length(uLightPos - vWorldPos), 2.0);
     vec3 diffuse = cosTheta * light_atten_coff * uKd;
 
-    vec3 viewDir = normalize(uCameraPos - vWorldPos);
-    vec3 halfDir = normalize(lightDir + viewDir);
+    vec3 halfDir = normalize(lightDir + uCameraW);
     float spec = pow(max(dot(halfDir, vNormal), 0.0), 32.0);
     vec3 specular = uKs * light_atten_coff * spec;
 

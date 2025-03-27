@@ -1,11 +1,11 @@
-#version 330 core
+#version 450 core
 
 layout(location = 0) out vec4 depthColor;
 
 //uniform vec3 uLightPos;
 
-in highp vec3 vNormal;
-in highp vec2 vTexCoord;
+layout(location = 0) in highp vec3 vNormal;
+layout(location = 1) in highp vec2 vTexCoord;
 
 vec4 pack(float depth)
 {
