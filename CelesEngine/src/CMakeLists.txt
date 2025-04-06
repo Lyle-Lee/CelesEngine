@@ -23,6 +23,9 @@ target_precompile_headers(CelesEngine PRIVATE
 )
 
 target_include_directories(CelesEngine PUBLIC
+    ${GLFW_INCLUDE_DIR}
+    ${GLEW_INCLUDE_DIR}
+    ${Vulkan_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/Box2D/include
     ${CMAKE_CURRENT_SOURCE_DIR}/yaml-cpp/include
@@ -39,15 +42,19 @@ target_compile_definitions(CelesEngine PRIVATE
 )
 
 target_link_libraries(CelesEngine PRIVATE
+    ${GLFW_LIBRARY}
+    ${GLEW_LIBRARY}
     OpenGL::GL
+    ${Vulkan_LIBRARIES}
     Vulkan::Vulkan
-    glfw
-    glew_s
 )
 
 if(CE_WINDOWS)
     target_sources(CelesEngine PRIVATE
-        Platform/Windows/Windows*.cpp
+        Platform/Windows/WindowsInput.cpp
+        Platform/Windows/WindowsUtils.cpp
+        Platform/Windows/WindowsWindow.h
+        Platform/Windows/WindowsWindow.cpp
     )
     
     target_compile_definitions(CelesEngine PRIVATE

@@ -60,6 +60,7 @@ message(STATUS "Platform: ${CE_PLATFORM}")
 # Check if D3D12/Vulkan are available.
 set(CE_HAS_D3D12 ${CE_WINDOWS})
 set(CE_HAS_VULKAN ON)
+set(CE_HAS_OPENGL ON)
 
 # -----------------------------------------------------------------------------
 # git submodules
@@ -183,11 +184,10 @@ set(CE_PLUGIN_OUTPUT_DIRECTORY ${CE_OUTPUT_DIRECTORY}/plugins)
 find_package(OpenGL REQUIRED)
 find_package(Vulkan REQUIRED)
 
-add_subdirectory(CelesEngine/Dependencies)
-
 message(STATUS "Feature flags:")
 message(STATUS "CE_HAS_D3D12: ${CE_HAS_D3D12}")
 message(STATUS "CE_HAS_VULKAN: ${CE_HAS_VULKAN}")
+message(STATUS "CE_HAS_OPENGL: ${CE_HAS_OPENGL}")
 # message(STATUS "CE_HAS_AFTERMATH: ${CE_HAS_AFTERMATH}")
 # message(STATUS "CE_HAS_NVAPI: ${CE_HAS_NVAPI}")
 # message(STATUS "CE_HAS_PIX: ${CE_HAS_PIX}")
@@ -199,6 +199,30 @@ message(STATUS "CE_HAS_VULKAN: ${CE_HAS_VULKAN}")
 # message(STATUS "CE_HAS_NV_USD: ${CE_HAS_NV_USD}")
 # message(STATUS "CE_HAS_MDL_SDK: ${CE_HAS_MDL_SDK}")
 # message(STATUS "CE_ENABLE_USD: ${CE_ENABLE_USD}")
+
+set(GLFW_ROOT "CelesEngine/Dependencies/GLFW")
+find_library(GLFW_LIBRARY
+    NAMES glfw3 libglfw3.a
+    PATHS ${GLFW_ROOT}/lib-vc2022
+    REQUIRED
+)
+find_path(GLFW_INCLUDE_DIR
+    NAMES GLFW/glfw3.h
+    PATHS ${GLFW_ROOT}/include
+    REQUIRED
+)
+
+set(GLEW_ROOT "CelesEngine/Dependencies/GLEW")
+find_library(GLEW_LIBRARY
+    NAMES glew32s libGLEW.a
+    PATHS ${GLEW_ROOT}/lib/x64
+    REQUIRED
+)
+find_path(GLEW_INCLUDE_DIR
+    NAMES GL/glew.h
+    PATHS ${GLEW_ROOT}/include
+    REQUIRED
+)
 
 # -----------------------------------------------------------------------------
 # Shader file handling
@@ -381,7 +405,7 @@ add_subdirectory(Glamoth/src)
 # add_dependencies(CelesEngine copy_data_folder copy_scripts_folder)
 
 # Make core library depend on deploying all dependencies.
-add_dependencies(CelesEngine deploy_dependencies)
+# add_dependencies(CelesEngine deploy_dependencies)
 
 # Get list of all plugin targets.
 get_property(plugin_targets GLOBAL PROPERTY CE_PLUGIN_TARGETS)
