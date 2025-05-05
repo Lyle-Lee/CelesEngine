@@ -1,6 +1,7 @@
 file(GLOB_RECURSE CE_SOURCES
     "Celes/*.cpp"
     "Box2D/src/*.cpp"
+    "ImGui/*.cpp"
     "ImGuizmo/*.cpp"
     "yaml-cpp/src/*.cpp"
     "Platform/OpenGL/*.cpp"
@@ -10,6 +11,7 @@ file(GLOB_RECURSE CE_SOURCES
 file(GLOB_RECURSE CE_HEADERS
     "Celes/*.h"
     "Box2D/include/*.h"
+    "ImGui/*.h"
     "ImGuizmo/*.h"
     "yaml-cpp/include/*.h"
     "Platform/OpenGL/*.h"
@@ -26,10 +28,13 @@ target_include_directories(CelesEngine PUBLIC
     ${GLFW_INCLUDE_DIR}
     ${GLEW_INCLUDE_DIR}
     ${Vulkan_INCLUDE_DIRS}
+    ${SPDLOG_INCLUDE_DIR}
+    ${GLM_INCLUDE_DIR}
+    ${ENTT_INCLUDE_DIR}
+    ${STBIMAGE_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/Box2D/include
     ${CMAKE_CURRENT_SOURCE_DIR}/yaml-cpp/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/ImGuizmo
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     # $<INSTALL_INTERFACE:include>
 )

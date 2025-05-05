@@ -224,6 +224,42 @@ find_path(GLEW_INCLUDE_DIR
     REQUIRED
 )
 
+# if(CE_HAS_VULKAN)
+# find_library(Vulkan_LIBRARIES
+#     NAMES shaderc
+#     PATHS ${VULKAN_SDK}/Lib
+#     REQUIRED
+# )
+# endif()
+
+set(SPDLOG_ROOT "CelesEngine/Dependencies/spdlog")
+find_path(SPDLOG_INCLUDE_DIR
+    NAMES spdlog.h
+    PATHS ${SPDLOG_ROOT}/include
+    REQUIRED
+)
+
+set(GLM_ROOT "CelesEngine/Dependencies/glm")
+find_path(GLM_INCLUDE_DIR
+    NAMES glm.hpp
+    PATHS ${GLM_ROOT}
+    REQUIRED
+)
+
+set(ENTT_ROOT "CelesEngine/Dependencies/EnTT")
+find_path(ENTT_INCLUDE_DIR
+    NAMES entt.hpp
+    PATHS ${ENTT_ROOT}/include
+    REQUIRED
+)
+
+set(STBIMAGE_ROOT "CelesEngine/Dependencies/stb_image")
+find_path(STBIMAGE_INCLUDE_DIR
+    NAMES stb_image.h
+    PATHS ${STBIMAGE_ROOT}
+    REQUIRED
+)
+
 # -----------------------------------------------------------------------------
 # Shader file handling
 # -----------------------------------------------------------------------------
