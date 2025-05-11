@@ -183,6 +183,9 @@ set(CE_PLUGIN_OUTPUT_DIRECTORY ${CE_OUTPUT_DIRECTORY}/plugins)
 
 find_package(OpenGL REQUIRED)
 find_package(Vulkan REQUIRED)
+set(VULKAN_LIB_DIR $ENV{VULKAN_SDK}/Lib)
+message(STATUS "Using Vulkan libraries from: ${VULKAN_LIB_DIR}")
+link_directories(${VULKAN_LIB_DIR})
 
 message(STATUS "Feature flags:")
 message(STATUS "CE_HAS_D3D12: ${CE_HAS_D3D12}")
@@ -224,14 +227,6 @@ find_path(GLEW_INCLUDE_DIR
     REQUIRED
 )
 
-# if(CE_HAS_VULKAN)
-# find_library(Vulkan_LIBRARIES
-#     NAMES shaderc
-#     PATHS ${VULKAN_SDK}/Lib
-#     REQUIRED
-# )
-# endif()
-
 set(SPDLOG_ROOT "CelesEngine/Dependencies/spdlog")
 find_path(SPDLOG_INCLUDE_DIR
     NAMES spdlog.h
@@ -265,7 +260,7 @@ find_path(STBIMAGE_INCLUDE_DIR
 # -----------------------------------------------------------------------------
 
 # Regex for matching shader files.
-set(SHADER_EXTENSION_REGEX "\.(slang|slangh|hlsli|hlsl)$")
+set(SHADER_EXTENSION_REGEX "\.(glsl|hlsli|hlsl)$")
 
 # Setup build rules to copy all shaders of a target to the output directory.
 # The specified output_dir is relative to the global shader output directory (CE_SHADER_OUTPUT_DIRECTORY).
@@ -434,9 +429,9 @@ endfunction()
 # Project sources
 # -----------------------------------------------------------------------------
 
-add_subdirectory(CelesEngine/src)
-add_subdirectory(Glamoth/src)
-# add_subdirectory(Sandbox/src)
+add_subdirectory(CelesEngine)
+add_subdirectory(Glamoth)
+# add_subdirectory(Sandbox)
 
 # add_dependencies(CelesEngine copy_data_folder copy_scripts_folder)
 
@@ -467,5 +462,5 @@ if(plugin_targets)
     # add_dependencies(Glamoth CelesPython)
 endif()
 
-# Make Mogwai the default startup project in VS.
+# Make Glamoth the default startup project in VS.
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Glamoth)
