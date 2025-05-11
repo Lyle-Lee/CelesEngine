@@ -41,6 +41,13 @@ else()
     )
 endif()
 
+# imgui init file
+add_custom_command(TARGET Glamoth POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_SOURCE_DIR}/DefaultUILayout.ini
+        $<TARGET_FILE_DIR:Glamoth>/imgui.ini
+)
+
 if(CE_WINDOWS)
     add_custom_command(TARGET Glamoth POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy

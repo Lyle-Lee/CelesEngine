@@ -354,7 +354,7 @@ MigrationBackup/
 .ionide/
 
 # CelesEngine ignores
-CelesEngine/imgui.ini
+!Glamoth/DefaultUILayout.ini
 Glamoth/assets/cache
 scripts/__pycache__
 /CelesEngine/Dependencies/VulkanSDK/*
