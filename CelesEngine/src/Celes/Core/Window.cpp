@@ -3,6 +3,8 @@
 
 #ifdef CE_PLATFORM_WINDOWS
 #include "Platform/Windows/WindowsWindow.h"
+#elif defined(CE_PLATFORM_MACOS)
+#include "Platform/macOS/MacOSWindow.h"
 #endif
 
 namespace Celes {
@@ -11,6 +13,8 @@ namespace Celes {
 	{
 #ifdef CE_PLATFORM_WINDOWS
 		return CreateScope<WindowsWindow>(info);
+#elif defined(CE_PLATFORM_MACOS)
+		return CreateScope<MacOSWindow>(info);
 #else
 		CE_CORE_ASSERT(false, "Unknown platform!")
 		return nullptr;

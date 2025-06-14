@@ -86,7 +86,12 @@ namespace Celes {
 		CE_CORE_ASSERT(size == m_Width * m_Height * bytesPerPixel, "Data must be entire texture!")
 
 		//glTexImage2D(GL_TEXTURE_2D, 0, m_InternalFormat, m_Width, m_Height, 0, m_DataFormat, m_DataType, data);
+#ifdef CE_PLATFORM_MACOS
+		// For macOS, OpenGL 4.1 does not support glTextureSubImage2D.
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_Width, m_Height, m_DataFormat, m_DataType, data);
+#else
 		glTextureSubImage2D(m_BufferID, 0, 0, 0, m_Width, m_Height, m_DataFormat, m_DataType, data);
+#endif
 	}
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const

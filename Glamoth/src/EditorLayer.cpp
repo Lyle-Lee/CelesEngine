@@ -293,8 +293,13 @@ namespace Celes {
 		for (auto& result : m_ProfileResults)
 		{
 			char label[50];
+#ifdef CE_PLATFORM_WINDOWS
 			strcpy_s(label, result.Name);
 			strcat_s(label, "  %.3fms");
+#else
+			strcpy(label, result.Name);
+			strcat(label, "  %.3fms");
+#endif
 			ImGui::Text(label, result.Time);
 		}
 		m_ProfileResults.clear();

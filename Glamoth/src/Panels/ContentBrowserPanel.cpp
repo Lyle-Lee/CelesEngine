@@ -44,8 +44,12 @@ namespace Celes {
 			if (ImGui::BeginDragDropSource())
 			{
 				auto relativePath = std::filesystem::relative(path, s_AssetsDirectory);
-				const wchar_t* itemPath = relativePath.c_str();
-				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t), ImGuiCond_Once);
+				const CE_PATH_CHAR* itemPath = relativePath.c_str();
+#ifdef CE_PATH_CHAR_IS_WCHAR
+				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(CE_PATH_CHAR), ImGuiCond_Once);
+#else
+				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (strlen(itemPath) + 1) * sizeof(CE_PATH_CHAR), ImGuiCond_Once);
+#endif
 				ImGui::EndDragDropSource();
 			}
 
