@@ -232,7 +232,11 @@ find_path(GLFW_INCLUDE_DIR
 set(GLEW_ROOT "CelesEngine/Dependencies/GLEW")
 find_library(GLEW_LIBRARY
     NAMES glew32s libGLEW.a
-    PATHS ${GLEW_ROOT}/lib
+    if(CE_WINDOWS)
+        PATHS ${GLEW_ROOT}/lib/x64
+    else()
+        PATHS ${GLEW_ROOT}/lib
+    endif()
     REQUIRED
 )
 find_path(GLEW_INCLUDE_DIR
