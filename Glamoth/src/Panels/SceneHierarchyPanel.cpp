@@ -190,7 +190,11 @@ namespace Celes {
 
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
+#ifdef CELE_PLATFORM_WINDOWS
 			strcpy_s(buffer, sizeof(buffer), tag.c_str());
+#else
+			strcpy(buffer, tag.c_str());
+#endif
 			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
 			{
 				tag = std::string(buffer);

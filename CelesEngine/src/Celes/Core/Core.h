@@ -16,7 +16,6 @@
 #error "IOS is not supported!"
 #elif TARGET_OS_MAC == 1
 #define CE_PLATFORM_MACOS
-#error "MacOS is not supported!"
 #else
 #error "Unknown Apple platform!"
 #endif // TARGET_IPHONE_SIMULATOR
@@ -46,14 +45,30 @@
 #define CE_API
 #endif // CE_DYNAMIC_LINK
 #define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING
+#define CE_PATH_CHAR wchar_t
+#define CE_PATH_CHAR_IS_WCHAR
+#elif defined(CE_PLATFORM_MACOS)
+#if CE_DYNAMIC_LINK
+#ifdef CE_BUILD_DLL
+#define CE_API __attribute__((visibility("default")))
+#define IMGUI_API __attribute__((visibility("default")))
+#define yaml_cpp_EXPORTS
 #else
-#error Celes only supports Windows currently!
+#define CE_API
+#define IMGUI_API
+#endif // CE_BUILD_DLL
+#else
+#define CE_API
+#endif // CE_DYNAMIC_LINK
+#define CE_PATH_CHAR char
+#else
+#error Celes only supports Windows and macOS currently!
 #endif // CE_PLATFORM_WINDOWS
 
 #ifdef CE_DEBUG
 #if defined(CE_PLATFORM_WINDOWS)
 #define CE_DEBUGBREAK() __debugbreak()
-#elif defined(CE_PLATFORM_LINUX)
+#elif defined(CE_PLATFORM_MACOS) || defined(CE_PLATFORM_LINUX)
 #include <signal.h>
 #define CE_DEBUGBREAK() raise(SIGTRAP)
 #else

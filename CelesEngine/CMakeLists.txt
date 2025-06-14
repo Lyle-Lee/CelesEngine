@@ -5,7 +5,6 @@ file(GLOB_RECURSE CE_SOURCES
     src/ImGuizmo/*.cpp
     src/yaml-cpp/src/*.cpp
     src/Platform/OpenGL/*.cpp
-    src/Platform/Windows/*.cpp
 )
 
 file(GLOB_RECURSE CE_HEADERS
@@ -15,7 +14,6 @@ file(GLOB_RECURSE CE_HEADERS
     src/ImGuizmo/*.h
     src/yaml-cpp/include/*.h
     src/Platform/OpenGL/*.h
-    src/Platform/Windows/*.h
 )
 
 add_library(CelesEngine SHARED ${CE_SOURCES} ${CE_HEADERS})
@@ -54,13 +52,6 @@ target_link_libraries(CelesEngine PRIVATE
     ${GLEW_LIBRARY}
     OpenGL::GL
     Vulkan::Vulkan
-    $<$<CONFIG:Debug>:SPIRV-Toolsd.lib>
-    $<$<CONFIG:Debug>:shaderc_sharedd.lib>
-    $<$<CONFIG:Release>:shaderc_shared.lib>
-    $<$<CONFIG:Debug>:spirv-cross-cored.lib>
-    $<$<CONFIG:Release>:spirv-cross-core.lib>
-    $<$<CONFIG:Debug>:spirv-cross-glsld.lib>
-    $<$<CONFIG:Release>:spirv-cross-glsl.lib>
 )
 
 if(CE_WINDOWS)
@@ -74,6 +65,38 @@ if(CE_WINDOWS)
     target_compile_definitions(CelesEngine PRIVATE
         NOMINMAX
         _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING
+    )
+
+    target_link_libraries(CelesEngine PRIVATE
+        $<$<CONFIG:Debug>:SPIRV-Toolsd.lib>
+        $<$<CONFIG:Debug>:shaderc_sharedd.lib>
+        $<$<CONFIG:Release>:shaderc_shared.lib>
+        $<$<CONFIG:Debug>:spirv-cross-cored.lib>
+        $<$<CONFIG:Release>:spirv-cross-core.lib>
+        $<$<CONFIG:Debug>:spirv-cross-glsld.lib>
+        $<$<CONFIG:Release>:spirv-cross-glsl.lib>
+    )
+endif()
+
+if(CE_MACOS)
+    target_sources(CelesEngine PRIVATE
+        src/Platform/macOS/MacOSInput.cpp
+        src/Platform/macOS/MacOSUtils.mm
+        src/Platform/macOS/MacOSWindow.h
+        src/Platform/macOS/MacOSWindow.cpp
+    )
+
+    # Set Objective-C++ flags for macOS
+    set(CMAKE_XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC "YES")
+    set_source_files_properties(src/Platform/macOS/MacOSUtils.mm PROPERTIES COMPILE_FLAGS "-x objective-c++")
+
+    target_link_libraries(CelesEngine PRIVATE
+        "-framework IOKit"
+        "-framework Cocoa"
+        $<$<CONFIG:Debug>:libSPIRV-Tools.a>
+        libshaderc_shared.dylib
+        libspirv-cross-core.a
+        libspirv-cross-glsl.a
     )
 endif()
 

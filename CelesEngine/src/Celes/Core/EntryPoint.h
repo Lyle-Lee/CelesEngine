@@ -3,7 +3,7 @@
 #include "Log.h"
 #include "Application.h"
 
-#ifdef CE_PLATFORM_WINDOWS
+#if defined(CE_PLATFORM_WINDOWS) || defined(CE_PLATFORM_MACOS)
 extern Celes::Application* Celes::CreateApp(AppCommandLineArgs args);
 
 int main(int argc, char** argv)
@@ -16,4 +16,4 @@ int main(int argc, char** argv)
 	app->Run();
 	delete app;
 }
-#endif // CE_PLATFORM_WINDOWS
+#endif // CE_PLATFORM

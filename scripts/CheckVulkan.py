@@ -1,20 +1,34 @@
 import os
+import sys
 # import shutil
 from pathlib import Path
 import Utils
 
 VULKAN_SDK = os.environ.get('VULKAN_SDK')
-VULKAN_SDK_INSTALLER_URL = 'https://sdk.lunarg.com/sdk/download/1.3.275.0/windows/VulkanSDK-1.3.275.0-Installer.exe'
 CE_VULKAN_VERSION = '1.3.275.0'
 VulkanDirectory = 'CelesEngine/Dependencies/VulkanSDK'
-VULKAN_SDK_EXE_PATH = f'{VulkanDirectory}/VulkanSDK-1.3.275.0-Installer.exe'
+if sys.platform == 'win32':
+    VULKAN_SDK_INSTALLER_URL = 'https://sdk.lunarg.com/sdk/download/1.3.275.0/windows/VulkanSDK-1.3.275.0-Installer.exe'
+    VULKAN_SDK_EXE_PATH = f'{VulkanDirectory}/VulkanSDK-1.3.275.0-Installer.exe'
+elif sys.platform == 'darwin':
+    VULKAN_SDK_INSTALLER_URL = 'https://sdk.lunarg.com/sdk/download/1.3.275.0/mac/vulkansdk-macos-1.3.275.0.dmg'
+    VULKAN_SDK_EXE_PATH = f'{VulkanDirectory}/vulkansdk-macos-1.3.275.0.dmg'
+else:  # Linux
+    VULKAN_SDK_INSTALLER_URL = 'https://sdk.lunarg.com/sdk/download/1.3.275.0/linux/vulkansdk-linux-x86_64-1.3.275.0.tar.xz'
+    VULKAN_SDK_EXE_PATH = f'{VulkanDirectory}/vulkansdk-linux-x86_64-1.3.275.0.tar.xz' # TODO: Handle extraction for Linux
 
 def installVulkanSDK():
     print('Downloading {} to {}'.format(VULKAN_SDK_INSTALLER_URL, VULKAN_SDK_EXE_PATH))
     Utils.downloadFile(VULKAN_SDK_INSTALLER_URL, VULKAN_SDK_EXE_PATH)
     print('Done.')
     print('Running Vulkan SDK installer...')
-    os.startfile(os.path.abspath(VULKAN_SDK_EXE_PATH))
+    if sys.platform == 'win32':
+        os.startfile(os.path.abspath(VULKAN_SDK_EXE_PATH))
+    elif sys.platform == 'darwin':
+        os.system(f'open "{os.path.abspath(VULKAN_SDK_EXE_PATH)}"')
+    else:
+        print("Automatic installer launch is not supported on this platform. Please extract and install manually.")
+
     print('Please re-run this script after installation.')
 
 def installVulkanPrompt():
@@ -39,6 +53,9 @@ def checkVulkanSDK():
     return True
 
 def checkVulkanSDKDebugLibs():
+    if sys.platform != 'win32':
+        return True
+
     shadercdLib = Path(f'{VULKAN_SDK}/Lib/shaderc_sharedd.lib')
     if not shadercdLib.exists():
         print(f"No Vulkan SDK debug libs found (checked '{shadercdLib}'). Please install Vulkan SDK debug libs while installing Vulkan SDK.")

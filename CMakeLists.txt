@@ -52,6 +52,10 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Window")
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CE_PLATFORM "Linux")
     set(CE_LINUX TRUE)
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    set(CE_PLATFORM "MacOS")
+    set(CE_MACOS TRUE)
+    enable_language(OBJCXX)
 else()
     message(CE_ERROR "Unsupported platform!")
 endif()
@@ -183,7 +187,11 @@ set(CE_PLUGIN_OUTPUT_DIRECTORY ${CE_OUTPUT_DIRECTORY}/plugins)
 
 find_package(OpenGL REQUIRED)
 find_package(Vulkan REQUIRED)
-set(VULKAN_LIB_DIR $ENV{VULKAN_SDK}/Lib)
+if(CE_WINDOWS)
+    set(VULKAN_LIB_DIR $ENV{VULKAN_SDK}/Lib)
+else()
+    set(VULKAN_LIB_DIR $ENV{VULKAN_SDK}/lib)
+endif()
 message(STATUS "Using Vulkan libraries from: ${VULKAN_LIB_DIR}")
 link_directories(${VULKAN_LIB_DIR})
 
@@ -206,7 +214,13 @@ message(STATUS "CE_HAS_OPENGL: ${CE_HAS_OPENGL}")
 set(GLFW_ROOT "CelesEngine/Dependencies/GLFW")
 find_library(GLFW_LIBRARY
     NAMES glfw3 libglfw3.a
-    PATHS ${GLFW_ROOT}/lib-vc2022
+    if(CE_WINDOWS)
+        PATHS ${GLFW_ROOT}/lib-vc2022
+    elseif(CE_MACOS)
+        PATHS ${GLFW_ROOT}/lib-arm64
+    else()
+        PATHS ${GLFW_ROOT}/lib
+    endif()
     REQUIRED
 )
 find_path(GLFW_INCLUDE_DIR
@@ -218,7 +232,7 @@ find_path(GLFW_INCLUDE_DIR
 set(GLEW_ROOT "CelesEngine/Dependencies/GLEW")
 find_library(GLEW_LIBRARY
     NAMES glew32s libGLEW.a
-    PATHS ${GLEW_ROOT}/lib/x64
+    PATHS ${GLEW_ROOT}/lib
     REQUIRED
 )
 find_path(GLEW_INCLUDE_DIR

@@ -282,7 +282,11 @@ bool    ImGui_ImplOpenGL3_Init(const char* glsl_version)
     {
         // Query GL_VERSION in desktop GL 2.x, the string will start with "<major>.<minor>"
         const char* gl_version = (const char*)glGetString(GL_VERSION);
+#ifdef CE_PLATFORM_WINDOWS
         sscanf_s(gl_version, "%d.%d", &major, &minor);
+#else
+        sscanf(gl_version, "%d.%d", &major, &minor);
+#endif
     }
     bd->GlVersion = (GLuint)(major * 100 + minor * 10);
 
@@ -324,8 +328,13 @@ bool    ImGui_ImplOpenGL3_Init(const char* glsl_version)
 #endif
     }
     IM_ASSERT((int)strlen(glsl_version) + 2 < IM_ARRAYSIZE(bd->GlslVersionString));
+#ifdef CE_PLATFORM_WINDOWS
     strcpy_s(bd->GlslVersionString, glsl_version);
     strcat_s(bd->GlslVersionString, "\n");
+#else
+    strcpy(bd->GlslVersionString, glsl_version);
+    strcat(bd->GlslVersionString, "\n");
+#endif
 
     // Make an arbitrary GL call (we don't actually need the result)
     // IF YOU GET A CRASH HERE: it probably means the OpenGL function loader didn't do its job. Let us know!
@@ -722,7 +731,11 @@ bool    ImGui_ImplOpenGL3_CreateDeviceObjects()
 
     // Parse GLSL version string
     int glsl_version = 130;
+#ifdef CE_PLATFORM_WINDOWS
     sscanf_s(bd->GlslVersionString, "#version %d", &glsl_version);
+#else
+    sscanf(bd->GlslVersionString, "#version %d", &glsl_version);
+#endif
 
     const GLchar* vertex_shader_glsl_120 =
         "uniform mat4 ProjMtx;\n"

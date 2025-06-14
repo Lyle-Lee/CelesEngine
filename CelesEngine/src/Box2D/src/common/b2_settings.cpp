@@ -52,7 +52,11 @@ FILE* b2_dumpFile = nullptr;
 void b2OpenDump(const char* fileName)
 {
 	b2Assert(b2_dumpFile == nullptr);
+#ifdef CE_PLATFORM_WINDOWS
 	fopen_s(&b2_dumpFile, fileName, "w");
+#else
+	b2_dumpFile = fopen(fileName, "w");
+#endif
 }
 
 void b2Dump(const char* string, ...)
