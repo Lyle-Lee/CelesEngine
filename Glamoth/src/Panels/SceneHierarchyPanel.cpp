@@ -190,7 +190,7 @@ namespace Celes {
 
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
-#ifdef CELE_PLATFORM_WINDOWS
+#ifdef CE_PLATFORM_WINDOWS
 			strcpy_s(buffer, sizeof(buffer), tag.c_str());
 #else
 			strcpy(buffer, tag.c_str());
