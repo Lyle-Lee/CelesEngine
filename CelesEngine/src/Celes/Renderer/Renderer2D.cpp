@@ -187,7 +187,9 @@ namespace Celes {
 
 	void Renderer2D::Shutdown()
 	{
-		//delete s_Data;
+		delete[] s_Data.QuadVBBase;
+		delete[] s_Data.CircleVBBase;
+		delete[] s_Data.LineVBBase;
 	}
 
 	void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& transform)
