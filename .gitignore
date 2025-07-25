@@ -43,6 +43,9 @@ build/
 # Visual Studio 2017 auto generated files
 Generated\ Files/
 
+# VSCode cache/options directory
+.vscode/
+
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
