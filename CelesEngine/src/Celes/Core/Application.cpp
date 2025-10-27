@@ -31,6 +31,7 @@ namespace Celes {
 
 	Application::~Application()
 	{
+		Renderer::Shutdown();
 	}
 
 	void Application::Run()

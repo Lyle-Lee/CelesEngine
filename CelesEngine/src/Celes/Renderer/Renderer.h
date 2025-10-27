@@ -33,6 +33,8 @@ namespace Celes {
 	{
 	public:
 		CE_API static void Init();
+		CE_API static void Shutdown();
+
 		CE_API static void OnWindowResize(uint32_t width, uint32_t height);
 
 		CE_API inline static void SetClearColor(const glm::vec4& color) { s_Cmd->SetClearColor(color); }
