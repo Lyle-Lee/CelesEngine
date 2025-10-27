@@ -20,7 +20,7 @@ Start by cloning the repository with `git clone https://github.com/Lyle-Lee/Cele
 
 <ins>**2. Setup the project:**</ins>
 
-Make sure that you have a Python environment first.
+Make sure that you have a Python environment (version >= 3.8) first.
 
 ### Windows
 

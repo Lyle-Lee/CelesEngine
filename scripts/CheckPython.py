@@ -1,5 +1,5 @@
 import subprocess
-import pkg_resources
+from importlib import metadata
 
 def install(package):
     print(f"Installing python module '{package}'...")
@@ -7,7 +7,7 @@ def install(package):
 
 def validatePackage(package):
     required = { package }
-    installed = { pkg.key for pkg in pkg_resources.working_set }
+    installed = { dist.metadata["Name"].lower() for dist in metadata.distributions() }
     missing = required - installed
     if missing:
         install(package)

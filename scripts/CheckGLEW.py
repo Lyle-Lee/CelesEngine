@@ -24,10 +24,10 @@ def fixPermissions(directory):
 
 def installGLEW():
     print("Installing GLEW...\nDownloading", GLEW_URL)
-    # os.makedirs(f'{GLEWDirectory}/lib')
     with urlopen(GLEW_URL) as zipresp:
         with ZipFile(BytesIO(zipresp.read())) as zfile:
             if sys.platform == 'win32':
+                os.makedirs(f'{GLEWDirectory}/lib', exist_ok=True)
                 for file in zfile.namelist():
                     if file.startswith('glew-2.1.0/include/'):
                         zfile.extract(file, GLEWDirectory)
@@ -61,6 +61,8 @@ def CheckGLEWLib():
     if not GLEWLib.exists():
         print(f"No GLEW libs found (Checked '{GLEWLib}').")
         if not installGLEW():
+            if GLEWLib.exists():
+                shutil.rmtree(GLEWLib)
             return False
 
     print(f"GLEW libs located at '{GLEWDirectory}'.")
